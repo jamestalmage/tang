@@ -4,7 +4,7 @@ node_js:
 - "0.12"
 - iojs
 script:
-  - npm cover
+  - npm run cover
 # - gulp coverage
 # - gulp lint
 # after_script:
