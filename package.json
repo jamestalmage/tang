@@ -27,12 +27,15 @@
   "homepage": "https://github.com/jamestalmage/angular-test-utils",
   "dependencies": {
     "ast-types": "^0.6.15",
+    "merge": "^1.2.0",
     "recast": "^0.10.1",
+    "source-map": "^0.4.0",
     "through2": "^0.6.3",
     "transformify": "^0.1.2"
   },
   "devDependencies": {
     "chai": "^2.1.0",
+    "coveralls": "^2.11.2",
     "esprima-fb": "^12001.1.0-dev-harmony-fb",
     "glob": "^4.4.0",
     "istanbul": "^0.3.6",
