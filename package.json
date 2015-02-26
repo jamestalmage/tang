@@ -4,8 +4,12 @@
   "description": "angular test utilities",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --globals expect mocha-globals.js test/**",
-    "watch": "mocha -w --globals expect mocha-globals.js test/**"
+    "test": "mocha mocha-globals.js test/**/*-test.js",
+    "test-hack": "RECAST_COMMENT_HACK=true mocha mocha-globals.js test/**/*-test.js",
+    "watch": "mocha -w --growl mocha-globals.js test/**/*-test.js",
+    "cover": "rm -rf coverage && npm run cover-nohack && npm run cover-hack && node combine-coverage",
+    "cover-nohack": "istanbul cover --report none --dir ./coverage/nohack _mocha -- mocha-globals.js  test/**/*-test.js",
+    "cover-hack": "RECAST_COMMENT_HACK=true istanbul cover --report none --dir ./coverage/hack _mocha -- mocha-globals.js  test/**/*-test.js"
   },
   "repository": {
     "type": "git",
@@ -23,16 +27,17 @@
   "homepage": "https://github.com/jamestalmage/angular-test-utils",
   "dependencies": {
     "ast-types": "^0.6.15",
-    "jstransform": "^9.1.1",
-    "ramda": "^0.10.0",
-    "recast": "git://github.com/benjamn/recast#8cb52b39d445da7c3adb71d2de80efe89810ad60",
+    "recast": "^0.10.1",
     "through2": "^0.6.3",
     "transformify": "^0.1.2"
   },
   "devDependencies": {
     "chai": "^2.1.0",
-    "esprima": "^2.0.0",
+    "esprima-fb": "^12001.1.0-dev-harmony-fb",
+    "glob": "^4.4.0",
+    "istanbul": "^0.3.6",
     "mocha": "^2.1.0",
+    "proxyquire": "^1.3.1",
     "sinon": "^1.12.2",
     "sinon-chai": "^2.7.0"
   }
