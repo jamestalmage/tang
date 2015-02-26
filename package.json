@@ -1,5 +1,5 @@
 {
-  "name": "angular-test-utils",
+  "name": "ng-test-utils",
   "version": "0.0.1",
   "description": "angular test utilities",
   "main": "index.js",
