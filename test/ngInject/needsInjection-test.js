@@ -1,6 +1,6 @@
 describe('needsInjection', function() {
-  var parse = require('./util/parse');
-  var needsInjection = require('../src/ngInject/needsInjection');
+  var parse = require('./../util').parse;
+  var needsInjection = require('../../src/ngInject/needsInjection');
   var assert = require('assert');
 
   it('true when its the first statement', function () {

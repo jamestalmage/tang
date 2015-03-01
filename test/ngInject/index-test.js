@@ -4,7 +4,7 @@ describe('insertVariableInjections', function() {
   var sinon = require('sinon');
 
   beforeEach(function (){
-    ngInject = require('../src/ngInject/');
+    ngInject = require('../../src/ngInject/index');
   });
 
   it('will not create sourcemap by default', function() {

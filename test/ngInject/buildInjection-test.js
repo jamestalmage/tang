@@ -1,7 +1,7 @@
 describe('buildInjection', function() {
-  var parse = require('./util/parse');
-  var print = require('./util/print');
-  var buildInjection = require('../src/ngInject/buildInjection');
+  var parse = require('../util/parse');
+  var print = require('../util/print');
+  var buildInjection = require('../../src/ngInject/buildInjection');
 
   it('creates a beforeEach(inject(ids)) method',function(){
     var actual = print(buildInjection(['a','b','c']));
