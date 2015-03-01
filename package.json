@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "jshint src/** test/**",
-    "test": "npm run cover && npm run lint",
+    "test": "npm run lint && npm run cover",
     "test-nohack": "mocha mocha-globals.js test/**/*-test.js",
     "test-hack": "RECAST_COMMENT_HACK=true mocha mocha-globals.js test/**/*-test.js",
     "watch": "mocha -w --growl mocha-globals.js test/**/*-test.js",

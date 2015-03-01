@@ -41,12 +41,31 @@ function wrapVariableIds(ids){
   return ids.map(wrapVariableId);
 }
 
+function variableDeclaration(ids){
+  /*var declarations = [];
+  ids.forEach(function(identifier){
+    declarations.push(b.VariableDeclarator(identifier))
+  }); */
+  return b.variableDeclaration(
+    'var',
+    ids.map(function(id){
+      return b.variableDeclarator(id, null);
+    })
+  );
+}
+
+function identifiers(ids){
+  return ids.map(b.identifier.bind(b));
+}
+
 module.exports = {
   injectCall: injectCall,
   beforeEachCall: beforeEachCall,
   assignmentStatements: assignmentStatements,
   assignmentStatement: assignmentStatement,
   wrapVariableId: wrapVariableId,
-  wrapVariableIds: wrapVariableIds
+  wrapVariableIds: wrapVariableIds,
+  variableDeclaration: variableDeclaration,
+  identifiers:identifiers
 };
 
