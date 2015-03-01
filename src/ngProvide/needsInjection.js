@@ -8,7 +8,7 @@ var n = types.namedTypes;
 
 function create(regexp, logger){
 
-  regexp = regexp ||  /^\s*@ngInject\s*$/;
+  regexp = regexp ||  /^\s*@ngProvide\s*$/;
 
   logger = logger || require('../silent-logger');
 
@@ -23,26 +23,26 @@ function create(regexp, logger){
       return false;
     }
     if(!containsNgInjectAnnotation(node)){
-      logger.logRejectedNode('does not contain an NgInit comment', node);
+      logger.logRejectedNode('does not contain an NgProvide comment', node);
       return false;
     }
-    if(hasInit(node)){
-      logger.logRejectedNode('contains a variable initialization', node);
+    if(missingInit(node)){
+      logger.logRejectedNode('at least one variable is missing an initialization', node);
       return false;
     }
     logger.logAcceptedNode(node);
     return true;
   }
 
-  function hasInit(node){
+  function missingInit(node){
     n.VariableDeclaration.assert(node);
-    var found = false;
+    var missing = false;
     types.visit(node,{
       visitVariableDeclarator:function(path){
-        if(path.node.init !== null) found = true;
+        if(path.node.init === null || path.node.init === undefined) missing = true;
         return false;
       }
     });
-    return found;
+    return missing;
   }
 }
