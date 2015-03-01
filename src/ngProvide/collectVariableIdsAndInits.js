@@ -14,6 +14,5 @@ function collectVariableIds(node){
       return false;
     }
   });
-  console.log(ids);
   return {ids:ids,inits:inits};
 }
