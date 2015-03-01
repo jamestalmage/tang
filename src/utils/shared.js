@@ -3,11 +3,20 @@ var assert = require('assert');
 var n = types.namedTypes;
 var b = types.builders;
 
-function beforeEachCall(callExp){
-  n.CallExpression.assert(callExp);
+function sliceArgs(args){
+  return Array.prototype.slice.call(args);
+}
+
+function beforeEachStmt(stmts){
+  return b.expressionStatement(
+    beforeEachExp(stmts)
+  );
+}
+
+function beforeEachExp(args){
   return b.callExpression(
     b.identifier('beforeEach'),
-    [callExp]
+    args
   );
 }
 
@@ -67,6 +76,38 @@ function provideValue(id, val){
   );
 }
 
+function moduleStmt() {
+  return b.expressionStatement(
+    moduleExp.apply(null,sliceArgs(arguments))
+  );
+}
+
+function moduleExp() {
+  var angular_mock__module = b.memberExpression(
+    b.memberExpression(
+      b.identifier('angular'),
+      b.identifier('mock'),
+      false
+    ),
+    b.identifier('module'),
+    false
+  );
+
+  return b.callExpression(
+      angular_mock__module,
+      sliceArgs(arguments)
+  );
+}
+
+function moduleCb(params,stmts) {
+  var functionExp = b.functionExpression(
+    null,
+    params,
+    b.blockStatement(stmts)
+  );
+
+  return moduleStmt(functionExp);
+}
 
 function identifiers(ids){
   return ids.map(b.identifier.bind(b));
@@ -74,13 +115,17 @@ function identifiers(ids){
 
 module.exports = {
   injectCall: injectCall,
-  beforeEachCall: beforeEachCall,
+  beforeEachCall: beforeEachExp,
+  beforeEachStmt: beforeEachStmt,
   assignmentStatements: assignmentStatements,
   assignmentStatement: assignmentStatement,
   wrapVariableId: wrapVariableId,
   wrapVariableIds: wrapVariableIds,
   variableDeclaration: variableDeclaration,
   identifiers: identifiers,
-  provideValue: provideValue
+  provideValue: provideValue,
+  moduleExp: moduleExp,
+  moduleStmt: moduleStmt,
+  moduleCb: moduleCb
 };
 

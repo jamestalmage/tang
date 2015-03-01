@@ -13,7 +13,5 @@ function buildNgInjectHandler(ids){
 
   var inject = s.injectCall(_ids_, assignments);
 
-  return b.expressionStatement(
-    s.beforeEachCall(inject)
-  );
+  return s.beforeEachStmt([inject]);
 }
