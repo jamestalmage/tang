@@ -52,7 +52,7 @@ describe('insertVariableInjections', function() {
     var parse = sinon.spy();
     var print = sinon.spy();
     var insertVariableInjections = sinon.spy();
-    ngInject = proxyquire('../src/ngInject',{
+    ngInject = proxyquire('../../src/ngInject',{
       'recast':{
         parse:parse,
         print:print
