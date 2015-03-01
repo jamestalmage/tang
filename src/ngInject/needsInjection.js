@@ -9,7 +9,7 @@ function create(regexp, logger){
 
   regexp = regexp ||  /^\s*@ngInject\s*$/;
 
-  logger = logger || require('./../silent-logger');
+  logger = logger || require('../silent-logger');
 
   return getsInjection;
 
