@@ -4,7 +4,9 @@
   "description": "angular test utilities",
   "main": "index.js",
   "scripts": {
-    "test": "mocha mocha-globals.js test/**/*-test.js",
+    "lint": "jshint src/** test/**",
+    "test": "npm run cover && npm run lint",
+    "test-nohack": "mocha mocha-globals.js test/**/*-test.js",
     "test-hack": "RECAST_COMMENT_HACK=true mocha mocha-globals.js test/**/*-test.js",
     "watch": "mocha -w --growl mocha-globals.js test/**/*-test.js",
     "cover": "rm -rf coverage && npm run cover-nohack && npm run cover-hack && node combine-coverage",
@@ -39,6 +41,7 @@
     "esprima-fb": "^12001.1.0-dev-harmony-fb",
     "glob": "^4.4.0",
     "istanbul": "^0.3.6",
+    "jshint": "^2.6.3",
     "mocha": "^2.1.0",
     "proxyquire": "^1.3.1",
     "sinon": "^1.12.2",

@@ -48,13 +48,13 @@ function create(regexp, logger){
 
   function hasInit(node){
     n.VariableDeclaration.assert(node);
-    var hasInit = false;
+    var found = false;
     types.visit(node,{
       visitVariableDeclarator:function(path){
-        if(path.node.init !== null) hasInit = true;
+        if(path.node.init !== null) found = true;
         return false;
       }
     });
-    return hasInit;
+    return found;
   }
 }

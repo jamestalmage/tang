@@ -52,8 +52,6 @@ function create() {
   }
 
   function assignmentStatement(lhs, rhs){
-    //lhs = b.identifier(lhs);
-    //rhs = b.identifier(rhs);
     return b.expressionStatement(b.assignmentExpression('=',lhs,rhs));
   }
 

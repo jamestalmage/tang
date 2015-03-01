@@ -7,7 +7,7 @@ var n = types.namedTypes;
 function createInjector (regexp, logger) {
 
   var needsInjection = require('./needsInjection').create(regexp, logger);
-  var buildInjection = require('./buildInjection');
+  var buildInjection = require('../utils/buildInjection');
   var collectVariableIds = require('./collectVariableIds');
 
   return addVariableInjections;
