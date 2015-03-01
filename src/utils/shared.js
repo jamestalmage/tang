@@ -42,10 +42,6 @@ function wrapVariableIds(ids){
 }
 
 function variableDeclaration(ids){
-  /*var declarations = [];
-  ids.forEach(function(identifier){
-    declarations.push(b.VariableDeclarator(identifier))
-  }); */
   return b.variableDeclaration(
     'var',
     ids.map(function(id){
@@ -53,6 +49,24 @@ function variableDeclaration(ids){
     })
   );
 }
+
+function provideValue(id, val){
+  n.Literal.assert(id);
+
+  var $parse_value = b.memberExpression(
+    b.identifier('$provide'),
+    b.identifier('value'),
+    false
+  );
+
+  return b.expressionStatement(
+    b.callExpression(
+      $parse_value,
+      [ id, val ]
+    )
+  );
+}
+
 
 function identifiers(ids){
   return ids.map(b.identifier.bind(b));
@@ -66,6 +80,7 @@ module.exports = {
   wrapVariableId: wrapVariableId,
   wrapVariableIds: wrapVariableIds,
   variableDeclaration: variableDeclaration,
-  identifiers:identifiers
+  identifiers: identifiers,
+  provideValue: provideValue
 };
 
