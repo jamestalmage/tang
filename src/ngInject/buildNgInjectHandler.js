@@ -3,7 +3,7 @@ module.exports = buildNgInjectHandler;
 var types = require('ast-types');
 var n = types.namedTypes;
 var b = types.builders;
-var s = require('./shared');
+var s = require('./../utils/shared');
 
 
 

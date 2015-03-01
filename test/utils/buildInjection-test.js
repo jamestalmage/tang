@@ -1,6 +1,6 @@
 describe('buildInjection', function() {
   var print = require('../lib/print');
-  var buildInjection = require('../../src/utils/buildNgInjectHandler');
+  var buildInjection = require('../../src/ngInject/buildNgInjectHandler');
 
   it('creates a beforeEach(inject(ids)) method',function(){
     var actual = print(buildInjection(['a','b','c']));
