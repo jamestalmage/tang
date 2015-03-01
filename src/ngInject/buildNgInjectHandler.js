@@ -5,19 +5,17 @@ var n = types.namedTypes;
 var b = types.builders;
 var s = require('./../utils/shared');
 
+function buildNgInjectHandler(ids){
+  var _ids_ = s.wrapVariableIds(ids);
 
+  ids = ids.map(b.identifier.bind(b));
+  _ids_ = _ids_.map(b.identifier.bind(b));
 
-  function buildNgInjectHandler(ids){
-    var _ids_ = s.wrapVariableIds(ids);
+  var assignments = s.assignmentStatements(ids, _ids_);
 
-    ids = ids.map(b.identifier.bind(b));
-    _ids_ = _ids_.map(b.identifier.bind(b));
+  var inject = s.injectCall(_ids_, assignments);
 
-    var assignments = s.assignmentStatements(ids, _ids_);
-
-    var inject = s.injectCall(_ids_, assignments);
-
-    return b.expressionStatement(
-      s.beforeEachCall(inject)
-    );
-  }
+  return b.expressionStatement(
+    s.beforeEachCall(inject)
+  );
+}
