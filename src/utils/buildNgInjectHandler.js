@@ -1,4 +1,4 @@
-module.exports = buildInjectionForNode;
+module.exports = buildNgInjectHandler;
 
 var types = require('ast-types');
 var n = types.namedTypes;
@@ -7,7 +7,7 @@ var s = require('./shared');
 
 
 
-  function buildInjectionForNode(ids){
+  function buildNgInjectHandler(ids){
     var _ids_ = s.wrapVariableIds(ids);
 
     ids = ids.map(b.identifier.bind(b));
