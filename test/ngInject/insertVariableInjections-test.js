@@ -1,5 +1,5 @@
 describe('insertVariableInjections', function() {
-  var util = require('../util');
+  var util = require('../lib');
   var insertVariableInjections = require('../../src/ngInject/insertVariableInjections');
 
   it('inserts a beforeEach',function(){

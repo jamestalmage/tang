@@ -1,6 +1,5 @@
 describe('buildInjection', function() {
-  var parse = require('../util/parse');
-  var print = require('../util/print');
+  var print = require('../lib/print');
   var buildInjection = require('../../src/utils/buildInjection');
 
   it('creates a beforeEach(inject(ids)) method',function(){

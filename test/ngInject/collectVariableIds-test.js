@@ -1,5 +1,5 @@
 describe('collectVariableIds', function() {
-  var parse = require('./../util/parse');
+  var parse = require('../lib/parse');
   var collectVariableIds = require('../../src/ngInject/collectVariableIds');
 
   it('a, b, c',function(){
