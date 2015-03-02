@@ -1,4 +1,4 @@
-describe('insertVariableInjections', function() {
+describe('ngProvide - perform ast transformation', function() {
   var util = require('../lib');
   var insertVariableInjections = require('../../src/ngProvide/insertProviders');
 

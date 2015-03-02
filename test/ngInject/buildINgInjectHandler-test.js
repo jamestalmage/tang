@@ -1,4 +1,4 @@
-describe('buildInjection', function() {
+describe('ngInject - build handler code', function() {
   var print = require('../lib/print');
   var buildInjection = require('../../src/ngInject/buildNgInjectHandler');
 

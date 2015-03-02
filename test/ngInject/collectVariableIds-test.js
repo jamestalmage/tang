@@ -1,4 +1,4 @@
-describe('collectVariableIds', function() {
+describe('ngInject - collect variable Ids', function() {
   var parse = require('../lib/parse');
   var collectVariableIds = require('../../src/ngInject/collectVariableIds');
 

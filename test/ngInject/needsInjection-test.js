@@ -1,4 +1,4 @@
-describe('needsInjection', function() {
+describe('ngInject - needs Injection', function() {
   var parse = require('../lib').parse;
   var needsInjection = require('../../src/ngInject/needsInjection');
   var assert = require('assert');

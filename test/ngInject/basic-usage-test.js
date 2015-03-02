@@ -4,7 +4,7 @@ describe('insertVariableInjections', function() {
   var sinon = require('sinon');
 
   beforeEach(function (){
-    ngInject = require('../../src/ngInject/index');
+    ngInject = require('../../src/index');
   });
 
   it('will not create sourcemap by default', function() {
@@ -46,29 +46,5 @@ describe('insertVariableInjections', function() {
       "}));"
     ].join('\n'));
     expect(!!output.map).to.equal(true);
-  });
-
-  it('will pass through sourceFileName and inputSourceMap', function() {
-    var parse = sinon.spy();
-    var print = sinon.spy();
-    var insertVariableInjections = sinon.spy();
-    ngInject = proxyquire('../../src/ngInject',{
-      'recast':{
-        parse:parse,
-        print:print
-      },
-      './insertVariableInjections':insertVariableInjections
-    });
-
-    ngInject('var a;',{sourceFileName:'input.src',inputSourceMap:{a:'a',b:'b'}});
-
-    expect(parse).to.have.been.calledWith(
-      'var a;',
-      {
-        sourceFileName:'input.src',
-        sourceMapName:'input.src.map',
-        inputSourceMap:{a:'a',b:'b'}
-      }
-    );
   });
 });

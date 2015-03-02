@@ -1,4 +1,4 @@
-describe('buildNgProvideHandler', function () {
+describe('ngProvide - build handler code', function () {
   var lib = require('../lib');
   var buildNgProvider = require('../../src/ngProvide/buildNgProvideHandler');
   var types = require('ast-types');

@@ -72,7 +72,7 @@ describe('main', function() {
     expect(output.map).to.equal(undefined);
   });
 
-  it('ngProvide will be turned off', function() {
+  it('ngProvide can be turned off', function() {
     var input = [
       'var e, f;',
       '// @ngInject',
@@ -116,40 +116,6 @@ describe('main', function() {
     ].join('\n'));
 
     expect(output.map).to.equal(undefined);
-  });
-
-  it('will create a sourcemap if sourceFileName is set', function() {
-    var input = [
-      'var e, f;',
-      '// @ngInject',
-      'var c, d;',
-      '// @ngProvide',
-      'var a = "a", b = "b";'
-    ].join('\n');
-    var output = process(input,{sourceFileName:'src.js'});
-    expect(output.code).to.equal([
-      'var e, f;',
-      '// @ngInject',
-      'var c, d;',
-      "",
-      "beforeEach(inject(function(_c_, _d_) {",
-      "  c = _c_;",
-      "  d = _d_;",
-      "}));",
-      '',
-      '// @ngProvide',
-      'var a, b;',
-      '',
-      "beforeEach(function() {",
-      "  angular.mock.module(function($provide) {",
-      "    a = \"a\";",
-      "    b = \"b\";",
-      "    $provide.value(\"a\", a);",
-      "    $provide.value(\"b\", b);",
-      "  });",
-      "});"
-    ].join('\n'));
-    expect(!!output.map).to.equal(true);
   });
 
   it('will create a sourcemap if sourceFileName is set', function() {

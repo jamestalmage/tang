@@ -6,12 +6,12 @@
   "scripts": {
     "lint": "jshint src/** test/**",
     "test": "npm run lint && npm run cover",
-    "test-nohack": "mocha mocha-globals.js test/**/*-test.js",
-    "test-hack": "RECAST_COMMENT_HACK=true mocha mocha-globals.js test/**/*-test.js",
-    "watch": "mocha -w --growl mocha-globals.js test/**/*-test.js",
+    "test-nohack": "mocha mocha-globals.js test/*-test.js test/**/*-test.js",
+    "test-hack": "RECAST_COMMENT_HACK=true mocha mocha-globals.js test/*-test.js test/**/*-test.js",
+    "watch": "mocha -w --growl mocha-globals.js test/*-test.js  test/**/*-test.js",
     "cover": "rm -rf coverage && npm run cover-nohack && npm run cover-hack && node combine-coverage",
-    "cover-nohack": "istanbul cover --report none --dir ./coverage/nohack _mocha -- mocha-globals.js  test/**/*-test.js",
-    "cover-hack": "RECAST_COMMENT_HACK=true istanbul cover --report none --dir ./coverage/hack _mocha -- mocha-globals.js  test/**/*-test.js"
+    "cover-nohack": "istanbul cover --report none --dir ./coverage/nohack _mocha -- mocha-globals.js test/*-test.js  test/**/*-test.js",
+    "cover-hack": "RECAST_COMMENT_HACK=true istanbul cover --report none --dir ./coverage/hack _mocha -- mocha-globals.js test/*-test.js  test/**/*-test.js"
   },
   "repository": {
     "type": "git",
