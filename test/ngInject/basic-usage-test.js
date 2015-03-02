@@ -1,4 +1,4 @@
-describe('insertVariableInjections', function() {
+describe('ngInject - basic usage', function() {
   var ngInject;
   var proxyquire = require('proxyquire');
   var sinon = require('sinon');
