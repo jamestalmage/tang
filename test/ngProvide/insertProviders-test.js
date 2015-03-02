@@ -1,6 +1,6 @@
 describe('ngProvide - perform ast transformation', function() {
   var util = require('../lib');
-  var insertVariableInjections = require('../../src/ngProvide/insertProviders');
+  var insertVariableInjections = require('../../src/ngProvide/index');
 
   it('inserts a beforeEach',function(){
     var input = util.parse([

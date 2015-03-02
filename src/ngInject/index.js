@@ -7,7 +7,7 @@ var n = types.namedTypes;
 function createInjector (regexp, logger) {
 
   var needsInjection = require('./needsInjection').create(regexp, logger);
-  var buildInjection = require('./buildNgInjectHandler');
+  var buildInjectionCode = require('./buildInjectionCode');
   var collectVariableIds = require('./collectVariableIds');
 
   return addVariableInjections;
@@ -18,7 +18,7 @@ function createInjector (regexp, logger) {
         var node = path.node;
         if (needsInjection(node)) {
           var ids = collectVariableIds(node);
-          path.insertAfter(buildInjection(ids));
+          path.insertAfter(buildInjectionCode(ids));
         }
         return false;
       }

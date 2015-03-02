@@ -12,7 +12,7 @@ function createInjector (regexp, logger) {
   regexp = regexp ||  /^\s*@ngProvide\s*$/;
 
   var needsInjection = require('./needsInjection').create(regexp, logger);
-  var buildInjection = require('./buildNgProvideHandler');
+  var buildInjection = require('./buildProviderCode');
   var collectVariableIdsAndInits = require('./collectVariableIdsAndInits');
   var hasNgProvideAnnotation = hasAnnotation(regexp);
 

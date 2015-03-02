@@ -1,6 +1,6 @@
 describe('ngInject - perform ast transformation', function() {
   var util = require('../lib');
-  var insertVariableInjections = require('../../src/ngInject/insertVariableInjections');
+  var insertVariableInjections = require('../../src/ngInject');
 
   it('inserts a beforeEach',function(){
     var input = util.parse([

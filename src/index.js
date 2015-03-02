@@ -1,8 +1,8 @@
 module.exports = transform;
 
 var recast = require('recast');
-var ngProvide = require('./ngProvide/insertProviders');
-var ngInject = require('./ngInject/insertVariableInjections');
+var ngProvide = require('./ngProvide/index');
+var ngInject = require('./ngInject');
 
 function transform(src, opts){
   opts = opts || {};
