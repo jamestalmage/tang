@@ -33,6 +33,32 @@ describe('insertVariableInjections', function() {
     expect(output.map).to.equal(undefined);
   });
 
+  it('will work on assignment', function(){
+    var input = [
+      "var a, b;",
+      "// @ngProvide",
+      "a = \"a\";",
+      "",
+      "b = \"b\""
+    ].join("\n");
+    var output = ngProvide(input);
+
+    var expected = [
+      "var a, b;",
+      "// @ngProvide",
+      "beforeEach(function() {",
+      "  angular.mock.module(function($provide) {",
+      "    a = \"a\";",
+      "    $provide.value(\"a\", a);",
+      "  });",
+      "});",
+      "",
+      "b = \"b\""
+    ].join("\n");
+
+    expect(output.code).to.equal(expected);
+  });
+
   it('will create a sourcemap if sourceFileName is set', function() {
     var input = [
       'var c, d;',
