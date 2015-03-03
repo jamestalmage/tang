@@ -30,7 +30,7 @@ describe('ngProvide - basic usage', function() {
       "});"
     ].join('\n'));
 
-    expect(output.map).to.equal(undefined);
+    expect(output.map).to.equal(null);
   });
 
   it('will work on assignment', function(){
@@ -65,7 +65,7 @@ describe('ngProvide - basic usage', function() {
       '// @ngProvide',
       'var a = "a", b = "b";'
     ].join('\n');
-    var output = ngProvide(input,{sourceFileName:'src.js'});
+    var output = ngProvide(input,{sourceMap:true,sourceFileName:'src.js'});
     expect(output.code).to.equal([
       'var c, d;',
       '',

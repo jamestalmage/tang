@@ -42,7 +42,7 @@ describe('main', function() {
       "});"
     ].join('\n'));
 
-    expect(output.map).to.equal(undefined);
+    expect(output.map).to.equal(null);
   });
 
   it('ngInject can be turned off', function() {
@@ -65,7 +65,7 @@ describe('main', function() {
       "});"
     ].join('\n'));
 
-    expect(output.map).to.equal(undefined);
+    expect(output.map).to.equal(null);
   });
 
   it('ngProvide can be turned off', function() {
@@ -84,17 +84,17 @@ describe('main', function() {
       'var a = "a", b = "b";'
     ].join('\n'));
 
-    expect(output.map).to.equal(undefined);
+    expect(output.map).to.equal(null);
   });
 
   it('ngProvide and ngInject can be turned off', function() {
     var output = process(input,{ngProvide:false,ngInject:false});
     expect(output.code).to.equal(input);
-    expect(output.map).to.equal(undefined);
+    expect(output.map).to.equal(null);
   });
 
   it('will create a sourcemap if sourceFileName is set', function() {
-    var output = process(input,{sourceFileName:'src.js'});
+    var output = process(input,{sourceMap:true, sourceFileName:'src.js'});
     expect(output.code).to.equal([
       'var e, f;',
       '// @ngInject',
@@ -121,7 +121,7 @@ describe('main', function() {
   });
 
   it('will create a sourcemap if sourceFileName is set', function() {
-    var output = process(input,{sourceFileName:'src.js', appendSourceMapComment:true});
+    var output = process(input,{sourceMap:true, sourceFileName:'src.js', appendSourceMapComment:true});
     expect(convert.fromSource(output.code)).not.to.equal(null);
   });
 
@@ -141,17 +141,17 @@ describe('main', function() {
     });
     fromSource.returns({toObject:toObj});
     print.returns({code:'blah'});
-    process(input);
+    process(input,{sourceMap:true});
     expect(fromSource.called).to.equal(true);
     expect(toObj.called).to.equal(true);
     fromSource.reset();
     toObj.reset();
     fromSource.returns(null);
-    process(input);
+    process(input,{sourceMap:true});
     expect(fromSource.called).to.equal(true);
     expect(toObj.called).to.equal(false);
     fromSource.reset();
-    process(input,{readSourceMapComments:false}) ;
+    process(input,{sourceMap:true, readSourceMapComments:false}) ;
     expect(fromSource.called).to.equal(false);
   });
 
@@ -167,7 +167,7 @@ describe('main', function() {
 
     print.returns({code:'blahblah',map:'map'});
 
-    process('var a;',{sourceFileName:'input.src',inputSourceMap:{a:'a',b:'b'}});
+    process('var a;',{sourceMap:true, sourceFileName:'input.src',inputSourceMap:{a:'a',b:'b'}});
 
     expect(parse).to.have.been.calledWith(
       'var a;',

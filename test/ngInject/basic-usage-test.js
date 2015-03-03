@@ -25,7 +25,7 @@ describe('ngInject - basic usage', function() {
       "}));"
     ].join('\n'));
 
-    expect(output.map).to.equal(undefined);
+    expect(output.map).to.equal(null);
   });
 
   it('will create a sourcemap if sourceFileName is set', function() {
@@ -34,7 +34,7 @@ describe('ngInject - basic usage', function() {
       '// @ngInject',
       'var a, b;'
     ].join('\n');
-    var output = ngInject(input,{sourceFileName:'src.js'});
+    var output = ngInject(input,{sourceMap:true,sourceFileName:'src.js'});
     expect(output.code).to.equal([
       'var c, d;',
       '// @ngInject',
