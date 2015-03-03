@@ -129,6 +129,7 @@ describe('main', function() {
     var fromSource = sinon.stub();
     var parse = sinon.spy();
     var print = sinon.stub();
+    var toObj = sinon.spy();
     process = proxyquire(pathToIndex,{
       'recast':{
         parse:parse,
@@ -138,9 +139,17 @@ describe('main', function() {
         fromSource: fromSource
       }
     });
+    fromSource.returns({toObject:toObj});
     print.returns({code:'blah'});
     process(input);
     expect(fromSource.called).to.equal(true);
+    expect(toObj.called).to.equal(true);
+    fromSource.reset();
+    toObj.reset();
+    fromSource.returns(null);
+    process(input);
+    expect(fromSource.called).to.equal(true);
+    expect(toObj.called).to.equal(false);
     fromSource.reset();
     process(input,{readSourceMapComments:false}) ;
     expect(fromSource.called).to.equal(false);

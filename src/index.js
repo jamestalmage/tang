@@ -15,7 +15,8 @@ function transform(src, suppliedOptions){
   if(suppliedOptions.inputSourceMap){
     options.inputSourceMap = suppliedOptions.inputSourceMap;
   } else if(suppliedOptions.readSourceMapComments !== false) {
-    options.inputSourceMap = convert.fromSource(src);
+    var inputMap = convert.fromSource(src);
+    if(inputMap) options.inputSourceMap = inputMap.toObject();
   }
   var doNgInject = suppliedOptions.hasOwnProperty('ngInject') ? suppliedOptions.ngInject : true;
   var doNgProvide = suppliedOptions.hasOwnProperty('ngProvide') ? suppliedOptions.ngProvide : true;
