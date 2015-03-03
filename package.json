@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/jamestalmage/angular-test-utils",
   "dependencies": {
-    "ast-types": "^0.6.15",
     "recast": "^0.10.1",
     "convert-source-map": "git://github.com/jamestalmage/convert-source-map#4397e24b9a41b19b964ea0a4b6eb0858d6a3450f"
   },

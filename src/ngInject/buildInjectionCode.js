@@ -1,6 +1,6 @@
 module.exports = buildNgInjectHandler;
 
-var types = require('ast-types');
+var types = require('recast').types;
 var n = types.namedTypes;
 var b = types.builders;
 var s = require('../utils/builders');

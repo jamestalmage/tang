@@ -1,6 +1,6 @@
 module.exports = requiredInjection;
 
-var n = require('ast-types').namedTypes;
+var n = require('recast').types.namedTypes;
 
 function requiredInjection (node){
   if(n.Identifier.check(node)) return node.name;

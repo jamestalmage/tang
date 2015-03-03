@@ -3,7 +3,7 @@ var hasAnnotation = require('../utils/hasAnnotation');
 module.exports = createInjector();
 module.exports.create = createInjector;
 
-var types = require('ast-types');
+var types = require('recast').types;
 var n = types.namedTypes;
 var b = types.builders;
 

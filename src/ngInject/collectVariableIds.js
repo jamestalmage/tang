@@ -1,6 +1,6 @@
 module.exports = collectVariableIds;
 
-var types = require('ast-types');
+var types = require('recast').types;
 var n = types.namedTypes;
 var b = types.builders;
 var requiredInjection = require('../utils/requiredInjection');

@@ -1,7 +1,7 @@
 describe('ngInject - build handler code', function() {
   var print = require('../lib/print');
   var buildInjection = require('../../src/ngInject/buildInjectionCode');
-  var b = require('ast-types').builders;
+  var b = require('recast').types.builders;
 
   xit('creates a beforeEach(inject(ids)) method',function(){
 

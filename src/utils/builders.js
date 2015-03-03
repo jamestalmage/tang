@@ -1,4 +1,4 @@
-var types = require('ast-types');
+var types = require('recast').types;
 var assert = require('assert');
 var n = types.namedTypes;
 var b = types.builders;

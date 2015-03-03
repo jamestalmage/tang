@@ -2,7 +2,7 @@ var hasAnnotation = require('../utils/hasAnnotation');
 module.exports = create();
 
 module.exports.create = create;
-var types = require('ast-types');
+var types = require('recast').types;
 var n = types.namedTypes;
 
 
