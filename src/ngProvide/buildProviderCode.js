@@ -3,7 +3,7 @@ module.exports = buildNgProvide;
 var types = require('ast-types');
 var n = types.namedTypes;
 var b = types.builders;
-var s = require('../utils/shared');
+var s = require('../utils/builders');
 var assert = require('assert');
 
 function buildNgProvide(ids, inits){
