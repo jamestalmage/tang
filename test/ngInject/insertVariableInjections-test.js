@@ -11,6 +11,7 @@ describe('ngInject - perform ast transformation', function() {
     var output = util.print(insertVariableInjections(input));
     expect(output).to.equal([
       'var c, d;',
+      '',
       '// @ngInject',
       'var a, b;',
       "",

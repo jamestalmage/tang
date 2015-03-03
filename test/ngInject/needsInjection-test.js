@@ -37,7 +37,7 @@ describe('ngInject - needs Injection', function() {
 
   });
 
-  it('false if it contains an assignment', function () {
+  it('false if it contains an assignment to a literal', function () {
     var code = [
       "/* @ngInject */",
       "var b = 'hello';"

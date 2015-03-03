@@ -1,8 +1,11 @@
 describe('ngInject - build handler code', function() {
   var print = require('../lib/print');
   var buildInjection = require('../../src/ngInject/buildInjectionCode');
+  var b = require('ast-types').builders;
 
-  it('creates a beforeEach(inject(ids)) method',function(){
+  xit('creates a beforeEach(inject(ids)) method',function(){
+
+
     var actual = print(buildInjection(['a','b','c']));
     expect(actual).to.equal([
       "beforeEach(inject(function(_a_, _b_, _c_) {",

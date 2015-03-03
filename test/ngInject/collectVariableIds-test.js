@@ -1,6 +1,10 @@
 describe('ngInject - collect variable Ids', function() {
   var parse = require('../lib/parse');
-  var collectVariableIds = require('../../src/ngInject/collectVariableIds');
+  var _collectVariableIds = require('../../src/ngInject/collectVariableIds');
+
+  function collectVariableIds(node){
+    return  _collectVariableIds(node).ids.map(function(node){return node.name;});
+  }
 
   it('a, b, c',function(){
     expect(collectVariableIds(parse('var a, b, c;').program.body[0]))

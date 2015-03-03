@@ -4,6 +4,7 @@ module.exports = create();
 module.exports.create = create;
 var types = require('ast-types');
 var n = types.namedTypes;
+var requiredInjection = require('../utils/requiredInjection');
 
 
 function create(regexp, logger){
@@ -26,7 +27,7 @@ function create(regexp, logger){
       logger.logRejectedNode('does not contain an NgInit comment', node);
       return false;
     }
-    if(hasInit(node)){
+    if(hasNonInjectableInit(node)){
       logger.logRejectedNode('contains a variable initialization', node);
       return false;
     }
@@ -34,12 +35,15 @@ function create(regexp, logger){
     return true;
   }
 
-  function hasInit(node){
+  function hasNonInjectableInit(node){
     n.VariableDeclaration.assert(node);
     var found = false;
     types.visit(node,{
       visitVariableDeclarator:function(path){
-        if(path.node.init !== null) found = true;
+        var init = path.node.init;
+        if(init !== null){
+          found = found || (requiredInjection(init) === null);
+        }
         return false;
       }
     });

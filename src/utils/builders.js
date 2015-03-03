@@ -29,25 +29,8 @@ function injectCall(params, statements){
   );
 }
 
-function assignmentStatements(lhs, rhs, array){
-  assert.equal(lhs.length, rhs.length, 'lhs and rhs must have matching lengths');
-  array = array || [];
-  for(var i = 0; i < lhs.length; i++){
-    array.push(assignmentStatement(lhs[i],rhs[i]));
-  }
-  return array;
-}
-
 function assignmentStatement(lhs, rhs){
   return b.expressionStatement(b.assignmentExpression('=',lhs,rhs));
-}
-
-function wrapVariableId(id){
-  return '_' + id + '_';
-}
-
-function wrapVariableIds(ids){
-  return ids.map(wrapVariableId);
 }
 
 function variableDeclaration(ids){
@@ -117,10 +100,7 @@ module.exports = {
   injectCall: injectCall,
   beforeEachCall: beforeEachExp,
   beforeEachStmt: beforeEachStmt,
-  assignmentStatements: assignmentStatements,
   assignmentStatement: assignmentStatement,
-  wrapVariableId: wrapVariableId,
-  wrapVariableIds: wrapVariableIds,
   variableDeclaration: variableDeclaration,
   identifiers: identifiers,
   provideValue: provideValue,

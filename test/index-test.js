@@ -21,6 +21,7 @@ describe('main', function() {
     var output = process(input);
     expect(output.code).to.equal([
       'var e, f;',
+      '',
       '// @ngInject',
       'var c, d;',
       "",
@@ -72,6 +73,7 @@ describe('main', function() {
     var output = process(input,{ngProvide:false});
     expect(output.code).to.equal([
       'var e, f;',
+      '',
       '// @ngInject',
       'var c, d;',
       "",
@@ -97,6 +99,7 @@ describe('main', function() {
     var output = process(input,{sourceMap:true, sourceFileName:'src.js'});
     expect(output.code).to.equal([
       'var e, f;',
+      '',
       '// @ngInject',
       'var c, d;',
       "",

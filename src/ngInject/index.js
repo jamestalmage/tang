@@ -3,6 +3,7 @@ module.exports.create = createInjector;
 
 var types = require('ast-types');
 var n = types.namedTypes;
+var s = require('../utils/builders');
 
 function createInjector (regexp, logger) {
 
@@ -17,8 +18,10 @@ function createInjector (regexp, logger) {
       visitVariableDeclaration: function (path) {
         var node = path.node;
         if (needsInjection(node)) {
-          var ids = collectVariableIds(node);
-          path.insertAfter(buildInjectionCode(ids));
+          var obj = collectVariableIds(node);
+          var decl = s.variableDeclaration(obj.ids);
+          decl.comments = node.comments;
+          path.replace(decl, buildInjectionCode(obj));
         }
         return false;
       }
