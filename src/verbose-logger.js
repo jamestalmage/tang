@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   logRejectedNode:function(reasons, node) {
     if (Array.isArray(reasons)) {

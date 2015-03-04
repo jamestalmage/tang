@@ -1,3 +1,5 @@
+'use strict';
+
 describe('ngInject - basic usage - ', function() {
   var _ngInject, ngInject;
   var proxyquire = require('proxyquire');

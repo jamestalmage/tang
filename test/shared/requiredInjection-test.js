@@ -1,3 +1,5 @@
+'use strict';
+
 describe('requiredInjection', function() {
   var parse = require('../lib').parse;
 

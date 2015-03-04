@@ -1,3 +1,5 @@
+'use strict';
+
 describe('ngInject - perform ast transformation', function() {
   var util = require('../lib');
   var insertVariableInjections = require('../../src/ngInject');

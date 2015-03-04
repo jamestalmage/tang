@@ -1,3 +1,5 @@
+'use strict';
+
 var hasAnnotation = require('../utils/hasAnnotation');
 
 module.exports = createInjector();

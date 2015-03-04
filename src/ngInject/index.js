@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = createInjector();
 module.exports.create = createInjector;
 

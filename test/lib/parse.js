@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = parse;
 
 var assert = require('assert');

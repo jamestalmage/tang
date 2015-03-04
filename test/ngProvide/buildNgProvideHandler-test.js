@@ -1,3 +1,5 @@
+'use strict';
+
 describe('ngProvide - build handler code', function() {
   var lib = require('../lib');
   var buildNgProvider = require('../../src/ngProvide/buildProviderCode');

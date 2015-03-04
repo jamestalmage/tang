@@ -1,3 +1,5 @@
+'use strict';
+
 describe('shared utils', function() {
   var lib = require('../lib');
   var s = require('../../src/utils/builders');

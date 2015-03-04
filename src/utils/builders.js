@@ -1,3 +1,5 @@
+'use strict';
+
 var types = require('recast').types;
 var assert = require('assert');
 var n = types.namedTypes;

@@ -1,3 +1,5 @@
+'use strict';
+
 describe('main', function() {
   var process, input, pathToIndex, index;
   var proxyquire    = require('proxyquire');

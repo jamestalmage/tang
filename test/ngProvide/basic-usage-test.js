@@ -1,3 +1,5 @@
+'use strict';
+
 describe('ngProvide - basic usage', function() {
   var _ngProvide, ngProvide;
   var proxyquire = require('proxyquire');

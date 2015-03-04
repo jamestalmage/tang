@@ -1,3 +1,5 @@
+'use strict';
+
 describe('ngProvide - needs injection', function() {
   var parse = require('../lib').parse;
   var needsInjection = require('../../src/ngProvide/needsInjection');

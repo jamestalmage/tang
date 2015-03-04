@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = collectVariableIds;
 
 var types = require('recast').types;

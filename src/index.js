@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = transform;
 
 var recast = require('recast');

@@ -1,3 +1,5 @@
+'use strict';
+
 describe('ngInject - collect variable Ids', function() {
   var parse = require('../lib/parse');
   var _collectVariableIds = require('../../src/ngInject/collectVariableIds');

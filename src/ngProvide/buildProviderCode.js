@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = buildNgProvide;
 
 var types = require('recast').types;
