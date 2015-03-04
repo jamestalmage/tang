@@ -4,34 +4,35 @@ var recast = require('recast');
 var ngProvide = require('./ngProvide/index');
 var ngInject = require('./ngInject');
 var convert = require('convert-source-map');
+var merge = require('merge');
 
 function transform(src, suppliedOptions){
-  var options = {};
-  suppliedOptions = suppliedOptions || {};
-  if(suppliedOptions.sourceMap){
-    if(suppliedOptions.sourceFileName) options.sourceFileName = suppliedOptions.sourceFileName;
-    if(suppliedOptions.sourceFileName && !suppliedOptions.sourceMapName){
-      options.sourceMapName = suppliedOptions.sourceFileName + '.map';
+  var options = merge({
+    readSourceMapComments:true,
+    ngInject:true,
+    ngProvide:true
+  },suppliedOptions);
+  if(options.sourceMap){
+    if(options.sourceFileName && !options.sourceMapName){
+      options.sourceMapName = options.sourceFileName + '.map';
     }
-    if(suppliedOptions.inputSourceMap){
-      options.inputSourceMap = suppliedOptions.inputSourceMap;
-    } else if(suppliedOptions.readSourceMapComments !== false) {
+    if(!options.inputSourceMap && options.readSourceMapComments) {
       var inputMap = convert.fromSource(src);
       if(inputMap) options.inputSourceMap = inputMap.toObject();
     }
   }
-  if(suppliedOptions.esprima) options.esprima = suppliedOptions.esprima;
-  var doNgInject = suppliedOptions.hasOwnProperty('ngInject') ? suppliedOptions.ngInject : true;
-  var doNgProvide = suppliedOptions.hasOwnProperty('ngProvide') ? suppliedOptions.ngProvide : true;
+  else {
+    delete options.sourceFileName;
+  }
   var ast = recast.parse(src, options);
-  if(doNgProvide) ngProvide(ast);
-  if(doNgInject) ngInject(ast);
+  if(options.ngProvide) ngProvide(ast);
+  if(options.ngInject) ngInject(ast);
   var result = recast.print(ast, options);
   var transformedCode = result.code;
   var map = null;
-  if(suppliedOptions.sourceMap){
+  if(options.sourceMap){
     map = result.map;
-    if(result.map && suppliedOptions.appendSourceMapComment){
+    if(result.map && options.appendSourceMapComment){
       transformedCode = convert.removeComments(transformedCode);
       transformedCode += '\n' + convert.fromObject(result.map).toComment() + '\n';
     }

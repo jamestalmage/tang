@@ -202,13 +202,10 @@ describe('main', function() {
 
     process('var a;',{sourceMap:true, sourceFileName:'input.src',inputSourceMap:{a:'a',b:'b'}});
 
-    expect(parse).to.have.been.calledWith(
-      'var a;',
-      {
-        sourceFileName:'input.src',
-        sourceMapName:'input.src.map',
-        inputSourceMap:{a:'a',b:'b'}
-      }
-    );
+    var args = parse.args[0];
+    expect(args[0]).to.equal('var a;');
+    expect(args[1]).to.have.property('sourceFileName').equal('input.src');
+    expect(args[1]).to.have.property('sourceMapName').equal('input.src.map');
+    expect(args[1]).to.have.property('inputSourceMap').eql({a:'a',b:'b'});
   });
 });

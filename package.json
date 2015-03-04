@@ -7,7 +7,6 @@
     "lint": "jshint src/** test/**",
     "test": "npm run lint && npm run cover",
     "test-recast": "mocha mocha-globals.js test/*-test.js test/**/*-test.js",
-    "test-esprima": "NG_UTILS_PARSER=ESPRIMA mocha mocha-globals.js test/*-test.js test/**/*-test.js",
     "test-esprima": "NG_UTILS_PARSER=ACORN mocha mocha-globals.js test/*-test.js test/**/*-test.js",
     "watch": "mocha -w --growl mocha-globals.js test/*-test.js  test/**/*-test.js",
     "cover": "rm -rf coverage && npm run cover-recast && npm run cover-esprima && npm run cover-acorn && node combine-coverage",
@@ -30,8 +29,9 @@
   },
   "homepage": "https://github.com/jamestalmage/angular-test-utils",
   "dependencies": {
-    "recast": "^0.10.1",
-    "convert-source-map": "git://github.com/jamestalmage/convert-source-map#4397e24b9a41b19b964ea0a4b6eb0858d6a3450f"
+    "convert-source-map": "git://github.com/jamestalmage/convert-source-map#4397e24b9a41b19b964ea0a4b6eb0858d6a3450f",
+    "merge": "^1.2.0",
+    "recast": "^0.10.1"
   },
   "devDependencies": {
     "acorn": "^0.12.0",
