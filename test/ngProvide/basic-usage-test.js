@@ -1,10 +1,13 @@
 describe('ngProvide - basic usage', function() {
-  var ngProvide;
+  var _ngProvide, ngProvide;
   var proxyquire = require('proxyquire');
   var sinon = require('sinon');
 
   beforeEach(function (){
-    ngProvide = require('../../src/index');
+    _ngProvide = require('../../src/index');
+    ngProvide = function(code,opts){
+      return _ngProvide(code, require('../lib/parse').setEsprimaProperty(opts));
+    };
   });
 
   it('will not create sourcemap by default', function() {

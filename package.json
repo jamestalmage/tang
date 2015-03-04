@@ -6,12 +6,14 @@
   "scripts": {
     "lint": "jshint src/** test/**",
     "test": "npm run lint && npm run cover",
-    "test-nohack": "mocha mocha-globals.js test/*-test.js test/**/*-test.js",
-    "test-hack": "RECAST_COMMENT_HACK=true mocha mocha-globals.js test/*-test.js test/**/*-test.js",
+    "test-recast": "mocha mocha-globals.js test/*-test.js test/**/*-test.js",
+    "test-esprima": "NG_UTILS_PARSER=ESPRIMA mocha mocha-globals.js test/*-test.js test/**/*-test.js",
+    "test-esprima": "NG_UTILS_PARSER=ACORN mocha mocha-globals.js test/*-test.js test/**/*-test.js",
     "watch": "mocha -w --growl mocha-globals.js test/*-test.js  test/**/*-test.js",
-    "cover": "rm -rf coverage && npm run cover-nohack && npm run cover-hack && node combine-coverage",
-    "cover-nohack": "istanbul cover --report none --dir ./coverage/nohack _mocha -- mocha-globals.js test/*-test.js  test/**/*-test.js",
-    "cover-hack": "RECAST_COMMENT_HACK=true istanbul cover --report none --dir ./coverage/hack _mocha -- mocha-globals.js test/*-test.js  test/**/*-test.js"
+    "cover": "rm -rf coverage && npm run cover-recast && npm run cover-esprima && node combine-coverage",
+    "cover-recast": "istanbul cover --report none --dir ./coverage/nohack _mocha -- mocha-globals.js test/*-test.js  test/**/*-test.js",
+    "cover-esprima": "NG_UTILS_PARSER=ESPRIMA istanbul cover --report none --dir ./coverage/hack _mocha -- mocha-globals.js test/*-test.js  test/**/*-test.js",
+    "cover-acorn": "NG_UTILS_PARSER=ACORN istanbul cover --report none --dir ./coverage/hack _mocha -- mocha-globals.js test/*-test.js  test/**/*-test.js"
   },
   "repository": {
     "type": "git",
@@ -32,6 +34,7 @@
     "convert-source-map": "git://github.com/jamestalmage/convert-source-map#4397e24b9a41b19b964ea0a4b6eb0858d6a3450f"
   },
   "devDependencies": {
+    "acorn": "^0.12.0",
     "chai": "^2.1.0",
     "coveralls": "^2.11.2",
     "esprima-fb": "^12001.1.0-dev-harmony-fb",

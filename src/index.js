@@ -20,6 +20,7 @@ function transform(src, suppliedOptions){
       if(inputMap) options.inputSourceMap = inputMap.toObject();
     }
   }
+  if(suppliedOptions.esprima) options.esprima = suppliedOptions.esprima;
   var doNgInject = suppliedOptions.hasOwnProperty('ngInject') ? suppliedOptions.ngInject : true;
   var doNgProvide = suppliedOptions.hasOwnProperty('ngProvide') ? suppliedOptions.ngProvide : true;
   var ast = recast.parse(src, options);

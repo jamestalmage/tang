@@ -1,10 +1,13 @@
 describe('ngInject - basic usage - ', function() {
-  var ngInject;
+  var _ngInject, ngInject;
   var proxyquire = require('proxyquire');
   var sinon = require('sinon');
 
   beforeEach(function (){
-    ngInject = require('../../src/index');
+    _ngInject = require('../../src/index');
+    ngInject = function(code,opts){
+      return _ngInject(code, require('../lib/parse').setEsprimaProperty(opts));
+    };
   });
 
   it('will insert injections for provided variables', function() {

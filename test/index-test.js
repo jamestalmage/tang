@@ -3,11 +3,14 @@ describe('main', function() {
   var proxyquire    = require('proxyquire');
   var sinon         = require('sinon');
   var convert       = require('convert-source-map');
-  var input, pathToIndex;
+  var input, pathToIndex, index;
 
   beforeEach(function (){
     pathToIndex = '../src/index';
-    process = require(pathToIndex);
+    index = require(pathToIndex);
+    process = function(src,opts){
+      return index(src, require('./lib/parse').setEsprimaProperty(opts));
+    };
     input = [
       'var e, f;',
       '// @ngInject',
