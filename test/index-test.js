@@ -98,6 +98,33 @@ describe('main', function() {
     expect(output.map).to.equal(null);
   });
 
+  it('will run all injections with sensible defaults if passed no options', function () {
+    var code = index(input).code;
+    expect(code).to.equal([
+      'var e, f;',
+      '',
+      '// @ngInject',
+      'var c, d;',
+      "",
+      "beforeEach(inject(function(_c_, _d_) {",
+      "  c = _c_;",
+      "  d = _d_;",
+      "}));",
+      '',
+      '// @ngProvide',
+      'var a, b;',
+      '',
+      "beforeEach(function() {",
+      "  angular.mock.module(function($provide) {",
+      "    a = \"a\";",
+      "    b = \"b\";",
+      "    $provide.value(\"a\", a);",
+      "    $provide.value(\"b\", b);",
+      "  });",
+      "});"
+    ].join('\n'));
+  });
+
   it('will create a sourcemap if sourceFileName is set', function() {
     var output = process(input,{sourceMap:true, sourceFileName:'src.js'});
     expect(output.code).to.equal([

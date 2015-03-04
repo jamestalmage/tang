@@ -58,8 +58,15 @@ function esprimaProperty(){
       return require('esprima-fb').parse(code, options);
     };
 
-    case 'acorn': return function(code){
-      return require('acorn').parse(code);
+    case 'acorn': return function(code,options){
+      var comments = [];
+      var ast = require('acorn').parse(code,{
+        locations: true,
+        ranges: true,
+        onComment: comments
+      });
+      ast.comments = comments;
+      return ast;
     };
   }
 
