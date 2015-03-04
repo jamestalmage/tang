@@ -3,10 +3,10 @@ describe('ngProvide - needs injection', function() {
   var needsInjection = require('../../src/ngProvide/needsInjection');
   var assert = require('assert');
 
-  it('true when its the first statement', function () {
+  it('true when its the first statement', function() {
     var code = [
-      "/* @ngProvide */",
-      "var a = sinon.spy();"
+      '/* @ngProvide */',
+      'var a = sinon.spy();'
     ];
 
     assert(needsInjection(
@@ -14,11 +14,11 @@ describe('ngProvide - needs injection', function() {
     ));
   });
 
-  it('true when its the second statement', function () {
+  it('true when its the second statement', function() {
     var code = [
-      "var b;",
-      "/* @ngProvide */",
-      "var a = sinon.spy();"
+      'var b;',
+      '/* @ngProvide */',
+      'var a = sinon.spy();'
     ];
 
     assert(needsInjection(
@@ -26,9 +26,9 @@ describe('ngProvide - needs injection', function() {
     ));
   });
 
-  it('false if there is no annotation', function () {
+  it('false if there is no annotation', function() {
     var code = [
-      "var a = sinon.spy();"
+      'var a = sinon.spy();'
     ];
 
     assert(!needsInjection(
@@ -37,10 +37,10 @@ describe('ngProvide - needs injection', function() {
 
   });
 
-  it('false if it does contains an assignment', function () {
+  it('false if it does contains an assignment', function() {
     var code = [
-      "/* @ngProvide */",
-      "var b;"
+      '/* @ngProvide */',
+      'var b;'
     ];
 
     assert(!needsInjection(
@@ -48,12 +48,12 @@ describe('ngProvide - needs injection', function() {
     ));
   });
 
-  it('false if it is not a variable declaration', function () {
+  it('false if it is not a variable declaration', function() {
     var code = [
-      "/* @ngProvide */",
-      "function getArgs() {",
-      "  return true",
-      "}"
+      '/* @ngProvide */',
+      'function getArgs() {',
+      '  return true',
+      '}'
     ];
 
     assert(!needsInjection(

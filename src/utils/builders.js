@@ -3,49 +3,49 @@ var assert = require('assert');
 var n = types.namedTypes;
 var b = types.builders;
 
-function sliceArgs(args){
+function sliceArgs(args) {
   return Array.prototype.slice.call(args);
 }
 
-function beforeEachStmt(stmts){
+function beforeEachStmt(stmts) {
   return b.expressionStatement(
     beforeEachExp(stmts)
   );
 }
 
-function beforeEachExp(args){
+function beforeEachExp(args) {
   return b.callExpression(
     b.identifier('beforeEach'),
     args
   );
 }
 
-function injectCall(params, statements){
+function injectCall(params, statements) {
   return b.callExpression(
     b.identifier('inject'),
     [
-      b.functionExpression( null, params, b.blockStatement(statements))
+      b.functionExpression(null, params, b.blockStatement(statements))
     ]
   );
 }
 
-function assignmentStatement(lhs, rhs){
-  return b.expressionStatement(b.assignmentExpression('=',lhs,rhs));
+function assignmentStatement(lhs, rhs) {
+  return b.expressionStatement(b.assignmentExpression('=', lhs, rhs));
 }
 
-function variableDeclaration(ids){
+function variableDeclaration(ids) {
   return b.variableDeclaration(
     'var',
-    ids.map(function(id){
+    ids.map(function(id) {
       return b.variableDeclarator(id, null);
     })
   );
 }
 
-function provideValue(id, val){
+function provideValue(id, val) {
   n.Literal.assert(id);
 
-  var $parse_value = b.memberExpression(
+  var $parseValueExp = b.memberExpression(
     b.identifier('$provide'),
     b.identifier('value'),
     false
@@ -53,20 +53,20 @@ function provideValue(id, val){
 
   return b.expressionStatement(
     b.callExpression(
-      $parse_value,
-      [ id, val ]
+      $parseValueExp,
+      [id, val]
     )
   );
 }
 
 function moduleStmt() {
   return b.expressionStatement(
-    moduleExp.apply(null,sliceArgs(arguments))
+    moduleExp.apply(null, sliceArgs(arguments))
   );
 }
 
 function moduleExp() {
-  var angular_mock__module = b.memberExpression(
+  var mockModule = b.memberExpression(
     b.memberExpression(
       b.identifier('angular'),
       b.identifier('mock'),
@@ -77,12 +77,12 @@ function moduleExp() {
   );
 
   return b.callExpression(
-      angular_mock__module,
+      mockModule,
       sliceArgs(arguments)
   );
 }
 
-function moduleCb(params,stmts) {
+function moduleCb(params, stmts) {
   var functionExp = b.functionExpression(
     null,
     params,
@@ -92,7 +92,7 @@ function moduleCb(params,stmts) {
   return moduleStmt(functionExp);
 }
 
-function identifiers(ids){
+function identifiers(ids) {
   return ids.map(b.identifier.bind(b));
 }
 
@@ -108,4 +108,3 @@ module.exports = {
   moduleStmt: moduleStmt,
   moduleCb: moduleCb
 };
-

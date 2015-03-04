@@ -3,10 +3,10 @@ describe('ngInject - needs Injection', function() {
   var needsInjection = require('../../src/ngInject/needsInjection');
   var assert = require('assert');
 
-  it('true when its the first statement', function () {
+  it('true when its the first statement', function() {
     var code = [
-      "/* @ngInject */",
-      "var a;"
+      '/* @ngInject */',
+      'var a;'
     ];
 
     assert(needsInjection(
@@ -14,11 +14,11 @@ describe('ngInject - needs Injection', function() {
     ));
   });
 
-  it('true when its the second statement', function () {
+  it('true when its the second statement', function() {
     var code = [
-      "var b;",
-      "/* @ngInject */",
-      "var a;"
+      'var b;',
+      '/* @ngInject */',
+      'var a;'
     ];
 
     assert(needsInjection(
@@ -26,9 +26,9 @@ describe('ngInject - needs Injection', function() {
     ));
   });
 
-  it('false if there is no annotation', function () {
+  it('false if there is no annotation', function() {
     var code = [
-      "var a;"
+      'var a;'
     ];
 
     assert(!needsInjection(
@@ -37,10 +37,10 @@ describe('ngInject - needs Injection', function() {
 
   });
 
-  it('false if it contains an assignment to a literal', function () {
+  it('false if it contains an assignment to a literal', function() {
     var code = [
-      "/* @ngInject */",
-      "var b = 'hello';"
+      '/* @ngInject */',
+      'var b = "hello";'
     ];
 
     assert(!needsInjection(
@@ -48,12 +48,12 @@ describe('ngInject - needs Injection', function() {
     ));
   });
 
-  it('false if it is not a variable declaration', function () {
+  it('false if it is not a variable declaration', function() {
     var code = [
-      "/* @ngInject */",
-      "function getArgs() {",
-      "  return true",
-      "}"
+      '/* @ngInject */',
+      'function getArgs() {',
+      '  return true',
+      '}'
     ];
 
     assert(!needsInjection(

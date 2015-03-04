@@ -4,4 +4,4 @@ module.exports = {
   logCode:noop
 };
 
-function noop(){}
+function noop() {}

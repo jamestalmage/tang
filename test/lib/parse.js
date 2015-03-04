@@ -3,10 +3,8 @@ module.exports = parse;
 var assert = require('assert');
 var recast = require('recast');
 
-
 var currentParser;
 logAndStoreParserSetting();
-
 
 /**
  * Wrapper for recast.parse which optionally uses:
@@ -25,62 +23,67 @@ logAndStoreParserSetting();
  *
  * @param {string|string[]} code to be parsed. Arrays will be joined using `.join('\n')`
  */
-function parse(code){
-  if(Array.isArray(code)) code = code.join('\n');
-  assert.equal(typeof code, "string", "code is wrong type, must be {string|string[]}");
+function parse(code) {
+  if (Array.isArray(code)) {
+    code = code.join('\n');
+  }
+  assert.equal(typeof code, 'string', 'code must be {string|string[]}');
   var prop = esprimaProperty();
   return prop ? recast.parse(code, {esprima:{parse:prop}}) : recast.parse(code);
 }
 
-function setEsprimaProperty(opts){
+function setEsprimaProperty(opts) {
   opts = opts || {};
   var prop = esprimaProperty();
-  if(prop){
+  if (prop) {
     opts.esprima = {parse:prop};
   }
   return opts;
 }
-
 parse.setEsprimaProperty = setEsprimaProperty;
-parse.esprimaProperty = esprimaProperty;
 
-function esprimaProperty(){
-
-  if(getEnv() !== currentParser){
+function esprimaProperty() {
+  if (getEnv() !== currentParser) {
     logAndStoreParserSetting(true);
   }
 
   switch (currentParser){
-    case 'recast': return null;
+    case 'recast':
+      return null;
 
-    case 'esprima': return function(code, options){
-      options.attachComment = true;
-      return require('esprima-fb').parse(code, options);
-    };
+    case 'esprima':
+      return function(code, options) {
+        options.attachComment = true;
+        return require('esprima-fb').parse(code, options);
+      };
 
-    case 'acorn': return function(code,options){
-      var comments = [];
-      var ast = require('acorn').parse(code,{
-        locations: true,
-        ranges: true,
-        onComment: comments
-      });
-      ast.comments = comments;
-      return ast;
-    };
+    case 'acorn':
+      return function(code, options) {
+        var comments = [];
+        var ast = require('acorn').parse(code, {
+          locations: true,
+          ranges: true,
+          onComment: comments
+        });
+        ast.comments = comments;
+        return ast;
+      };
   }
 
-  throw new Error('Unacceptable value for process.env.NG_UTILS_PARSER: ' + process.env.NG_UTILS_PARSER);
+  throw new Error(
+    'Unacceptable value for process.env.NG_UTILS_PARSER: ' +
+    process.env.NG_UTILS_PARSER
+  );
 }
+parse.esprimaProperty = esprimaProperty;
 
-
-function logAndStoreParserSetting(changed){
+function logAndStoreParserSetting(changed) {
   currentParser = getEnv();
   var message = changed ? ['env.NG_UTILS_PARSER changed! '] : [];
   message.push('using ', currentParser);
   console.log(message.join(''));
 }
 
-function getEnv(){
+function getEnv() {
   return (process.env.NG_UTILS_PARSER || 'recast').toLowerCase();
 }

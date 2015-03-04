@@ -1,36 +1,37 @@
 module.exports = {
-  logRejectedNode:function(reasons, node){
-    if(Array.isArray(reasons)) reasons = reasons.join(', ');
+  logRejectedNode:function(reasons, node) {
+    if (Array.isArray(reasons)) {
+      reasons = reasons.join(', ');
+    }
     reasons = reasons || '';
     logNode('rejected - ' + reasons, node);
   },
-  logAcceptedNode:function(node){
+  logAcceptedNode:function(node) {
     logNode('accepted ', node);
   },
-  logCode:function(code){
+  logCode:function(code) {
     logNode('', code);
   }
 };
 
-function logNode(message, node){
+function logNode(message, node) {
   prefix(message);
   var code = require('recast').print(node).code;
   console.log(code);
   suffix();
 }
 
-function logCode(message, code){
+function logCode(message, code) {
   prefix(message);
   console.log(code);
   suffix();
 }
 
-
-function prefix(message){
-  console.log('---------------'+ message + '------------------------------');
+function prefix(message) {
+  console.log('---------------' + message + '----------------------------');
 }
 
-function suffix(){
+function suffix() {
   console.log('--------------------------------------------------------');
   console.log('\n\n');
 }

@@ -6,35 +6,41 @@ var ngInject = require('./ngInject');
 var convert = require('convert-source-map');
 var merge = require('merge');
 
-function transform(src, suppliedOptions){
+function transform(src, suppliedOptions) {
   var options = merge({
     readSourceMapComments:true,
     ngInject:true,
     ngProvide:true
-  },suppliedOptions);
-  if(options.sourceMap){
-    if(options.sourceFileName && !options.sourceMapName){
+  }, suppliedOptions);
+  if (options.sourceMap) {
+    if (options.sourceFileName && !options.sourceMapName) {
       options.sourceMapName = options.sourceFileName + '.map';
     }
-    if(!options.inputSourceMap && options.readSourceMapComments) {
+    if (!options.inputSourceMap && options.readSourceMapComments) {
       var inputMap = convert.fromSource(src);
-      if(inputMap) options.inputSourceMap = inputMap.toObject();
+      if (inputMap) {
+        options.inputSourceMap = inputMap.toObject();
+      }
     }
-  }
-  else {
+  } else {
     delete options.sourceFileName;
   }
   var ast = recast.parse(src, options);
-  if(options.ngProvide) ngProvide(ast);
-  if(options.ngInject) ngInject(ast);
+  if (options.ngProvide) {
+    ngProvide(ast);
+  }
+  if (options.ngInject) {
+    ngInject(ast);
+  }
   var result = recast.print(ast, options);
   var transformedCode = result.code;
   var map = null;
-  if(options.sourceMap){
+  if (options.sourceMap) {
     map = result.map;
-    if(result.map && options.appendSourceMapComment){
+    if (result.map && options.appendSourceMapComment) {
       transformedCode = convert.removeComments(transformedCode);
-      transformedCode += '\n' + convert.fromObject(result.map).toComment() + '\n';
+      map = convert.fromObject(result.map);
+      transformedCode += '\n' + map.toComment() + '\n';
     }
   }
   return {

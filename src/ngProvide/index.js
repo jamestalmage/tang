@@ -20,34 +20,33 @@ function createInjector (regexp, logger) {
 
   function addVariableInjections (ast) {
     types.visit(ast, {
-      visitVariableDeclaration: function (path) {
+      visitVariableDeclaration: function(path) {
         var node = path.node;
         if (needsInjection(node)) {
-          var idInits = collectVariableIdsAndInits(node);
-          var ids = idInits.ids, inits = idInits.inits;
+          var obj = collectVariableIdsAndInits(node);
 
           var decl = b.variableDeclaration(
             'var',
-            ids.map(function(id){
-              return b.variableDeclarator(id,null);
+            obj.ids.map(function(id) {
+              return b.variableDeclarator(id, null);
             })
           );
 
           decl.comments = node.comments;
 
-
-          path.replace(decl, buildInjection(ids, inits));
+          path.replace(decl, buildInjection(obj.ids, obj.inits));
         }
         return false;
       },
       visitAssignmentExpression: function(path) {
         var node = path.node;
-        var parent = path.parent, parentNode = parent && parent.node;
-        if(
+        var parent = path.parent;
+        var parentNode = parent && parent.node;
+        if (
           parentNode &&
           n.ExpressionStatement.check(parentNode) &&
           hasNgProvideAnnotation(parentNode)
-        ){
+        ) {
           var injection = buildInjection([node.left], [node.right]);
           injection.comments = parentNode.comments;
           parent.replace(injection);

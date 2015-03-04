@@ -6,8 +6,7 @@ var types = require('recast').types;
 var n = types.namedTypes;
 var requiredInjection = require('../utils/requiredInjection');
 
-
-function create(regexp, logger){
+function create(regexp, logger) {
 
   regexp = regexp ||  /^\s*@ngInject\s*$/;
 
@@ -17,17 +16,16 @@ function create(regexp, logger){
 
   return getsInjection;
 
-
-  function getsInjection(node){
-    if(!n.VariableDeclaration.check(node)){
+  function getsInjection(node) {
+    if (!n.VariableDeclaration.check(node)) {
       logger.logRejectedNode('not a VariableDeclaration', node);
       return false;
     }
-    if(!containsNgInjectAnnotation(node)){
+    if (!containsNgInjectAnnotation(node)) {
       logger.logRejectedNode('does not contain an NgInit comment', node);
       return false;
     }
-    if(hasNonInjectableInit(node)){
+    if (hasNonInjectableInit(node)) {
       logger.logRejectedNode('contains a variable initialization', node);
       return false;
     }
@@ -35,13 +33,13 @@ function create(regexp, logger){
     return true;
   }
 
-  function hasNonInjectableInit(node){
+  function hasNonInjectableInit(node) {
     n.VariableDeclaration.assert(node);
     var found = false;
-    types.visit(node,{
-      visitVariableDeclarator:function(path){
+    types.visit(node, {
+      visitVariableDeclarator:function(path) {
         var init = path.node.init;
-        if(init !== null){
+        if (init !== null) {
           found = found || (requiredInjection(init) === null);
         }
         return false;

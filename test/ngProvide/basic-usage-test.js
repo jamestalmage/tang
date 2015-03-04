@@ -3,9 +3,9 @@ describe('ngProvide - basic usage', function() {
   var proxyquire = require('proxyquire');
   var sinon = require('sinon');
 
-  beforeEach(function (){
+  beforeEach(function() {
     _ngProvide = require('../../src/index');
-    ngProvide = function(code,opts){
+    ngProvide = function(code, opts) {
       return _ngProvide(code, require('../lib/parse').setEsprimaProperty(opts));
     };
   });
@@ -23,41 +23,41 @@ describe('ngProvide - basic usage', function() {
       '// @ngProvide',
       'var a, b;',
       '',
-      "beforeEach(function() {",
-      "  angular.mock.module(function($provide) {",
-      "    a = \"a\";",
-      "    b = \"b\";",
-      "    $provide.value(\"a\", a);",
-      "    $provide.value(\"b\", b);",
-      "  });",
-      "});"
+      'beforeEach(function() {',
+      '  angular.mock.module(function($provide) {',
+      '    a = "a";',
+      '    b = "b";',
+      '    $provide.value("a", a);',
+      '    $provide.value("b", b);',
+      '  });',
+      '});'
     ].join('\n'));
 
     expect(output.map).to.equal(null);
   });
 
-  it('will work on assignment', function(){
+  it('will work on assignment', function() {
     var input = [
-      "var a, b;",
-      "// @ngProvide",
-      "a = \"a\";",
-      "",
-      "b = \"b\""
-    ].join("\n");
+      'var a, b;',
+      '// @ngProvide',
+      'a = "a";',
+      '',
+      'b = "b"'
+    ].join('\n');
     var output = ngProvide(input);
 
     var expected = [
-      "var a, b;",
-      "// @ngProvide",
-      "beforeEach(function() {",
-      "  angular.mock.module(function($provide) {",
-      "    a = \"a\";",
-      "    $provide.value(\"a\", a);",
-      "  });",
-      "});",
-      "",
-      "b = \"b\""
-    ].join("\n");
+      'var a, b;',
+      '// @ngProvide',
+      'beforeEach(function() {',
+      '  angular.mock.module(function($provide) {',
+      '    a = "a";',
+      '    $provide.value("a", a);',
+      '  });',
+      '});',
+      '',
+      'b = "b"'
+    ].join('\n');
 
     expect(output.code).to.equal(expected);
   });
@@ -68,23 +68,22 @@ describe('ngProvide - basic usage', function() {
       '// @ngProvide',
       'var a = "a", b = "b";'
     ].join('\n');
-    var output = ngProvide(input,{sourceMap:true,sourceFileName:'src.js'});
+    var output = ngProvide(input, {sourceMap:true, sourceFileName:'src.js'});
     expect(output.code).to.equal([
       'var c, d;',
       '',
       '// @ngProvide',
       'var a, b;',
       '',
-      "beforeEach(function() {",
-      "  angular.mock.module(function($provide) {",
-      "    a = \"a\";",
-      "    b = \"b\";",
-      "    $provide.value(\"a\", a);",
-      "    $provide.value(\"b\", b);",
-      "  });",
-      "});"
+      'beforeEach(function() {',
+      '  angular.mock.module(function($provide) {',
+      '    a = "a";',
+      '    b = "b";',
+      '    $provide.value("a", a);',
+      '    $provide.value("b", b);',
+      '  });',
+      '});'
     ].join('\n'));
     expect(!!output.map).to.equal(true);
   });
-
 });

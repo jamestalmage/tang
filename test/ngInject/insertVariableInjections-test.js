@@ -2,7 +2,7 @@ describe('ngInject - perform ast transformation', function() {
   var util = require('../lib');
   var insertVariableInjections = require('../../src/ngInject');
 
-  it('inserts a beforeEach',function(){
+  it('inserts a beforeEach', function() {
     var input = util.parse([
       'var c, d;',
       '// @ngInject',
@@ -14,11 +14,11 @@ describe('ngInject - perform ast transformation', function() {
       '',
       '// @ngInject',
       'var a, b;',
-      "",
-      "beforeEach(inject(function(_a_, _b_) {",
-      "  a = _a_;",
-      "  b = _b_;",
-      "}));"
+      '',
+      'beforeEach(inject(function(_a_, _b_) {',
+      '  a = _a_;',
+      '  b = _b_;',
+      '}));'
     ].join('\n'));
   });
 });

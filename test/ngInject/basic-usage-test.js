@@ -3,9 +3,9 @@ describe('ngInject - basic usage - ', function() {
   var proxyquire = require('proxyquire');
   var sinon = require('sinon');
 
-  beforeEach(function (){
+  beforeEach(function() {
     _ngInject = require('../../src/index');
-    ngInject = function(code,opts){
+    ngInject = function(code, opts) {
       return _ngInject(code, require('../lib/parse').setEsprimaProperty(opts));
     };
   });
@@ -19,15 +19,15 @@ describe('ngInject - basic usage - ', function() {
     expect(output.code).to.equal([
       '// @ngInject',
       'var a, b;',
-      "",
-      "beforeEach(inject(function(_a_, _b_) {",
-      "  a = _a_;",
-      "  b = _b_;",
-      "}));"
+      '',
+      'beforeEach(inject(function(_a_, _b_) {',
+      '  a = _a_;',
+      '  b = _b_;',
+      '}));'
     ].join('\n'));
   });
 
-  it('variable assignment will cause required variables to be injected', function() {
+  it('variable assignment causes injection of required variables', function() {
     var input = [
       '// @ngInject',
       'var a = b;'
@@ -36,14 +36,14 @@ describe('ngInject - basic usage - ', function() {
     expect(output.code).to.equal([
       '// @ngInject',
       'var a;',
-      "",
-      "beforeEach(inject(function(b) {",
-      "  a = b;",
-      "}));"
+      '',
+      'beforeEach(inject(function(b) {',
+      '  a = b;',
+      '}));'
     ].join('\n'));
   });
 
-  it('variable assigned to member of value not previously injected', function() {
+  it('assignment to member of value not previously injected', function() {
     var input = [
       '// @ngInject',
       'var a = b.name;'
@@ -52,10 +52,10 @@ describe('ngInject - basic usage - ', function() {
     expect(output.code).to.equal([
       '// @ngInject',
       'var a;',
-      "",
-      "beforeEach(inject(function(b) {",
-      "  a = b.name;",
-      "}));"
+      '',
+      'beforeEach(inject(function(b) {',
+      '  a = b.name;',
+      '}));'
     ].join('\n'));
   });
 
@@ -68,11 +68,11 @@ describe('ngInject - basic usage - ', function() {
     expect(output.code).to.equal([
       '// @ngInject',
       'var b, a;',
-      "",
-      "beforeEach(inject(function(_b_) {",
-      "  b = _b_;",
-      "  a = b.name;",
-      "}));"
+      '',
+      'beforeEach(inject(function(_b_) {',
+      '  b = _b_;',
+      '  a = b.name;',
+      '}));'
     ].join('\n'));
   });
 
@@ -92,7 +92,7 @@ describe('ngInject - basic usage - ', function() {
       '// @ngInject',
       'var a, b;'
     ].join('\n');
-    var output = ngInject(input,{sourceMap:true,sourceFileName:'src.js'});
+    var output = ngInject(input, {sourceMap:true, sourceFileName:'src.js'});
     expect(!!output.map).to.equal(true);
   });
 });
