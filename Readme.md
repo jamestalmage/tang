@@ -25,7 +25,7 @@ beforeEach(inject(function(_serviceB_, _$rootScope_) {
 // Finally - I can start writing tests!!
 ```
 
-All those `beforeEach` statements start to add up as your test count grows.
+All those `beforeEach` statements start to add up.
 They clutter the top of all your test files, and distract from what's important.
 
 ng-test-utils seeks to offer a better way:
