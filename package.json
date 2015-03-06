@@ -30,6 +30,8 @@
     "glob": "^4.4.0",
     "gulp": "^3.8.11",
     "gulp-clean": "^0.3.1",
+    "gulp-istanbul": "^0.6.0",
+    "gulp-mocha": "^2.0.0",
     "gulp-util": "^3.0.4",
     "istanbul": "^0.3.6",
     "jscs": "^1.11.3",
@@ -40,18 +42,14 @@
     "sinon-chai": "^2.7.0"
   },
   "scripts": {
-    "test": "npm run lint && npm run cover && npm run check-style && gulp",
+    "test": "npm run lint && npm run cover && npm run check-style && gulp test-plugin",
     "cover": "rm -rf coverage && npm run cover-recast && npm run cover-esprima && npm run cover-acorn && node combine-coverage",
     "watch": "mocha -w --growl mocha-globals.js test/*-test.js  test/**/*-test.js",
     "lint": "jshint src/** test/**",
     "check-style": "jscs test/** src/**",
-    "test-run": "mocha mocha-globals.js test/*-test.js test/**/*-test.js",
     "cover-run": "istanbul cover --report none --root ./src --dir ./coverage/$NG_UTILS_PARSER _mocha -- mocha-globals.js test/*-test.js test/**/*-test.js",
-    "test-recast": "NG_UTILS_PARSER=recast  npm run test-run",
-    "test-esprima": "NG_UTILS_PARSER=esprima npm run test-run",
-    "test-acorn": "NG_UTILS_PARSER=acorn   npm run test-run",
-    "cover-recast": "NG_UTILS_PARSER=recast  npm run cover-run",
-    "cover-esprima": "NG_UTILS_PARSER=esprima npm run cover-run",
-    "cover-acorn": "NG_UTILS_PARSER=acorn   npm run cover-run"
+    "cover-recast": "NG_UTILS_PARSER=recast gulp test",
+    "cover-esprima": "NG_UTILS_PARSER=esprima gulp test",
+    "cover-acorn": "NG_UTILS_PARSER=acorn gulp test"
   }
 }

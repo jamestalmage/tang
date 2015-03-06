@@ -1,21 +1,21 @@
 var gulp = require('gulp');
-//var git = require('nodegit');
-//var clone = git.Clone.clone;
 var exec = require('child_process').exec;
 var clean = require('gulp-clean');
 var gutils = require('gulp-util');
+var istanbul = require('gulp-istanbul');
+var mocha = require('gulp-mocha');
 
-
-/*function cloneTask(url, dir){
-  var opts = { ignoreCertErrors: 1, depth:1 }
-  return function(cb){
-    clone(url, dir, opts)
-      .then(function(repo){
-        cb();
-      })
-      .catch(cb);
-  }
-}*/
+gulp.task('test', function(cb){
+  gulp.src(['src/**/*.js'])
+    .pipe(istanbul())
+    .pipe(istanbul.hookRequire())
+    .on('finish',function(){
+      gulp.src(['mocha-globals.js','test/**/*-test.js', 'test/*-test.js'])
+        .pipe(mocha())
+        .pipe(istanbul.writeReports({dir: './coverage/' + (process.env.NG_UTILS_PARSER || 'recast')}))
+        .on('end',cb);
+    });
+});
 
 function cloneTask(url, dir){
   return function(cb){
@@ -28,7 +28,6 @@ function cloneTask(url, dir){
     });
   }
 }
-
 
 function execTask(dir){
   return function(cb){
@@ -84,3 +83,16 @@ gulp.task('run-karma',['clone-karma'],execTask('karma'));
 gulp.task('clone', ['clone-browserify', 'clone-karma', 'clone-gulp']);
 
 gulp.task('default', ['run-browserify','run-karma','run-gulp']);
+
+var deps;
+var pluginUnderTest = process.env.NGUTILS_PLUGIN;
+
+if(pluginUnderTest){
+  pluginUnderTest = pluginUnderTest.toLowerCase();
+  deps = ['run-' + pluginUnderTest];
+}
+else {
+  deps = ['default']
+}
+
+gulp.task('test-plugin', deps);

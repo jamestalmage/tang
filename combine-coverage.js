@@ -3,9 +3,9 @@ var istanbul = require('istanbul'),
   reporter = new istanbul.Reporter(),
   sync = false;
 
-collector.add(require('./coverage/recast/coverage.json'));
-collector.add(require('./coverage/esprima/coverage.json'));
-collector.add(require('./coverage/acorn/coverage.json'));
+collector.add(require('./coverage/recast/coverage-final.json'));
+collector.add(require('./coverage/esprima/coverage-final.json'));
+collector.add(require('./coverage/acorn/coverage-final.json'));
 
 reporter.add('text');
 reporter.addAll([ 'lcov', 'clover' ]);
