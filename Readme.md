@@ -2,6 +2,10 @@ ng-test-utils
 =============
 Cleaner, less verbose tests for your Angular app!
 
+[![Build Status](https://travis-ci.org/jamestalmage/angular-test-utils.svg?branch=master)](https://travis-ci.org/jamestalmage/angular-test-utils)
+[![Coverage Status](https://coveralls.io/repos/jamestalmage/angular-test-utils/badge.svg?branch=master)](https://coveralls.io/r/jamestalmage/angular-test-utils?branch=master)
+
+
 Angular is an amazing framework, but its dependency injection framework can lead to some pretty verbose tests:
 
 ```javascript
@@ -48,16 +52,10 @@ Better still, it includes comprehensive source-map support to help you easily id
 where errors are being thrown in your code. It even plays nice with upstream transforms that supply
 source-maps (i.e. coffee-script).
 
-It includes a comprehensive tests suite (i.e. 100% coverage), and has a thorough complement
-of plugins and examples that will help you easily fit it in to your build process.
+It includes a comprehensive tests suite (with 100% coverage), and has a thorough complement
+of [plugins](https://github.com/jamestalmage/angular-test-utils#plugins) with examples
+that will help you fit it in to your build process.
 
-To get started, check out the [karma preprocessor](https://github.com/jamestalmage/karma-angular-test-utils)
-to start using it in your tests.
-Browserify users should check out the [browserify transform](https://github.com/jamestalmage/browserify-angular-test-utils).
-If neither of those work for your current build process, there is also a
-[gulp plugin](https://github.com/jamestalmage/gulp-angular-test-utils) that can be adapted to nearly any build chain.
-
-Each module contains its own set of examples that will help get you started.
 
 @ngInject
 ---------
@@ -175,6 +173,7 @@ on how to do so).
 plugins
 -------
 `ng-test-utils` has a number of companion plugins that help you insert it in your build process.
+Each one has its own set of examples that will help get you started.
 
   * The [karma preprocessor](https://github.com/jamestalmage/karma-angular-test-utils) provides
   the simplest solution that will work for the majority of users. Since the transforms provided
@@ -187,4 +186,5 @@ plugins
 
   * The [gulp plugin](https://github.com/jamestalmage/gulp-angular-test-utils) provides a gulp compatible
    transform. Use gulps powerful streaming system to wire the transform up to any input/output stream you choose.
+
 
