@@ -1,12 +1,12 @@
 var gulp = require('gulp');
-var git = require('nodegit');
-var clone = git.Clone.clone;
+//var git = require('nodegit');
+//var clone = git.Clone.clone;
 var exec = require('child_process').exec;
 var clean = require('gulp-clean');
 var gutils = require('gulp-util');
 
 
-function cloneTask(url, dir){
+/*function cloneTask(url, dir){
   var opts = { ignoreCertErrors: 1, depth:1 }
   return function(cb){
     clone(url, dir, opts)
@@ -15,7 +15,20 @@ function cloneTask(url, dir){
       })
       .catch(cb);
   }
+}*/
+
+function cloneTask(url, dir){
+  return function(cb){
+    exec('mkdir -p plugins && git clone ' + url + ' ' + dir, function(err, stdout, stderr) {
+      if(err){
+        console.log(stdout);
+        console.log(stderr);
+      }
+      cb(err);
+    });
+  }
 }
+
 
 function execTask(dir){
   return function(cb){
