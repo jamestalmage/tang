@@ -2,6 +2,7 @@ node_modules
 coverage
 *.log
 .idea
+plugins
 
 # Because Intellj bugs me incessantly to add them
 JasmineAdapter-1.1.2.js
@@ -12,3 +13,8 @@ jasmine-1.1.0.js
 # npmignore
 src/transform
 test
+.jscsrc
+.jshintrc
+combine-coverage.js
+mocha-globals.js
+.travis.yml

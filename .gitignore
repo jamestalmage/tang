@@ -2,6 +2,7 @@ node_modules
 coverage
 *.log
 .idea
+plugins
 
 # Because Intellj bugs me incessantly to add them
 JasmineAdapter-1.1.2.js
