@@ -25,7 +25,10 @@ beforeEach(inject(function(_serviceB_, _$rootScope_) {
 // Finally - I can start writing tests!!
 ```
 
-ng-test-utils offers a better way:
+All those `beforeEach` statements start to add up as your test count grows.
+They clutter the top of all your test files, and distract from what's important.
+
+ng-test-utils seeks to offer a better way:
 
 ```javascript
 module('myModule');
@@ -41,7 +44,7 @@ var serviceB, $rootScope, scope = $rootScope.$new();
 
 ng-test-utils automatically generates the rest for you.
 
-To get started, check out the plugins for.
-[gulp](https://github.com/jamestalmage/gulp-angular-test-utils)
+To get started, check out the plugins for
+[gulp](https://github.com/jamestalmage/gulp-angular-test-utils),
 [browserify](https://github.com/jamestalmage/browserify-angular-test-utils)
 and [karma](https://github.com/jamestalmage/karma-angular-test-utils)
