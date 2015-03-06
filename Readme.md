@@ -178,7 +178,7 @@ plugins
 
   * The [karma preprocessor](https://github.com/jamestalmage/karma-angular-test-utils) provides
   the simplest solution that will work for the majority of users. Since the transforms provided
-  are entirely testing related, most users will not need anything beyond the karma plugin.
+  are entirely testing related, most users will not need anything beyond this.
 
   * The [browserify transform](https://github.com/jamestalmage/browserify-angular-test-utils),
   provides a way to perform the injections on code before it gets bundled by browserify.
