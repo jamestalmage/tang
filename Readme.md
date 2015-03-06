@@ -167,11 +167,11 @@ boilerplate required to make things work (it injects the `beforeEach` methods ex
 However, modified javascript can create difficulties during the debug process if the line numbers displayed
 when an Error gets thrown do not match the actual place in your code where it is happening. Fortunately,
 `ng-test-utils` ships with full source-map support. Just make sure you enable source-maps
-in your browsers developer tools, and enable source-map support (see the individual plugins for more details
-on how to do so).
+in your browsers developer tools, and enable source-map support from whichever plugin you
+are using in your build.
 
-plugins
--------
+build plugins
+-------------
 `ng-test-utils` has a number of companion plugins that help you insert it in your build process.
 Each one has its own set of examples that will help get you started.
 
