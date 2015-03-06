@@ -107,10 +107,9 @@ You could combine both approaches (giving your tests access to both `myService` 
 ```javascript
 // @ngInject
 var myService, thing = myService.some.thing;
-```
-becomes
 
-```javascript
+// ---- becomes ----
+
 var myService, thing;
 
 beforeEach(inject(function(_myService_) {
@@ -124,11 +123,9 @@ You can even initialize variables with the results of method calls on injected i
 ```javascript
 // @ngInject
 var scope = $rootScope.$new();
-```
 
-becomes
+// ---- becomes ----
 
-```javascript
 var scope;
 
 beforeEach(inject(function($rootScope){
@@ -148,11 +145,9 @@ var myService = {
  doSomething: sinon.spy(),
  somethingElse: sinon.spy()
 };
-```
 
-becomes
+// ---- becomes ----
 
-```javascript
 var myService;
 
 beforeEach(module(function($provide){
