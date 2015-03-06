@@ -1,6 +1,6 @@
 ng-test-utils
 =============
-Cleaner, less verbose tests for your angular app!
+Cleaner, less verbose tests for your Angular app!
 
 Angular is an amazing framework, but its dependency injection framework can lead to some pretty verbose tests:
 
@@ -61,7 +61,7 @@ Each module contains its own set of examples that will help get you started.
 
 @ngInject
 ---------
-The `@ngInject` annotation allows you to inject instances from the angular dependency injection framework
+The `@ngInject` annotation allows you to inject instances from the Angular dependency injection framework
 directly in to your tests with ease. Variable names are used to infer the instance name you want injected, so
 
 ```javascript
