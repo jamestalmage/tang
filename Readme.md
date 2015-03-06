@@ -55,6 +55,6 @@ To get started, check out the [karma preprocessor](https://github.com/jamestalma
 to start using it in your tests.
 Browserify users should check out the [browserify transform](https://github.com/jamestalmage/browserify-angular-test-utils).
 If neither of those work for your current build process, there is also a
-[gulp plugin](https://github.com/jamestalmage/gulp-angular-test-utils). That can be adapted to nearly any build chain.
+[gulp plugin](https://github.com/jamestalmage/gulp-angular-test-utils) that can be adapted to nearly any build chain.
 
 Each module contains it's own set of examples that will help get you started.
