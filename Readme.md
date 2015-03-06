@@ -158,7 +158,7 @@ beforeEach(module(function($provide){
 ```
 
 You can use both `@ngProvide` and `@ngInject` together in your tests, but you must make sure all of your
-`@ngProvide` declarations come before `@ngInject`.
+`@ngProvide` declarations come before your first `@ngInject`.
 
 source-maps
 -----------
