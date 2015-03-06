@@ -28,7 +28,7 @@ beforeEach(inject(function(_serviceB_, _$rootScope_) {
 All those `beforeEach` statements start to add up.
 They clutter the top of all your test files, and distract from what's important.
 
-ng-test-utils seeks to offer a better way:
+`ng-test-utils` seeks to offer a better way:
 
 ```javascript
 module('myModule');
@@ -42,7 +42,7 @@ var serviceB, $rootScope, scope = $rootScope.$new();
 // That's it - really!
 ```
 
-ng-test-utils automatically generates the rest for you through a series of ast transforms.
+`ng-test-utils` automatically generates the rest for you through a series of ast transforms.
 
 Better still, it includes comprehensive source-map support to help you easily identify exactly
 where errors are being thrown in your code. It even plays nice with upstream transforms that supply
@@ -72,7 +72,7 @@ var myService;
 Will cause the "myService" instance from your module to be injected in to the test.
 This injection is automatically wrapped in a `beforeEach` method call compatible with `mocha` or `jasmine`.
 
-After ng-test-utils does its thing, the final code looks something like this.
+After `ng-test-utils` does its thing, the final code looks something like this.
 
 ```javascript
 var myService;
