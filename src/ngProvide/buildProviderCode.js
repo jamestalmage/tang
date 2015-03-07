@@ -17,7 +17,7 @@ function buildNgProvide(ids, inits) {
   for (var i = 0; i < ids.length; i++) {
     assignments.push(s.assignmentStatement(ids[i], inits[i]));
 
-    provides.push(s.provideValue(b.literal(ids[i].name), ids[i]));
+    provides.push(s.provide('value', b.literal(ids[i].name), ids[i]));
   }
 
   var func = b.functionExpression(

@@ -16,8 +16,8 @@ describe('shared utils', function() {
     expect(actual).to.equal(expected);
   });
 
-  it('provideValue calls $provide.value()', function() {
-    var pV = s.provideValue(b.literal('a'), b.literal('b'));
+  it('provide("value",...) calls $provide.value()', function() {
+    var pV = s.provide('value', b.literal('a'), b.literal('b'));
     var actual = lib.print(pV);
 
     var expected = '$provide.value("a", "b");';
@@ -64,8 +64,8 @@ describe('shared utils', function() {
     var moduleCb = s.moduleCb(
       [b.identifier('$provide')],
       [
-        s.provideValue(b.literal('a'), b.literal('b')),
-        s.provideValue(b.literal('c'), b.literal('d'))
+        s.provide('value', b.literal('a'), b.literal('b')),
+        s.provide('value', b.literal('c'), b.literal('d'))
       ]
     );
     var expected = [

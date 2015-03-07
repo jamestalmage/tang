@@ -44,12 +44,12 @@ function variableDeclaration(ids) {
   );
 }
 
-function provideValue(id, val) {
+function provide(type, id, val) {
   n.Literal.assert(id);
 
   var $parseValueExp = b.memberExpression(
     b.identifier('$provide'),
-    b.identifier('value'),
+    b.identifier(type),
     false
   );
 
@@ -105,7 +105,7 @@ module.exports = {
   assignmentStatement: assignmentStatement,
   variableDeclaration: variableDeclaration,
   identifiers: identifiers,
-  provideValue: provideValue,
+  provide: provide,
   moduleExp: moduleExp,
   moduleStmt: moduleStmt,
   moduleCb: moduleCb
