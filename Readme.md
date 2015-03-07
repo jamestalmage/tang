@@ -161,6 +161,29 @@ beforeEach(module(function($provide){
 You can use both `@ngProvide` and `@ngInject` together in your tests, but you must make sure all of your
 `@ngProvide` declarations come before your first `@ngInject`.
 
+@ngConstant
+-----------
+Very similar to `@ngValue`, but it provides a constant service. From the angular docs:
+
+> Unlike a value [a constant] can be injected into a module configuration function (see angular.Module)
+ and it cannot be overridden by an Angular decorator
+
+```javascript
+// @ngConstant
+var siteUrl = 'https://angular.io';
+
+// ---- becomes ----
+
+var siteUrl;
+
+beforeEach(module(function($provide){
+  siteUrl = 'https://angular.io';
+  $provide.constant('siteUrl', siteUrl);
+}));
+```
+
+All your `@ngConstant` declarations must come before your first `@ngInject`.
+
 source-maps
 -----------
 `ng-test-utils` uses [recast](https://github.com/benjamn/recast) to scan your code and inject all the

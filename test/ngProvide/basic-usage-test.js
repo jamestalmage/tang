@@ -129,4 +129,23 @@ describe('ngProvide - basic usage', function() {
       '});'
     ].join('\n'));
   });
+
+  it('@ngConstant - provides a constant', function() {
+    var input = [
+      '// @ngConstant',
+      'var a = "b";'
+    ].join('\n');
+    var output = ngProvide(input);
+    expect(output.code).to.equal([
+      '// @ngConstant',
+      'var a;',
+      '',
+      'beforeEach(function() {',
+      '  angular.mock.module(function($provide) {',
+      '    a = "b";',
+      '    $provide.constant("a", a);',
+      '  });',
+      '});'
+    ].join('\n'));
+  });
 });

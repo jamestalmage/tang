@@ -9,6 +9,9 @@ var ngProvide = require('./ngProvide/index')(
 var ngValue = require('./ngProvide/index')(
   'value', /^\s*@ngValue\s*$/, require('./silent-logger')
 );
+var ngConstant = require('./ngProvide/index')(
+  'constant', /^\s*@ngConstant\s*$/, require('./silent-logger')
+);
 var ngInject = require('./ngInject');
 var convert = require('convert-source-map');
 var merge = require('merge');
@@ -18,7 +21,8 @@ function transform(src, suppliedOptions) {
     readSourceMapComments:true,
     ngInject:true,
     ngProvide:true,
-    ngValue:true
+    ngValue:true,
+    ngConstant:true
   }, suppliedOptions);
   if (options.sourceMap) {
     if (options.sourceFileName && !options.sourceMapName) {
@@ -42,6 +46,9 @@ function transform(src, suppliedOptions) {
   }
   if (options.ngInject) {
     ngInject(ast);
+  }
+  if (options.ngConstant) {
+    ngConstant(ast);
   }
   var result = recast.print(ast, options);
   var transformedCode = result.code;
