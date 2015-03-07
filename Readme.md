@@ -131,11 +131,11 @@ beforeEach(inject(function($rootScope){
 }));
 ```
 
-@ngProvide
-----------
-Where `@ngInject` is useful for getting testable instances *out* of your angular module, `@ngProvide` gives
-you a way to put spies or mocks *in* to the dependency injection framework. Again, the variable name is used to infer
-the name for the item being injected.
+@ngProvide / @ngValue
+---------------------
+Where `@ngInject` is useful for getting testable instances *out* of your angular module, `@ngProvide` and
+`@ngValue` give you a way to put spies or mocks *in* to the dependency injection framework. Again, the
+variable name is used to infer the name for the item being injected.
 
 ```javascript
 // @ngProvide
@@ -156,6 +156,7 @@ beforeEach(module(function($provide){
   $provide.value('myService', myService);
 }));
 ```
+`@ngValue` works the same way and is synonymous with `@ngProvide`
 
 You can use both `@ngProvide` and `@ngInject` together in your tests, but you must make sure all of your
 `@ngProvide` declarations come before your first `@ngInject`.
