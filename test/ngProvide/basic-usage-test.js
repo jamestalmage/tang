@@ -112,23 +112,21 @@ describe('ngProvide - basic usage', function() {
   });
 
   it('@ngValue - provides a value', function() {
-      var input = [
-        '// @ngValue',
-        'var a = "a";'
-      ].join('\n');
-      var output = ngProvide(input);
-      expect(output.code).to.equal([
-        '// @ngValue',
-        'var a;',
-        '',
-        'beforeEach(function() {',
-        '  angular.mock.module(function($provide) {',
-        '    a = "a";',
-        '    $provide.value("a", a);',
-        '  });',
-        '});'
-      ].join('\n'));
-
-      expect(output.map).to.equal(null);
+    var input = [
+      '// @ngValue',
+      'var a = "a";'
+    ].join('\n');
+    var output = ngProvide(input);
+    expect(output.code).to.equal([
+      '// @ngValue',
+      'var a;',
+      '',
+      'beforeEach(function() {',
+      '  angular.mock.module(function($provide) {',
+      '    a = "a";',
+      '    $provide.value("a", a);',
+      '  });',
+      '});'
+    ].join('\n'));
   });
 });
