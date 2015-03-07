@@ -4,6 +4,8 @@ var clean = require('gulp-clean');
 var gutils = require('gulp-util');
 var istanbul = require('gulp-istanbul');
 var mocha = require('gulp-mocha');
+var jshint = require('gulp-jshint');
+var jscs = require('gulp-jscs');
 
 gulp.task('cover', function(cb){
   gulp.src(['src/**/*.js'])
@@ -17,9 +19,19 @@ gulp.task('cover', function(cb){
     });
 });
 
-gulp.task('test', function(){
+gulp.task('test', function() {
   return gulp.src(['mocha-globals.js','test/**/*-test.js', 'test/*-test.js'])
     .pipe(mocha())
+});
+
+gulp.task('lint', function() {
+  return gulp.src(['src/**', 'test/**'])
+    .pipe(jshint());
+});
+
+gulp.task('check-style', function() {
+  return gulp.src(['src/**', 'test/**'])
+    .pipe(jscs());
 });
 
 function cloneTask(url, dir){
