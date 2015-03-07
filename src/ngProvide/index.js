@@ -2,18 +2,19 @@
 
 var hasAnnotation = require('../utils/hasAnnotation');
 
-module.exports = createInjector();
-module.exports.create = createInjector;
+module.exports = createInjector;
+
+var assert = require('assert');
 
 var types = require('recast').types;
 var n = types.namedTypes;
 var b = types.builders;
 
-function createInjector (regexp, logger) {
+function createInjector (type, regexp, logger) {
+  assert(typeof type === 'string', 'type must be a string');
+  assert(regexp, 'regexp required');
 
-  regexp = regexp ||  /^\s*@ngProvide\s*$/;
-
-  var needsInjection = require('./needsInjection').create(regexp, logger);
+  var needsInjection = require('./needsInjection')(regexp, logger);
   var buildInjection = require('./buildProviderCode');
   var collectVariableIdsAndInits = require('./collectVariableIdsAndInits');
   var hasNgProvideAnnotation = hasAnnotation(regexp);
@@ -25,7 +26,7 @@ function createInjector (regexp, logger) {
       visitVariableDeclaration: function(path) {
         var node = path.node;
         if (needsInjection(node)) {
-          var obj = collectVariableIdsAndInits(node);
+          var obj = collectVariableIdsAndInits(type, node);
 
           var decl = b.variableDeclaration(
             'var',
@@ -36,7 +37,7 @@ function createInjector (regexp, logger) {
 
           decl.comments = node.comments;
 
-          path.replace(decl, buildInjection(obj.ids, obj.inits));
+          path.replace(decl, buildInjection(obj.types, obj.ids, obj.inits));
         }
         return false;
       },
@@ -49,7 +50,7 @@ function createInjector (regexp, logger) {
           n.ExpressionStatement.check(parentNode) &&
           hasNgProvideAnnotation(parentNode)
         ) {
-          var injection = buildInjection([node.left], [node.right]);
+          var injection = buildInjection(['value'], [node.left], [node.right]);
           injection.comments = parentNode.comments;
           parent.replace(injection);
         }

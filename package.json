@@ -42,14 +42,14 @@
     "sinon-chai": "^2.7.0"
   },
   "scripts": {
-    "test": "npm run lint && npm run cover && npm run check-style && gulp test-plugin",
+    "test": "npm run lint && npm run cover && npm run check-style",
+    "test-all": "npm test && gulp test-plugin",
     "cover": "rm -rf coverage && npm run cover-recast && npm run cover-esprima && npm run cover-acorn && node combine-coverage",
     "watch": "mocha -w --growl mocha-globals.js test/*-test.js  test/**/*-test.js",
     "lint": "jshint src/** test/**",
     "check-style": "jscs test/** src/**",
-    "cover-run": "istanbul cover --report none --root ./src --dir ./coverage/$NG_UTILS_PARSER _mocha -- mocha-globals.js test/*-test.js test/**/*-test.js",
-    "cover-recast": "NG_UTILS_PARSER=recast gulp test",
-    "cover-esprima": "NG_UTILS_PARSER=esprima gulp test",
-    "cover-acorn": "NG_UTILS_PARSER=acorn gulp test"
+    "cover-recast": "NG_UTILS_PARSER=recast gulp cover",
+    "cover-esprima": "NG_UTILS_PARSER=esprima gulp cover",
+    "cover-acorn": "NG_UTILS_PARSER=acorn gulp cover"
   }
 }

@@ -2,7 +2,11 @@
 
 describe('ngProvide - needs injection', function() {
   var parse = require('../lib').parse;
-  var needsInjection = require('../../src/ngProvide/needsInjection');
+
+  var needsInjection = require('../../src/ngProvide/needsInjection')(
+    /^\s*@ngProvide\s*$/, require('../../src/silent-logger')
+  );
+
   var assert = require('assert');
 
   it('true when its the first statement', function() {

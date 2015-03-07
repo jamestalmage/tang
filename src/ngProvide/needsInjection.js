@@ -1,17 +1,17 @@
 'use strict';
 
 var hasAnnotation = require('../utils/hasAnnotation');
-module.exports = create();
+module.exports = create;
 
-module.exports.create = create;
+var assert = require('assert');
 var types = require('recast').types;
 var n = types.namedTypes;
 
 function create(regexp, logger) {
-
-  regexp = regexp ||  /^\s*@ngProvide\s*$/;
-
-  logger = logger || require('../silent-logger');
+  assert(regexp, 'regexp required');
+  assert(logger, 'logger required');
+  //regexp = regexp ||  /^\s*@ngProvide\s*$/;
+  //logger = logger || require('../silent-logger');
 
   var containsNgInjectAnnotation = hasAnnotation(regexp);
 

@@ -3,7 +3,9 @@
 module.exports = transform;
 
 var recast = require('recast');
-var ngProvide = require('./ngProvide/index');
+var ngProvide = require('./ngProvide/index')(
+  'value', /^\s*@ngProvide\s*$/, require('./silent-logger')
+);
 var ngInject = require('./ngInject');
 var convert = require('convert-source-map');
 var merge = require('merge');

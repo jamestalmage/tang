@@ -9,6 +9,7 @@ describe('ngProvide - build handler code', function() {
 
   it('builds the before each call', function() {
     var ngProvideInit = buildNgProvider(
+      ['value'],
       [b.identifier('a')],
       [b.literal('b')]
     );

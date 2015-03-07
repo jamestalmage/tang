@@ -10,7 +10,9 @@ describe('ngProvide - perform ast transformation', function() {
       '// @ngProvide',
       'var a=sinon.spy(), b=sinon.spy();'
     ]);
-    var output = util.print(insertVariableInjections(input));
+    var output = util.print(insertVariableInjections(
+      'value', /^\s*@ngProvide\s*$/, require('../../src/silent-logger')
+    )(input));
 
     var expected = [
       'var c, d;',

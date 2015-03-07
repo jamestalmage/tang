@@ -5,7 +5,7 @@ var gutils = require('gulp-util');
 var istanbul = require('gulp-istanbul');
 var mocha = require('gulp-mocha');
 
-gulp.task('test', function(cb){
+gulp.task('cover', function(cb){
   gulp.src(['src/**/*.js'])
     .pipe(istanbul())
     .pipe(istanbul.hookRequire())
@@ -15,6 +15,11 @@ gulp.task('test', function(cb){
         .pipe(istanbul.writeReports({dir: './coverage/' + (process.env.NG_UTILS_PARSER || 'recast')}))
         .on('end',cb);
     });
+});
+
+gulp.task('test', function(){
+  return gulp.src(['mocha-globals.js','test/**/*-test.js', 'test/*-test.js'])
+    .pipe(mocha())
 });
 
 function cloneTask(url, dir){
