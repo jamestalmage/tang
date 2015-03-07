@@ -130,6 +130,18 @@ describe('ngProvide - basic usage', function() {
     ].join('\n'));
   });
 
+  it('@ngValue - can be disabled', function() {
+    var input = [
+      '// @ngValue',
+      'var a = "b";'
+    ].join('\n');
+    var output = ngProvide(input, {ngValue:false});
+    expect(output.code).to.equal([
+      '// @ngValue',
+      'var a = "b";'
+    ].join('\n'));
+  });
+
   it('@ngConstant - provides a constant', function() {
     var input = [
       '// @ngConstant',
@@ -147,5 +159,37 @@ describe('ngProvide - basic usage', function() {
       '  });',
       '});'
     ].join('\n'));
+  });
+
+  it('@ngConstant - can be disabled', function() {
+    var input = [
+      '// @ngConstant',
+      'var a = "b";'
+    ].join('\n');
+    var output = ngProvide(input, {ngConstant:false});
+    expect(output.code).to.equal([
+      '// @ngConstant',
+      'var a = "b";'
+    ].join('\n'));
+  });
+
+  xit('@ngFactory - provides a factory', function() {
+    // @ngFactory
+    var timeoutInSeconds = function($timeout) {
+      return function(fn, delay, invokeApply) {
+        return $timeout(fn, delay * 1000, invokeApply);
+      };
+    };
+
+    // @ngFactory
+    var timeoutInSeconds;
+
+    beforeEach(function() {
+      angular.mock.module(function($provide) {
+        function timeoutInSecondsFactory($timeout) {
+
+        }
+      });
+    });
   });
 });
