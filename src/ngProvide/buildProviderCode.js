@@ -21,13 +21,10 @@ function buildNgProvide(types, ids, inits) {
     provides.push(s.provide(types[i], b.literal(ids[i].name), ids[i]));
   }
 
-  var func = b.functionExpression(
-    null,
+  var moduleStmt = s.moduleCb(
     [b.identifier('$provide')],
-    b.blockStatement(assignments.concat(provides))
+    assignments.concat(provides)
   );
-
-  var moduleStmt = s.moduleStmt(func);
 
   return s.beforeEachStmt(
     [b.functionExpression(null, [], b.blockStatement([moduleStmt]))]
