@@ -14,7 +14,6 @@ function createInjector (type, regexp, logger) {
   assert(typeof type === 'string', 'type must be a string');
   assert(regexp, 'regexp required');
 
-  var needsInjection = require('./needsInjection')(regexp, logger);
   var buildInjection = require('./buildProviderCode');
   var collectVariableIdsAndInits = require('./collectVariableIdsAndInits');
   var hasNgProvideAnnotation = hasAnnotation(regexp);
@@ -25,20 +24,30 @@ function createInjector (type, regexp, logger) {
     types.visit(ast, {
       visitVariableDeclaration: function(path) {
         var node = path.node;
-        if (needsInjection(node)) {
-          var obj = collectVariableIdsAndInits(type, node);
 
-          var decl = b.variableDeclaration(
-            'var',
-            obj.ids.map(function(id) {
-              return b.variableDeclarator(id, null);
-            })
-          );
-
-          decl.comments = node.comments;
-
-          path.replace(decl, buildInjection(obj.types, obj.ids, obj.inits));
+        // check that this is a node we want to modify
+        if (!hasNgProvideAnnotation(node)) {
+          logger.logRejectedNode('does not contain an NgProvide comment', node);
+          return false;
         }
+        if (missingInit(node)) {
+          //TODO: throw here?
+          logger.logRejectedNode('variable missing initialization', node);
+          return false;
+        }
+        logger.logAcceptedNode(node);
+
+        var obj = collectVariableIdsAndInits(type, node);
+        var decl = b.variableDeclaration(
+          'var',
+          obj.ids.map(function(id) {
+            return b.variableDeclarator(id, null);
+          })
+        );
+
+        decl.comments = node.comments;
+
+        path.replace(decl, buildInjection(obj.types, obj.ids, obj.inits));
         return false;
       },
       visitAssignmentExpression: function(path) {
@@ -59,4 +68,19 @@ function createInjector (type, regexp, logger) {
     });
     return ast;
   }
+}
+
+function missingInit(node) {
+  n.VariableDeclaration.assert(node);
+  var missing = false;
+  types.visit(node, {
+    visitVariableDeclarator:function(path) {
+      var node = path.node;
+      if (node.init === null || node.init === undefined) {
+        missing = true;
+      }
+      return false;
+    }
+  });
+  return missing;
 }

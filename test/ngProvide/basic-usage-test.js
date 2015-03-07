@@ -88,4 +88,26 @@ describe('ngProvide - basic usage', function() {
     ].join('\n'));
     expect(!!output.map).to.equal(true);
   });
+
+  it('will not touch annotated functions', function() {
+    var code = [
+      '/* @ngProvide */ ',
+      'function foo() {}'
+    ].join('\n');
+
+    var output = ngProvide(code);
+
+    expect(output.code).to.equal(code);
+  });
+
+  it('will not touch variable declarations without init', function() {
+    var code = [
+      '// @ngProvide',
+      'var a;'
+    ].join('\n');
+
+    var output = ngProvide(code);
+
+    expect(output.code).to.equal(code);
+  });
 });
