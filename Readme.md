@@ -243,6 +243,8 @@ function myService(injectedDependency){
 
 // ----- becomes -----
 
+var myService;
+
 beforeEach(function() {
   angular.mock.module(function($provide) {
     $provide.service("myService" function(injectedDependency) {
