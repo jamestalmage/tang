@@ -9,13 +9,12 @@ var assert = require('assert');
 var types = require('recast').types;
 var n = types.namedTypes;
 var b = types.builders;
+var s = require('../utils/builders');
 
 function createInjector (type, regexp, logger) {
   assert(typeof type === 'string', 'type must be a string');
   assert(regexp, 'regexp required');
 
-  var buildInjection = require('./buildProviderCode');
-  var collectVariableIdsAndInits = require('./collectVariableIdsAndInits');
   var hasNgProvideAnnotation = hasAnnotation(regexp);
 
   return addVariableInjections;
@@ -83,4 +82,43 @@ function missingInit(node) {
     }
   });
   return missing;
+}
+
+function collectVariableIdsAndInits(type, node) {
+  n.VariableDeclaration.assert(node);
+  var t = [];
+  var ids = [];
+  var inits = [];
+  types.visit(node, {
+    visitVariableDeclarator:function(path) {
+      t.push(type);
+      ids.push(path.node.id);
+      inits.push(path.node.init);
+      return false;
+    }
+  });
+  return {types:t, ids:ids, inits:inits};
+}
+
+function buildInjection(types, ids, inits) {
+  assert.equal(ids.length, inits.length, 'ids and inits must be same length');
+  assert.equal(types.length, inits.length, 'types.length !== inits.length');
+
+  var assignments = [];
+  var provides = [];
+
+  for (var i = 0; i < ids.length; i++) {
+    assignments.push(s.assignmentStatement(ids[i], inits[i]));
+
+    provides.push(s.provide(types[i], b.literal(ids[i].name), ids[i]));
+  }
+
+  var moduleStmt = s.moduleCb(
+    [b.identifier('$provide')],
+    assignments.concat(provides)
+  );
+
+  return s.beforeEachStmt(
+    [b.functionExpression(null, [], b.blockStatement([moduleStmt]))]
+  );
 }
