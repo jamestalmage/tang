@@ -5,7 +5,7 @@ describe('ngFactory', function() {
   var types = require('recast').types;
   var n = types.namedTypes;
   var b = types.builders;
-  var s = require('../../src/utils/builders');
+  var s = require('../../src/builders');
 
   var ngFactory = require('../../src/ngFactory');
 

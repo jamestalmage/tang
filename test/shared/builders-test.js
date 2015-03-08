@@ -2,7 +2,7 @@
 
 describe('shared utils', function() {
   var lib = require('../lib');
-  var s = require('../../src/utils/builders');
+  var s = require('../../src/builders');
   var types = require('recast').types;
   var n = types.namedTypes;
   var b = types.builders;

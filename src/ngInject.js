@@ -4,12 +4,12 @@ module.exports = createInjector();
 module.exports.create = createInjector;
 module.exports.collectVariableIds = collectVariableIds;
 module.exports.needsInjection = needsInjection;
+module.exports.requiredInjection = requiredInjection;
 
 var types = require('recast').types;
 var n = types.namedTypes;
 var b = types.builders;
-var s = require('./utils/builders');
-var requiredInjection = require('./utils/requiredInjection');
+var s = require('./builders');
 
 function createInjector(regexp, logger) {
   regexp = regexp ||  /^\s*@ngInject\s*$/;
@@ -83,7 +83,7 @@ function collectVariableIds(node) {
 }
 
 function needsInjection(regexp, logger) {
-  var containsNgInjectAnnotation = require('./utils/hasAnnotation')(regexp);
+  var containsNgInjectAnnotation = require('./hasAnnotation')(regexp);
 
   return function(node) {
     if (!n.VariableDeclaration.check(node)) {
@@ -116,4 +116,17 @@ function needsInjection(regexp, logger) {
     });
     return found;
   }
+}
+
+function requiredInjection(node) {
+  if (n.Identifier.check(node)) {
+    return node.name;
+  }
+  if (n.MemberExpression.check(node)) {
+    return requiredInjection(node.object);
+  }
+  if (n.CallExpression.check(node)) {
+    return requiredInjection(node.callee);
+  }
+  return null;
 }

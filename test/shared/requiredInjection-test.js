@@ -3,7 +3,7 @@
 describe('requiredInjection', function() {
   var parse = require('../lib').parse;
 
-  var _requiredInjection = require('../../src/utils/requiredInjection');
+  var _requiredInjection = require('../../src/ngInject').requiredInjection;
 
   function requiredInjection(input) {
     var ast = parse(input);
