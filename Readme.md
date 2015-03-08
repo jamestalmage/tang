@@ -237,6 +237,7 @@ Very similar to `@ngFactory`, but rather than assigning the return value, it
 uses the function as a constructor and injects the new instance.
 
 ```javascript
+// @ngService
 function myService(injectedDependency){
   this.foo = "bar";
 }
