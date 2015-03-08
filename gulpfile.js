@@ -31,7 +31,8 @@ gulp.task('watch', function() {
 
 gulp.task('lint', function() {
   return gulp.src(['src/**', 'test/**'])
-    .pipe(jshint());
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
 });
 
 gulp.task('check-style', function() {

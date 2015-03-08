@@ -7,15 +7,6 @@ describe('shared utils', function() {
   var n = types.namedTypes;
   var b = types.builders;
 
-  it('variableDeclarations creates a list of declarations', function() {
-    var ids = s.identifiers(['a', 'b', 'c']);
-    var actual = lib.print(s.variableDeclaration(ids));
-
-    var expected = 'var a, b, c;';
-
-    expect(actual).to.equal(expected);
-  });
-
   it('provide("value",...) calls $provide.value()', function() {
     var pV = s.provide('value', b.literal('a'), b.literal('b'));
     var actual = lib.print(pV);

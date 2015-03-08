@@ -174,7 +174,7 @@ describe('ngProvide - basic usage', function() {
   });
 
   xit('@ngFactory - provides a factory', function() {
-    // @ngFactory
+  /*  // @ngFactory
     function timeoutInSeconds($timeout) {
       return function(fn, delay, invokeApply) {
         return $timeout(fn, delay * 1000, invokeApply);
@@ -192,6 +192,6 @@ describe('ngProvide - basic usage', function() {
           }
         });
       });
-    });
+    }); */
   });
 });

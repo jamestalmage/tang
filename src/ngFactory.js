@@ -19,7 +19,7 @@ function create(regexp) {
         this.traverse(path);
       }
     });
-  }
+  };
 }
 module.exports = create;
 

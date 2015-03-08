@@ -9,16 +9,12 @@ function sliceArgs(args) {
   return Array.prototype.slice.call(args);
 }
 
-function beforeEachStmt(stmts) {
+function beforeEachStmt(args) {
   return b.expressionStatement(
-    beforeEachExp(stmts)
-  );
-}
-
-function beforeEachExp(args) {
-  return b.callExpression(
-    b.identifier('beforeEach'),
-    args
+    b.callExpression(
+      b.identifier('beforeEach'),
+      args
+    )
   );
 }
 
@@ -100,11 +96,10 @@ function identifiers(ids) {
 
 module.exports = {
   injectCall: injectCall,
-  beforeEachCall: beforeEachExp,
   beforeEachStmt: beforeEachStmt,
   assignmentStatement: assignmentStatement,
   variableDeclaration: variableDeclaration,
-  identifiers: identifiers,
+  //identifiers: identifiers,
   provide: provide,
   moduleExp: moduleExp,
   moduleStmt: moduleStmt,
