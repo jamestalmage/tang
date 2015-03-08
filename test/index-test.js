@@ -129,6 +129,20 @@ describe('main', function() {
     expect(process(input).code).to.equal(expected);
   });
 
+  it('ngFactory - can be disabled', function() {
+    var input = [
+      '// @ngFactory',
+      'function foo(bar) {',
+      '  function baz() {',
+      '    return "foo" + bar;',  // should not put assignment on this return statement
+      '  }',
+      '  return baz;',
+      '}'
+    ].join('\n');
+
+    expect(process(input, {ngFactory:false}).code).to.equal(input);
+  });
+
   it('will run all injections with sensible defaults', function() {
     var code = index(input).code;
     expect(code).to.equal([

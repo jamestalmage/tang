@@ -90,16 +90,11 @@ function moduleCb(params, stmts) {
   return moduleStmt(functionExp);
 }
 
-function identifiers(ids) {
-  return ids.map(b.identifier.bind(b));
-}
-
 module.exports = {
   injectCall: injectCall,
   beforeEachStmt: beforeEachStmt,
   assignmentStatement: assignmentStatement,
   variableDeclaration: variableDeclaration,
-  //identifiers: identifiers,
   provide: provide,
   moduleExp: moduleExp,
   moduleStmt: moduleStmt,
