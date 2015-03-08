@@ -215,8 +215,7 @@ beforeEach(function() {
 });
 ```
 
-Note that, for the above example could also be achieved by combining `@ngValue`
-and `@ngInject`.
+The above example could also be achieved by combining `@ngValue` and `@ngInject`.
 
 ```javascript
 @ngValue
