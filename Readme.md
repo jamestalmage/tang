@@ -53,8 +53,7 @@ where errors are being thrown in your code. It even plays nice with upstream tra
 source-maps (i.e. coffee-script).
 
 It includes a comprehensive tests suite (with 100% coverage), and has a thorough complement
-of [plugins](https://github.com/jamestalmage/angular-test-utils#plugins) with examples
-that will help you fit it in to your build process.
+of [plugins](#build-plugins) with examples that will help you fit it in to your build process.
 
 
 @ngInject
@@ -131,14 +130,14 @@ beforeEach(inject(function($rootScope){
 }));
 ```
 
-@ngProvide / @ngValue
----------------------
-Where `@ngInject` is useful for getting testable instances *out* of your angular module, `@ngProvide` and
-`@ngValue` give you a way to put spies or mocks *in* to the dependency injection framework. Again, the
-variable name is used to infer the name for the item being injected.
+@ngValue & ~~@ngProvide~~
+-------------------------
+Where `@ngInject` helps you get testable instances *out* of your angular module, `@ngValue`
+provides a way to place spies or mocks *in* to the dependency injection framework. Variable names
+are used to infer the name for the item being injected.
 
 ```javascript
-// @ngProvide
+// @ngValue
 var myService = {
  doSomething: sinon.spy(),
  somethingElse: sinon.spy()
@@ -156,14 +155,15 @@ beforeEach(module(function($provide){
   $provide.value('myService', myService);
 }));
 ```
-`@ngValue` works the same way and is synonymous with `@ngProvide`
+`@ngProvide` works the same way and is synonymous with `@ngValue`, but I plan to repurpose it with slightly
+different semantics - so stick with `@ngvalue` for now.
 
-You can use both `@ngProvide` and `@ngInject` together in your tests, but you must make sure all of your
-`@ngProvide` declarations come before your first `@ngInject`.
+You can use both `@ngValue` and `@ngInject` together in your tests, but you must make sure all of your
+`@ngValue` declarations come before your first `@ngInject`.
 
 @ngConstant
 -----------
-Very similar to `@ngValue`, but it provides a constant service. From the angular docs:
+Very similar to `@ngConstant`, but it provides a constant service. From the angular docs:
 
 > Unlike a value [a constant] can be injected into a module configuration function (see angular.Module)
  and it cannot be overridden by an Angular decorator
@@ -183,6 +183,37 @@ beforeEach(module(function($provide){
 ```
 
 All your `@ngConstant` declarations must come before your first `@ngInject`.
+
+@ngFactory
+----------
+Provides a way to inject mock services using Angulars factory style provider.
+A factory function takes a list of injectables as arguments and returns a service.
+When you place the `@ngFactory` annotation on a named function, it will be replaced
+by a variable with that same name that is injected with the result of the factory
+functions invocation.
+
+```javascript
+ // @ngFactory
+function timeoutInSeconds($timeout) {
+  return function(fn, delay, invokeApply) {
+    return $timeout(fn, delay * 1000, invokeApply);
+  };
+}
+
+// ---- becomes ----
+
+var timeoutInSeconds;
+
+beforeEach(function() {
+  angular.mock.module(function($provide) {
+    $provide.factory(function($timeout) {
+      return timeoutInSeconds = function(fn, delay, invokeApply) {
+        return $timeout(fn, delay * 1000, invokeApply);
+      }
+    });
+  });
+});
+```
 
 source-maps
 -----------
