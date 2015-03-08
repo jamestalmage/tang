@@ -231,6 +231,31 @@ your tests as well. Problems would arise if `timeoutInSeconds` were to be called
 during module initialization before the `@ngInject` annotation has injected `$timeout`
 in to your test. In that case `@ngFactory` is an acceptable workaround.
 
+@ngService
+----------
+Very similar to `@ngFactory`, but rather than assigning the return value, it
+uses the function as a constructor and injects the new instance.
+
+```javascript
+function myService(injectedDependency){
+  this.foo = "bar";
+}
+
+// ----- becomes -----
+
+beforeEach(function() {
+  angular.mock.module(function($provide) {
+    $provide.service("myService" function(injectedDependency) {
+      myService = this;
+      this.foo = "bar";
+    });
+  });
+});
+```
+
+Note - this currently does not work if you `return` a value from your constructor.
+If that is the case you probably should be using `@ngFactory`.
+
 source-maps
 -----------
 `ng-test-utils` uses [recast](https://github.com/benjamn/recast) to scan your code and inject all the

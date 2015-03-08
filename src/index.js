@@ -15,6 +15,7 @@ var ngConstant = require('./ngProvide')(
 );
 
 var ngFactory = require('./ngFactory')(/^\s*@ngFactory\s*$/);
+var ngService = require('./ngService')(/^\s*@ngService\s*$/);
 
 var ngInject = require('./ngInject');
 
@@ -29,7 +30,8 @@ function transform(src, suppliedOptions) {
     ngProvide:true,
     ngValue:true,
     ngConstant:true,
-    ngFactory:true
+    ngFactory:true,
+    ngService:true
   }, suppliedOptions);
   if (options.sourceMap) {
     if (options.sourceFileName && !options.sourceMapName) {
@@ -59,6 +61,9 @@ function transform(src, suppliedOptions) {
   }
   if (options.ngFactory) {
     ngFactory(ast);
+  }
+  if (options.ngService) {
+    ngService(ast);
   }
   var result = recast.print(ast, options);
   var transformedCode = result.code;

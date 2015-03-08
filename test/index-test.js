@@ -143,6 +143,42 @@ describe('main', function() {
     expect(process(input, {ngFactory:false}).code).to.equal(input);
   });
 
+  it('ngService', function() {
+    var input = [
+      '// @ngService',
+      'function myService(injectedDependency){',
+      '  this.foo = "bar";',
+      '}'
+    ].join('\n');
+
+    var expected = [
+      '// @ngService',
+      'var myService;',
+      '',
+      'beforeEach(function() {',
+      '  angular.mock.module(function($provide) {',
+      '    $provide.service("myService", function(injectedDependency) {',
+      '      myService = this;',
+      '      this.foo = "bar";',
+      '    });',
+      '  });',
+      '});'
+    ].join('\n');
+
+    expect(process(input).code).to.equal(expected);
+  });
+
+  it('ngService - can be turned off', function() {
+    var input = [
+      '// @ngService',
+      'function myService(injectedDependency){',
+      '  this.foo = "bar";',
+      '}'
+    ].join('\n');
+
+    expect(process(input, {ngService:false}).code).to.equal(input);
+  });
+
   it('will run all injections with sensible defaults', function() {
     var code = index(input).code;
     expect(code).to.equal([
