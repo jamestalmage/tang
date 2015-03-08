@@ -1,13 +1,13 @@
 describe('ngFactory', function() {
 
-  var lib = require('../lib');
+  var lib = require('./lib/index');
 
   var types = require('recast').types;
   var n = types.namedTypes;
   var b = types.builders;
-  var s = require('../../src/builders');
+  var s = require('../src/builders');
 
-  var ngFactory = require('../../src/ngFactory');
+  var ngFactory = require('../src/ngFactory');
 
   function instrumentFactoryFunction(code) {
     var node = firstNode(code);

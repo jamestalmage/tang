@@ -1,8 +1,8 @@
 'use strict';
 
 describe('shared utils', function() {
-  var lib = require('../lib');
-  var s = require('../../src/builders');
+  var lib = require('./lib/index');
+  var s = require('../src/builders');
   var types = require('recast').types;
   var n = types.namedTypes;
   var b = types.builders;
