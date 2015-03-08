@@ -215,6 +215,23 @@ beforeEach(function() {
 });
 ```
 
+Note that, for the above example could also be achieved by combining `@ngValue`
+and `@ngInject`.
+
+```javascript
+@ngValue
+var timeoutInSeconds = function(fn, delay, invokeApply) {
+  return $timeout(fn, delay, invokeApply);
+}
+
+@ngInject
+var $timeout;
+```
+This will work in most cases, and has the added advantage of exposing $timeout to
+your tests as well. Problems would arise if `timeoutInSeconds` were to be called
+during module initialization before the `@ngInject` annotation has injected `$timeout`
+in to your test. In that case `@ngFactory` is an acceptable workaround.
+
 source-maps
 -----------
 `ng-test-utils` uses [recast](https://github.com/benjamn/recast) to scan your code and inject all the
