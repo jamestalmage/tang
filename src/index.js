@@ -2,15 +2,15 @@
 
 module.exports = transform;
 
-var ngProvide = require('./ngProvide/index')(
+var ngProvide = require('./ngProvide')(
   'value', /^\s*@ngProvide\s*$/, require('./silent-logger')
 );
 
-var ngValue = require('./ngProvide/index')(
+var ngValue = require('./ngProvide')(
   'value', /^\s*@ngValue\s*$/, require('./silent-logger')
 );
 
-var ngConstant = require('./ngProvide/index')(
+var ngConstant = require('./ngProvide')(
   'constant', /^\s*@ngConstant\s*$/, require('./silent-logger')
 );
 

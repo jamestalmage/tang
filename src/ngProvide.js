@@ -1,6 +1,6 @@
 'use strict';
 
-var hasAnnotation = require('../utils/hasAnnotation');
+var hasAnnotation = require('./utils/hasAnnotation');
 
 module.exports = createInjector;
 
@@ -9,7 +9,7 @@ var assert = require('assert');
 var types = require('recast').types;
 var n = types.namedTypes;
 var b = types.builders;
-var s = require('../utils/builders');
+var s = require('./utils/builders');
 
 function createInjector (type, regexp, logger) {
   assert(typeof type === 'string', 'type must be a string');

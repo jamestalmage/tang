@@ -1,10 +1,10 @@
 var types = require('recast').types;
 var n = types.namedTypes;
 var b = types.builders;
-var s = require('../../src/utils/builders');
+var s = require('./utils/builders');
 
 function create(regexp) {
-  var hasAnnotation = require('../utils/hasAnnotation')(regexp);
+  var hasAnnotation = require('./utils/hasAnnotation')(regexp);
 
   return function(node) {
     types.visit(node, {

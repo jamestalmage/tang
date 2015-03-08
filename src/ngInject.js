@@ -8,12 +8,12 @@ module.exports.needsInjection = needsInjection;
 var types = require('recast').types;
 var n = types.namedTypes;
 var b = types.builders;
-var s = require('../utils/builders');
-var requiredInjection = require('../utils/requiredInjection');
+var s = require('./utils/builders');
+var requiredInjection = require('./utils/requiredInjection');
 
 function createInjector(regexp, logger) {
   regexp = regexp ||  /^\s*@ngInject\s*$/;
-  logger = logger || require('../silent-logger');
+  logger = logger || require('./silent-logger');
 
   var injectionNeeded = needsInjection(regexp, logger);
 
@@ -83,7 +83,7 @@ function collectVariableIds(node) {
 }
 
 function needsInjection(regexp, logger) {
-  var containsNgInjectAnnotation = require('../utils/hasAnnotation')(regexp);
+  var containsNgInjectAnnotation = require('./utils/hasAnnotation')(regexp);
 
   return function(node) {
     if (!n.VariableDeclaration.check(node)) {
