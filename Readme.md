@@ -238,7 +238,7 @@ uses the function as a constructor and injects the new instance.
 
 ```javascript
 // @ngService
-function myService(injectedDependency){
+function myService(injectedDependency) {
   this.foo = "bar";
 }
 
