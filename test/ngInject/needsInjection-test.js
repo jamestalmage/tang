@@ -2,7 +2,8 @@
 
 describe('ngInject - needs Injection', function() {
   var parse = require('../lib').parse;
-  var needsInjection = require('../../src/ngInject/needsInjection');
+  var logger = require('../../src/silent-logger');
+  var needsInjection = require('../../src/ngInject').needsInjection(/\s+@ngInject\s+/, logger);
   var assert = require('assert');
 
   it('true when its the first statement', function() {

@@ -2,7 +2,7 @@
 
 describe('ngInject - collect variable Ids', function() {
   var parse = require('../lib/parse');
-  var _collectVariableIds = require('../../src/ngInject/collectVariableIds');
+  var _collectVariableIds = require('../../src/ngInject').collectVariableIds;
 
   function collectVariableIds(node) {
     return _collectVariableIds(node).ids.map(

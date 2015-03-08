@@ -2,14 +2,20 @@
 
 module.exports = createInjector();
 module.exports.create = createInjector;
+module.exports.collectVariableIds = collectVariableIds;
+module.exports.needsInjection = needsInjection;
 
 var types = require('recast').types;
 var n = types.namedTypes;
+var b = types.builders;
 var s = require('../utils/builders');
+var requiredInjection = require('../utils/requiredInjection');
 
 function createInjector(regexp, logger) {
-  var needsInjection = require('./needsInjection').create(regexp, logger);
-  var collectVariableIds = require('./collectVariableIds');
+  regexp = regexp ||  /^\s*@ngInject\s*$/;
+  logger = logger || require('../silent-logger');
+
+  var injectionNeeded = needsInjection(regexp, logger);
 
   return addVariableInjections;
 
@@ -17,23 +23,97 @@ function createInjector(regexp, logger) {
     types.visit(ast, {
       visitVariableDeclaration: function(path) {
         var node = path.node;
-        if (needsInjection(node)) {
-          var obj = collectVariableIds(node);
 
-          // variable declaration
-          var decl = s.variableDeclaration(obj.ids);
-          decl.comments = node.comments;
-
-          // beforeEach call that injects required variables and assigns them.
-          var beforeEach = s.beforeEachStmt([
-            s.injectCall(obj.inject, obj.assign)
-          ]);
-
-          path.replace(decl, beforeEach);
+        if (!injectionNeeded(node)) {
+          return false;
         }
+
+        var obj = collectVariableIds(node);
+
+        // variable declaration
+        var decl = s.variableDeclaration(obj.ids);
+        decl.comments = node.comments;
+
+        // beforeEach call that injects required variables and assigns them.
+        var beforeEach = s.beforeEachStmt([
+          s.injectCall(obj.inject, obj.assign)
+        ]);
+
+        path.replace(decl, beforeEach);
         return false;
       }
     });
     return ast;
+  }
+}
+
+function collectVariableIds(node) {
+  n.VariableDeclaration.assert(node);
+  var injectedOrSet = {};
+  var ids = [];
+  var inject = [];
+  var assign = [];
+
+  types.visit(node, {
+    visitVariableDeclarator:function(path) {
+      var node = path.node;
+      if (node.init) {
+        var req = requiredInjection(node.init);
+        var reqId = b.identifier(req);
+        if (injectedOrSet[req] !== true) {
+          injectedOrSet[req] = true;
+          inject.push(reqId);
+        }
+        ids.push(node.id);
+        injectedOrSet[node.id.name] = true;
+        assign.push(s.assignmentStatement(node.id, node.init));
+      } else {
+        ids.push(node.id);
+        var name = node.id.name;
+        var injectionName = '_' + name + '_';
+        injectedOrSet[name] = true;
+        var injectId = b.identifier(injectionName);
+        inject.push(injectId);
+        assign.push(s.assignmentStatement(node.id, injectId));
+      }
+      return false;
+    }
+  });
+  return {ids:ids, inject:inject, assign:assign};
+}
+
+function needsInjection(regexp, logger) {
+  var containsNgInjectAnnotation = require('../utils/hasAnnotation')(regexp);
+
+  return function(node) {
+    if (!n.VariableDeclaration.check(node)) {
+      logger.logRejectedNode('not a VariableDeclaration', node);
+      return false;
+    }
+    if (!containsNgInjectAnnotation(node)) {
+      logger.logRejectedNode('does not contain an NgInit comment', node);
+      return false;
+    }
+    if (hasNonInjectableInit(node)) {
+      logger.logRejectedNode('contains a variable initialization', node);
+      return false;
+    }
+    logger.logAcceptedNode(node);
+    return true;
+  };
+
+  function hasNonInjectableInit(node) {
+    n.VariableDeclaration.assert(node);
+    var found = false;
+    types.visit(node, {
+      visitVariableDeclarator:function(path) {
+        var init = path.node.init;
+        if (init !== null) {
+          found = found || (requiredInjection(init) === null);
+        }
+        return false;
+      }
+    });
+    return found;
   }
 }
