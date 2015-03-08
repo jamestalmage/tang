@@ -175,20 +175,22 @@ describe('ngProvide - basic usage', function() {
 
   xit('@ngFactory - provides a factory', function() {
     // @ngFactory
-    var timeoutInSeconds = function($timeout) {
+    function timeoutInSeconds($timeout) {
       return function(fn, delay, invokeApply) {
         return $timeout(fn, delay * 1000, invokeApply);
       };
-    };
+    }
 
     // @ngFactory
     var timeoutInSeconds;
 
     beforeEach(function() {
       angular.mock.module(function($provide) {
-        function timeoutInSecondsFactory($timeout) {
-
-        }
+        $provide.factory(function($timeout) {
+          return timeoutInSeconds = function(fn, delay, invokeApply) {
+            return $timeout(fn, delay * 1000, invokeApply);
+          }
+        });
       });
     });
   });

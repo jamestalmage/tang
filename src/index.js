@@ -2,17 +2,23 @@
 
 module.exports = transform;
 
-var recast = require('recast');
 var ngProvide = require('./ngProvide/index')(
   'value', /^\s*@ngProvide\s*$/, require('./silent-logger')
 );
+
 var ngValue = require('./ngProvide/index')(
   'value', /^\s*@ngValue\s*$/, require('./silent-logger')
 );
+
 var ngConstant = require('./ngProvide/index')(
   'constant', /^\s*@ngConstant\s*$/, require('./silent-logger')
 );
+
+var ngFactory = require('./ngFactory')(/^\s*@ngFactory\s*$/);
+
 var ngInject = require('./ngInject');
+
+var recast = require('recast');
 var convert = require('convert-source-map');
 var merge = require('merge');
 
@@ -22,7 +28,8 @@ function transform(src, suppliedOptions) {
     ngInject:true,
     ngProvide:true,
     ngValue:true,
-    ngConstant:true
+    ngConstant:true,
+    ngFactory:true
   }, suppliedOptions);
   if (options.sourceMap) {
     if (options.sourceFileName && !options.sourceMapName) {
@@ -49,6 +56,9 @@ function transform(src, suppliedOptions) {
   }
   if (options.ngConstant) {
     ngConstant(ast);
+  }
+  if (options.ngFactory) {
+    ngFactory(ast);
   }
   var result = recast.print(ast, options);
   var transformedCode = result.code;

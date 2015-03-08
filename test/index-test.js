@@ -99,6 +99,36 @@ describe('main', function() {
     expect(output.map).to.equal(null);
   });
 
+  it('ngFactory', function() {
+    var input = [
+      '// @ngFactory',
+      'function foo(bar) {',
+      '  function baz() {',
+      '    return "foo" + bar;',  // should not put assignment on this return statement
+      '  }',
+      '  return baz;',
+      '}'
+    ].join('\n');
+
+    var expected = [
+      '// @ngFactory',
+      'var foo;',
+      '',
+      'beforeEach(function() {',
+      '  angular.mock.module(function($provide) {',
+      '    $provide.factory("foo", function(bar) {',
+      '      function baz() {',
+      '        return "foo" + bar;',
+      '      }',
+      '      return foo = baz;',
+      '    });',
+      '  });',
+      '});'
+    ].join('\n');
+
+    expect(process(input).code).to.equal(expected);
+  });
+
   it('will run all injections with sensible defaults', function() {
     var code = index(input).code;
     expect(code).to.equal([

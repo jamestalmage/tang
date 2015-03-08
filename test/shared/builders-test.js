@@ -70,8 +70,8 @@ describe('shared utils', function() {
     );
     var expected = [
       'angular.mock.module(function($provide) {',
-      '    $provide.value("a", "b");',
-      '    $provide.value("c", "d");',
+      '  $provide.value("a", "b");',
+      '  $provide.value("c", "d");',
       '});'
     ].join('\n');
     expect(lib.print(moduleCb)).to.equal(expected);

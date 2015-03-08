@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 var exec = require('child_process').exec;
 var clean = require('gulp-clean');
-var gutils = require('gulp-util');
+var gutil = require('gulp-util');
 var istanbul = require('gulp-istanbul');
 var mocha = require('gulp-mocha');
 var jshint = require('gulp-jshint');
@@ -22,6 +22,11 @@ gulp.task('cover', function(cb){
 gulp.task('test', function() {
   return gulp.src(['mocha-globals.js','test/**/*-test.js', 'test/*-test.js'])
     .pipe(mocha())
+    .on('error', gutil.log);
+});
+
+gulp.task('watch', function() {
+  gulp.watch(['test/**', 'src/**'],['test']);
 });
 
 gulp.task('lint', function() {
@@ -51,7 +56,7 @@ function execTask(dir){
     exec('cd ./plugins/' + dir + ' && npm i && npm i ../.. && gulp', function(err,stdout,stderr){
         var capsDir = dir.toUpperCase();
       if(err){
-        console.log(gutils.colors.red([
+        console.log(gutil.colors.red([
           '************************************************************************************************',
           '***************************** BEGIN FAILURE: ' + capsDir + ' ***************************************'
         ].join('\n')));
@@ -59,13 +64,13 @@ function execTask(dir){
         console.log(stdout);
         console.log(stderr);
 
-        console.log(gutils.colors.red([
+        console.log(gutil.colors.red([
           '***************************** END FAILURE: ' + capsDir + ' *****************************************',
           '************************************************************************************************'
         ].join('\n')));
       }
       else {
-        console.log(gutils.colors.blue('************** PLUGIN TESTS SUCCEEDED: ' + capsDir + '***************************'));
+        console.log(gutil.colors.blue('************** PLUGIN TESTS SUCCEEDED: ' + capsDir + '***************************'));
       }
       cb(err);
     });
