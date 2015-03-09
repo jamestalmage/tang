@@ -130,6 +130,25 @@ beforeEach(inject(function($rootScope){
 }));
 ```
 
+@ngInjectProvider
+-----------------
+Works identically to `@ngInject` but performs it's injections during the `config` stage instead
+of the `run` stage of module initialization. This means you have access to instance providers
+instead of instances.
+
+```javascript
+// @ngInject
+var $compileProvider;
+
+// ---- becomes ----
+
+var scope;
+
+beforeEach(module(function(_$compileProvider_){
+  $compileProvider = _$compileProvider_;
+}));
+```
+
 @ngValue & ~~@ngProvide~~
 -------------------------
 Where `@ngInject` helps you get testable instances *out* of your angular module, `@ngValue`
