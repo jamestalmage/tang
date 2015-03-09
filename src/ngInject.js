@@ -1,7 +1,6 @@
 'use strict';
 
-module.exports = createInjector();
-module.exports.create = createInjector;
+module.exports = createInjector;
 module.exports.collectVariableIds = collectVariableIds;
 module.exports.needsInjection = needsInjection;
 module.exports.requiredInjection = requiredInjection;
@@ -11,9 +10,10 @@ var n = types.namedTypes;
 var b = types.builders;
 var s = require('./builders');
 
-function createInjector(regexp, logger) {
+function createInjector(regexp, logger, injectionFuncName) {
   regexp = regexp ||  /^\s*@ngInject\s*$/;
   logger = logger || require('./silent-logger');
+  injectionFuncName = injectionFuncName || 'inject';
 
   var injectionNeeded = needsInjection(regexp, logger);
 
@@ -36,7 +36,7 @@ function createInjector(regexp, logger) {
 
         // beforeEach call that injects required variables and assigns them.
         var beforeEach = s.beforeEachStmt([
-          s.injectCall(obj.inject, obj.assign)
+          s.injectCall(obj.inject, obj.assign, injectionFuncName)
         ]);
 
         path.replace(decl, beforeEach);

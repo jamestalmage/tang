@@ -18,9 +18,9 @@ function beforeEachStmt(args) {
   );
 }
 
-function injectCall(params, statements) {
+function injectCall(params, statements, ngFuncName) {
   return b.callExpression(
-    b.identifier('inject'),
+    b.identifier(ngFuncName),
     [
       b.functionExpression(null, params, b.blockStatement(statements))
     ]

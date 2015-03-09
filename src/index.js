@@ -25,7 +25,11 @@ var ngDirective = require('./ngProvide')(
 var ngFactory = require('./ngFactory')(/^\s*@ngFactory\s*$/);
 var ngService = require('./ngService')(/^\s*@ngService\s*$/);
 
-var ngInject = require('./ngInject');
+var ngInject = require('./ngInject')();
+
+var ngInjectProvider = require('./ngInject')(
+  /^\s*@ngInjectProvider\s*$/, require('./silent-logger'), 'module'
+);
 
 var recast = require('recast');
 var convert = require('convert-source-map');
@@ -41,7 +45,8 @@ function transform(src, suppliedOptions) {
     ngFactory:true,
     ngService:true,
     ngProvider:true,
-    ngDirective:true
+    ngDirective:true,
+    ngInjectProvider:true
   }, suppliedOptions);
   if (options.sourceMap) {
     if (options.sourceFileName && !options.sourceMapName) {
@@ -80,6 +85,9 @@ function transform(src, suppliedOptions) {
   }
   if (options.ngDirective) {
     ngDirective(ast);
+  }
+  if (options.ngInjectProvider) {
+    ngInjectProvider(ast);
   }
   var result = recast.print(ast, options);
   var transformedCode = result.code;

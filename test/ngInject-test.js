@@ -127,7 +127,7 @@ describe('ngInject - collect variable Ids', function() {
 
 describe('ngInject - perform ast transformation', function() {
   var util = require('./lib/index');
-  var insertVariableInjections = require('../src/ngInject');
+  var insertVariableInjections = require('../src/ngInject')();
 
   it('inserts a beforeEach', function() {
     var input = util.parse([
