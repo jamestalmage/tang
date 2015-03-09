@@ -40,11 +40,12 @@ function variableDeclaration(ids) {
   );
 }
 
-function provide(type, id, val) {
+function provide(type, id, val, $provide) {
   n.Literal.assert(id);
+  $provide = $provide || '$provide';
 
   var $parseValueExp = b.memberExpression(
-    b.identifier('$provide'),
+    b.identifier($provide),
     b.identifier(type),
     false
   );

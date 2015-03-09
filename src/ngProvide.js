@@ -11,9 +11,10 @@ var n = types.namedTypes;
 var b = types.builders;
 var s = require('./builders');
 
-function createInjector (type, regexp, logger) {
+function createInjector (type, regexp, logger, requiredProvider) {
   assert(typeof type === 'string', 'type must be a string');
   assert(regexp, 'regexp required');
+  requiredProvider = requiredProvider || '$provide';
 
   var hasNgProvideAnnotation = hasAnnotation(regexp);
 
@@ -86,6 +87,31 @@ function createInjector (type, regexp, logger) {
     });
     return ast;
   }
+
+  function buildInjection(types, ids, inits) {
+    assert.equal(ids.length, inits.length, 'ids and inits must be same length');
+    assert.equal(types.length, inits.length, 'types.length !== inits.length');
+
+    var assignments = [];
+    var provides = [];
+
+    for (var i = 0; i < ids.length; i++) {
+      assignments.push(s.assignmentStatement(ids[i], inits[i]));
+
+      provides.push(
+        s.provide(types[i], b.literal(ids[i].name), ids[i], requiredProvider)
+      );
+    }
+
+    var moduleStmt = s.moduleCb(
+      [b.identifier(requiredProvider)],
+      assignments.concat(provides)
+    );
+
+    return s.beforeEachStmt(
+      [b.functionExpression(null, [], b.blockStatement([moduleStmt]))]
+    );
+  }
 }
 
 function missingInit(node) {
@@ -117,27 +143,4 @@ function collectVariableIdsAndInits(type, node) {
     }
   });
   return {types:t, ids:ids, inits:inits};
-}
-
-function buildInjection(types, ids, inits) {
-  assert.equal(ids.length, inits.length, 'ids and inits must be same length');
-  assert.equal(types.length, inits.length, 'types.length !== inits.length');
-
-  var assignments = [];
-  var provides = [];
-
-  for (var i = 0; i < ids.length; i++) {
-    assignments.push(s.assignmentStatement(ids[i], inits[i]));
-
-    provides.push(s.provide(types[i], b.literal(ids[i].name), ids[i]));
-  }
-
-  var moduleStmt = s.moduleCb(
-    [b.identifier('$provide')],
-    assignments.concat(provides)
-  );
-
-  return s.beforeEachStmt(
-    [b.functionExpression(null, [], b.blockStatement([moduleStmt]))]
-  );
 }
