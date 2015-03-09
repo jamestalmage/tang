@@ -287,7 +287,7 @@ Provide mock providers using `$provide.provider()`
 
 ```javascript
 // @ngProvider
-var myProvider = {
+var greetProvider = {
   name: "world",
   $get: function(a) {
     return "hello " + this.name + a;
@@ -296,20 +296,32 @@ var myProvider = {
 
 // ---- becomes ----
 
-var myProvider;
+var greetProvider;
 
 beforeEach(function() {
   angular.mock.module(function($provide) {
-    myProvider = {
+    greetProvider = {
       name: "world",
       $get: function(a) {
         return "hello " + this.name + a;
       }
     };
 
-    $provide.provider("myProvider", myProvider);
+    $provide.provider("greet", myProvider);
   });
 });
+```
+
+Note that if your variable name has a "Provider" suffix, it will be stripped off when
+creating the name for the service. This allows you to avoid naming collisions when
+your tests need access to both the provider and the provided instance:
+
+```javascript
+// @ngProvider
+function greetProvider() { /* ... */ }
+
+// @ngInject
+var greet;
 ```
 
 @ngDirective
