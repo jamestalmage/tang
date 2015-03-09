@@ -14,6 +14,10 @@ var ngConstant = require('./ngProvide')(
   'constant', /^\s*@ngConstant\s*$/, require('./silent-logger')
 );
 
+var ngProvider = require('./ngProvide')(
+  'provider', /^\s*@ngProvider\s*$/, require('./silent-logger')
+);
+
 var ngFactory = require('./ngFactory')(/^\s*@ngFactory\s*$/);
 var ngService = require('./ngService')(/^\s*@ngService\s*$/);
 
@@ -31,7 +35,8 @@ function transform(src, suppliedOptions) {
     ngValue:true,
     ngConstant:true,
     ngFactory:true,
-    ngService:true
+    ngService:true,
+    ngProvider:true
   }, suppliedOptions);
   if (options.sourceMap) {
     if (options.sourceFileName && !options.sourceMapName) {
@@ -64,6 +69,9 @@ function transform(src, suppliedOptions) {
   }
   if (options.ngService) {
     ngService(ast);
+  }
+  if (options.ngProvider) {
+    ngProvider(ast);
   }
   var result = recast.print(ast, options);
   var transformedCode = result.code;

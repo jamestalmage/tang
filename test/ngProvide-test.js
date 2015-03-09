@@ -89,15 +89,25 @@ describe('ngProvide - basic usage', function() {
     expect(!!output.map).to.equal(true);
   });
 
-  it('will not touch annotated functions', function() {
-    var code = [
+  it('will handle function declarations ', function() {
+    var input = [
       '/* @ngProvide */ ',
       'function foo() {}'
     ].join('\n');
 
-    var output = ngProvide(code);
+    var expected = [
+      '/* @ngProvide */',
+      'var foo;',
+      '',
+      'beforeEach(function() {',
+      '  angular.mock.module(function($provide) {',
+      '    foo = function() {};',
+      '    $provide.value("foo", foo);',
+      '  });',
+      '});'
+    ].join('\n');
 
-    expect(output.code).to.equal(code);
+    expect(ngProvide(input).code).to.equal(expected);
   });
 
   it('will not touch variable declarations without init', function() {

@@ -2,5 +2,6 @@
 
 module.exports = {
   parse: require('./parse'),
-  print: require('./print')
+  print: require('./print'),
+  process: require('./process')
 };

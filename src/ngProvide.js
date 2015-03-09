@@ -58,11 +58,30 @@ function createInjector (type, regexp, logger) {
           n.ExpressionStatement.check(parentNode) &&
           hasNgProvideAnnotation(parentNode)
         ) {
+          //TODO: This should not automatically be type value
           var injection = buildInjection(['value'], [node.left], [node.right]);
           injection.comments = parentNode.comments;
           parent.replace(injection);
         }
         return false;
+      },
+      visitFunctionDeclaration: function(path) {
+        var node = path.node;
+        if (hasNgProvideAnnotation(node)) {
+          var id = node.id;
+          var func = b.functionExpression(null, node.params, node.body);
+          var injection = buildInjection([type], [id], [func]);
+          var decl = b.variableDeclaration(
+            'var',
+            [b.variableDeclarator(
+              id, null
+            )]
+          );
+          decl.comments = node.comments;
+          path.replace(decl, injection);
+          return false;
+        }
+        this.traverse(path);
       }
     });
     return ast;

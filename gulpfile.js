@@ -21,7 +21,7 @@ gulp.task('cover', function(cb){
 
 gulp.task('test', function() {
   return gulp.src(['mocha-globals.js','test/**/*-test.js', 'test/*-test.js'])
-    .pipe(mocha())
+    .pipe(mocha({growl:true}))
     .on('error', gutil.log);
 });
 
