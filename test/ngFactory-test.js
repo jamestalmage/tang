@@ -22,6 +22,50 @@ describe('ngFactory', function() {
     return lib.parse(code).program.body[0];
   }
 
+  it('ngFactory', function() {
+    var input = [
+      '// @ngFactory',
+      'function foo(bar) {',
+      '  function baz() {',
+      '    return "foo" + bar;',  // should not put assignment on this return statement
+      '  }',
+      '  return baz;',
+      '}'
+    ].join('\n');
+
+    var expected = [
+      '// @ngFactory',
+      'var foo;',
+      '',
+      'beforeEach(function() {',
+      '  angular.mock.module(function($provide) {',
+      '    $provide.factory("foo", function(bar) {',
+      '      function baz() {',
+      '        return "foo" + bar;',
+      '      }',
+      '      return foo = baz;',
+      '    });',
+      '  });',
+      '});'
+    ].join('\n');
+
+    expect(lib.process(input).code).to.equal(expected);
+  });
+
+  it('ngFactory - can be disabled', function() {
+    var input = [
+      '// @ngFactory',
+      'function foo(bar) {',
+      '  function baz() {',
+      '    return "foo" + bar;',  // should not put assignment on this return statement
+      '  }',
+      '  return baz;',
+      '}'
+    ].join('\n');
+
+    expect(lib.process(input, {ngFactory:false}).code).to.equal(input);
+  });
+
   describe('extractName', function() {
     it('strips the identifier from the function', function() {
       var extracted = instrumentFactoryFunction('function bar() {}');
