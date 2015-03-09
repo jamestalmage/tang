@@ -1,6 +1,6 @@
 {
   "name": "ng-test-utils",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "angular test utilities",
   "main": "index.js",
   "repository": {
