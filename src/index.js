@@ -15,7 +15,15 @@ var ngConstant = require('./ngProvide')(
 );
 
 var ngProvider = require('./ngProvide')(
-  'provider', /^\s*@ngProvider\s*$/, require('./silent-logger')
+  'provider',
+  /^\s*@ngProvider\s*$/,
+  require('./silent-logger'),
+  null,
+  function(name) {
+    var returnValue =  name.replace(/Provider$/, '').toString();
+    console.log(name + ' replaced with ' + returnValue);
+    return returnValue;
+  }
 );
 
 var ngDirective = require('./ngProvide')(

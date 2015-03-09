@@ -51,6 +51,6 @@ describe('@ngDirective', function() {
       '}'
     ].join('\n');
 
-    expect(lib.process(input, {ngDirective:false}).code).to.equal(input)
+    expect(lib.process(input, {ngDirective:false}).code).to.equal(input);
   });
 });

@@ -11,10 +11,13 @@ var n = types.namedTypes;
 var b = types.builders;
 var s = require('./builders');
 
-function createInjector (type, regexp, logger, requiredProvider) {
+function identity(val) {return val;}
+
+function createInjector (type, regexp, logger, requiredProvider, rename) {
   assert(typeof type === 'string', 'type must be a string');
   assert(regexp, 'regexp required');
   requiredProvider = requiredProvider || '$provide';
+  rename = rename || identity;
 
   var hasNgProvideAnnotation = hasAnnotation(regexp);
 
@@ -98,9 +101,12 @@ function createInjector (type, regexp, logger, requiredProvider) {
     for (var i = 0; i < ids.length; i++) {
       assignments.push(s.assignmentStatement(ids[i], inits[i]));
 
-      provides.push(
-        s.provide(types[i], b.literal(ids[i].name), ids[i], requiredProvider)
-      );
+      provides.push(s.provide(
+        types[i],
+        b.literal(rename(ids[i].name)),
+        ids[i],
+        requiredProvider
+      ));
     }
 
     var moduleStmt = s.moduleCb(

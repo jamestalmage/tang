@@ -32,7 +32,8 @@ gulp.task('watch', function() {
 gulp.task('lint', function() {
   return gulp.src(['src/**', 'test/**'])
     .pipe(jshint())
-    .pipe(jshint.reporter('default'));
+    .pipe(jshint.reporter('default'))
+    .pipe(jshint.reporter('fail'));
 });
 
 gulp.task('check-style', function() {
