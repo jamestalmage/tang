@@ -15,7 +15,7 @@ var serviceA;
 
 beforeEach(module(function() {
   serviceA = sinon.spy();
-  $provide.value('serviceA', serviceA);
+  $provide.value('serviceA serviceA);
 }));
 
 var serviceB, $rootScope, scope;
@@ -152,7 +152,7 @@ beforeEach(module(function($provide){
     doSomething: sinon.spy(),
     somethingElse: sinon.spy()
   };
-  $provide.value('myService', myService);
+  $provide.value('myService myService);
 }));
 ```
 `@ngProvide` works the same way and is synonymous with `@ngValue`, but I plan to repurpose it with slightly
@@ -178,7 +178,7 @@ var siteUrl;
 
 beforeEach(module(function($provide){
   siteUrl = 'https://angular.io';
-  $provide.constant('siteUrl', siteUrl);
+  $provide.constant('siteUrl siteUrl);
 }));
 ```
 
@@ -258,6 +258,37 @@ beforeEach(function() {
 
 Note - this currently does not work if you `return` a value from your constructor.
 If that is the case you probably should be using `@ngFactory`.
+
+@ngProvider
+-----------
+Provide mock providers using `$provide.provider()`
+
+```javascript
+// @ngProvider
+var myProvider = {
+  name: "world",
+  $get: function(a) {
+    return "hello " + this.name + a;
+  }
+}
+
+// ---- becomes ----
+
+var myProvider;
+
+beforeEach(function() {
+  angular.mock.module(function($provide) {
+    myProvider = {
+      name: "world",
+      $get: function(a) {
+        return "hello " + this.name + a;
+      }
+    };
+
+    $provide.provider("myProvider", myProvider);
+  });
+});
+```
 
 source-maps
 -----------
