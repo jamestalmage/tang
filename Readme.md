@@ -180,8 +180,11 @@ different semantics - so stick with `@ngvalue` for now.
 You can use both `@ngValue` and `@ngInject` together in your tests, but you must make sure all of your
 `@ngValue` declarations come before your first `@ngInject`.
 
-@ngConstant
+~~@ngConstant~~
 -----------
+**deprecated** - Angular constants can not be overridden, so this is pretty useless.
+Use providers for configurable application wide settings.
+
 Very similar to `@ngConstant`, but it provides a constant service. From the angular docs:
 
 > Unlike a value [a constant] can be injected into a module configuration function (see angular.Module)
