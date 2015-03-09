@@ -290,6 +290,42 @@ beforeEach(function() {
 });
 ```
 
+@ngDirective
+------------
+Create a stub directive (experimental).
+
+```javascript
+// @ngDirective
+function myDirective($timeout, $log) {
+  return {
+    template: "<div></div>",
+    link: function postLink(scope, iElement, iAttrs, controller) {
+      // do stuff
+    }
+  };
+}
+
+// ---- becomes ----
+
+var myDirective;
+
+beforeEach(function() {
+  angular.mock.module(function($compileProvider) {
+    myDirective = function($timeout, $log) {
+      return {
+        template: "<div></div>",
+        link: function postLink(scope, iElement, iAttrs, controller) {
+          // do stuff
+        }
+      }
+    };
+
+    $compileProvider.directive("myDirective", myDirective);
+  });
+});
+
+```
+
 source-maps
 -----------
 `ng-test-utils` uses [recast](https://github.com/benjamn/recast) to scan your code and inject all the
