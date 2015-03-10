@@ -137,7 +137,7 @@ of the `run` stage of module initialization. This means you have access to insta
 instead of instances.
 
 ```javascript
-// @ngInject
+// @ngInjectProvider
 var $compileProvider;
 
 // ---- becomes ----
@@ -226,15 +226,13 @@ function timeoutInSeconds($timeout) {
 
 var timeoutInSeconds;
 
-beforeEach(function() {
-  angular.mock.module(function($provide) {
-    $provide.factory(function($timeout) {
-      return timeoutInSeconds = function(fn, delay, invokeApply) {
-        return $timeout(fn, delay * 1000, invokeApply);
-      }
-    });
+beforeEach(module(function($provide) {
+  $provide.factory(function($timeout) {
+    return timeoutInSeconds = function(fn, delay, invokeApply) {
+      return $timeout(fn, delay * 1000, invokeApply);
+    };
   });
-});
+}));
 ```
 
 The above example could also be achieved by combining `@ngValue` and `@ngInject`.
@@ -268,12 +266,10 @@ function myService(injectedDependency) {
 
 var myService;
 
-beforeEach(function() {
-  angular.mock.module(function($provide) {
-    $provide.service("myService" function(injectedDependency) {
-      myService = this;
-      this.foo = "bar";
-    });
+beforeEach(module(function($provide) {
+  $provide.service("myService", function(injectedDependency) {
+    myService = this;
+    this.foo = "bar";
   });
 });
 ```
@@ -298,18 +294,16 @@ var greetProvider = {
 
 var greetProvider;
 
-beforeEach(function() {
-  angular.mock.module(function($provide) {
-    greetProvider = {
-      name: "world",
-      $get: function(a) {
-        return "hello " + this.name + a;
-      }
-    };
+beforeEach(module(function($provide) {
+  greetProvider = {
+    name: "world",
+    $get: function(a) {
+      return "hello " + this.name + a;
+    }
+  };
 
-    $provide.provider("greet", myProvider);
-  });
-});
+  $provide.provider("greet", myProvider);
+}));
 ```
 
 Note that if your variable name has a "Provider" suffix, it will be stripped off when
@@ -327,11 +321,15 @@ var greet;
 @ngDirective
 ------------
 Create a stub directive (experimental).
+Possible way to test how directive controllers interact with children.
+This does **not** allow you to swap out directives for mocks
+(see [replaceDirectiveController](#replaceDirectiveController) for that).
 
 ```javascript
 // @ngDirective
 function myDirective($timeout, $log) {
   return {
+    require: "^parentDirective",
     template: "<div></div>",
     link: function postLink(scope, iElement, iAttrs, controller) {
       // do stuff
@@ -343,22 +341,52 @@ function myDirective($timeout, $log) {
 
 var myDirective;
 
-beforeEach(function() {
-  angular.mock.module(function($compileProvider) {
-    myDirective = function($timeout, $log) {
-      return {
-        template: "<div></div>",
-        link: function postLink(scope, iElement, iAttrs, controller) {
-          // do stuff
-        }
+beforeEach(module(function($compileProvider) {
+  myDirective = function($timeout, $log) {
+    return {
+      require: "^parentDirective",
+      template: "<div></div>",
+      link: function postLink(scope, iElement, iAttrs, controller) {
+        // do stuff
       }
-    };
+    }
+  };
 
-    $compileProvider.directive("myDirective", myDirective);
-  });
-});
-
+  $compileProvider.directive("myDirective", myDirective);
+}));
 ```
+
+@replaceDirectiveController
+---------------------------
+Angular does not provide a straightforward way to swap out directive implementations.
+This annotation will allows you to swap out the controller for testing.
+The controller function will be swapped out with a variable of the same name, assigned to an array.
+Each time your controller stub is initialized by Angular, the new instance will be pushed in to that array.
+(note: this does not _yet_ work with controller functions that return a value it pushes "this" on to the array);
+
+```javascript
+// @replaceDirectiveController
+function customClick() {
+  this.doSomething = sinon.spy();
+}
+
+// ----- becomes -----
+
+// @replaceDirectiveController
+var customClick = [];
+
+beforeEach(module(function($provide) {
+  $provide.decorator("customClickDirective", function($delegate) {
+    var directive = $delegate[0];
+
+    directive.controller = function() {
+      customClick.push(this);
+      this.doSomething = sinon.spy();
+    };
+  });
+}));
+```
+
 
 source-maps
 -----------
