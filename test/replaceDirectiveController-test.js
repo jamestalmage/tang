@@ -21,6 +21,8 @@ describe('replaceDirectiveController', function() {
       '      customClickDirective.push(this);',
       '      this.doSomething = sinon.spy();',
       '    };',
+      '',
+      '    return $delegate;',
       '  });',
       '}));'
     ].join('\n');
@@ -48,6 +50,8 @@ describe('replaceDirectiveController', function() {
       '      customClick.push(this);',
       '      this.doSomething = sinon.spy();',
       '    };',
+      '',
+      '    return $delegate;',
       '  });',
       '}));'
     ].join('\n');

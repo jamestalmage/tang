@@ -383,6 +383,8 @@ beforeEach(module(function($provide) {
       customClick.push(this);
       this.doSomething = sinon.spy();
     };
+
+    return $delegate;
   });
 }));
 ```

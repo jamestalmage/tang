@@ -92,7 +92,8 @@ function controllerReplacementCode(directiveName, newController) {
   var func2 = b.functionExpression(null, [i$delegate],
     b.blockStatement([
       sDirectiveDeclare,
-      controllerAssignment
+      controllerAssignment,
+      b.returnStatement(i$delegate)
     ])
   );
 
@@ -103,7 +104,8 @@ function controllerReplacementCode(directiveName, newController) {
         b.callExpression(
           m$provideDecorator,
           [b.literal(directiveName), func2]
-        ))
+        )
+      )
     ])
   );
 
