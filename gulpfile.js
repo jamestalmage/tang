@@ -4,6 +4,7 @@ var clean = require('gulp-clean');
 var gutil = require('gulp-util');
 var istanbul = require('gulp-istanbul');
 var mocha = require('gulp-mocha');
+var spawnMocha = require('gulp-spawn-mocha');
 var jshint = require('gulp-jshint');
 var jscs = require('gulp-jscs');
 var processFiles = require('./processFiles');
@@ -25,8 +26,12 @@ gulp.task('cover', function(cb) {
 });
 
 gulp.task('test', function() {
-  return gulp.src(['mocha-globals.js', 'test/**/*-test.js', 'test/*-test.js'])
-    .pipe(mocha({growl:true}))
+  return gulp.src(['test/**/*-test.js', 'test/*-test.js'], {read: false})
+    .pipe(spawnMocha({
+      growl:true,
+      r:'mocha-globals.js',
+      colors:true
+    }))
     .on('error', gutil.log);
 });
 
