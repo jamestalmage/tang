@@ -3,6 +3,7 @@ coverage
 *.log
 .idea
 plugins
+build
 
 # Because Intellj bugs me incessantly to add them
 JasmineAdapter-1.1.2.js
@@ -18,3 +19,4 @@ test
 combine-coverage.js
 mocha-globals.js
 .travis.yml
+examples

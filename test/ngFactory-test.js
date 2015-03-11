@@ -100,8 +100,6 @@ describe('ngFactory', function() {
       ].join('\n');
 
       expect(lib.print(extracted)).to.equal(expected);
-
-      console.log(lib.print(extractStatements(input)));
     });
 
     it('creates a beforeEachInjection', function() {

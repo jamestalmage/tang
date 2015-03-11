@@ -21,7 +21,7 @@ var ngProvider = require('./ngProvide')(
   null,
   function(name) {
     var returnValue =  name.replace(/Provider$/, '').toString();
-    console.log(name + ' replaced with ' + returnValue);
+    //console.log(name + ' replaced with ' + returnValue);
     return returnValue;
   }
 );
