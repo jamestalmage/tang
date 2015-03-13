@@ -5,7 +5,7 @@ describe('messages', function() {
     // @ngInject
     var greet, hiFred, multiGreet;
 
-    it('greet', function () {
+    it('greet', function() {
       expect(greet('James')).to.equal('hello James!');
     });
 
@@ -36,7 +36,7 @@ describe('messages', function() {
     // @ngInject
     var greet;
 
-    it('greet', function () {
+    it('greet', function() {
       expect(greet('James')).to.equal('hello James?');
     });
   });
@@ -57,7 +57,7 @@ describe('messages', function() {
   describe('use @ngProvider to override the provider', function() {
     // @ngProvider
     var greetProvider = {
-      $get: function(){ return function(name){return 'yo ' + name;}},
+      $get: function() {return function(name) {return 'yo ' + name;}},
       setSalutation: sinon.spy()
     };
 
@@ -75,7 +75,7 @@ describe('messages', function() {
       , $timeout
       , $el = $compile('<message-collection><message my-message="hello"></message></message-collection>')(scope);
 
-    it('test', function(){
+    it('test', function() {
       scope.$apply();
       $timeout.flush();
       var child = angular.element($el.children()[1]);
@@ -83,9 +83,9 @@ describe('messages', function() {
     });
   });
 
-  describe('messageCollection injected as mock', function() {
+  describe('messageCollection replacing', function() {
     // @replaceDirectiveController
-    function messageCollection(){
+    function messageCollection() {
       this.setElement = sinon.spy();
       this.appendMessage = sinon.spy();
     }
@@ -97,6 +97,50 @@ describe('messages', function() {
     it('test', function() {
       $compile('<message-collection><message my-message="hello"></message></message-collection>')(scope);
       scope.$apply();
+      expect(messageCollection.length).to.equal(1);
+      expect(messageCollection[0].appendMessage).to.have.been.calledOnce.and.calledWith('hello');
+      expect(messageCollection[0].setElement.called).to.equal(true);
+    });
+  });
+
+  describe('$injector.instantiate', function(){
+    // @ngInject
+    var $injector;
+
+    it('test', function() {
+      var s = sinon.spy();
+
+      var val = $injector.instantiate(function($injector) {
+        return $injector.instantiate(function() {
+          this.a = sinon.spy();
+          this.b = sinon.spy();
+        })
+      });
+
+      val.a();
+      val.b();
+
+    });
+
+  });
+
+  describe.only('@mockDirectiveController', function() {
+    // @mockDirectiveController
+    function messageCollection() {
+      this.setElement = sinon.spy();
+      this.appendMessage = sinon.spy();
+      console.log('this:', this)
+    }
+
+    // @ngInject
+    var scope = $rootScope.$new()
+      , $compile
+      , $timeout;
+
+    it('test', function() {
+      $compile('<message-collection><message my-message="hello"></message></message-collection>')(scope);
+      scope.$apply();
+      $timeout.flush()
       expect(messageCollection.length).to.equal(1);
       expect(messageCollection[0].appendMessage).to.have.been.calledOnce.and.calledWith('hello');
       expect(messageCollection[0].setElement.called).to.equal(true);
