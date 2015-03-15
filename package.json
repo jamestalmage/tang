@@ -21,7 +21,7 @@
     "ng-test-utils": "./cli.js"
   },
   "dependencies": {
-    "convert-source-map": "git://github.com/jamestalmage/convert-source-map#4397e24b9a41b19b964ea0a4b6eb0858d6a3450f",
+    "convert-source-map": "^1.0.0",
     "merge": "^1.2.0",
     "mkpath": "^0.1.0",
     "nomnom": "^1.8.1",
