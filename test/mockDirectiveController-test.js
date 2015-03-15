@@ -2,7 +2,7 @@ describe('interceptController', function() {
 
   var lib = require('./lib');
 
-  it('blah', function() {
+  it('injects code', function() {
     var input = [
       '// @mockDirectiveController',
       'function myThing($scope) {',
@@ -25,22 +25,23 @@ describe('interceptController', function() {
       '    };',
       '',
       '    directive.controller = function($attrs, $element, $scope, $injector, $transclude) {',
+      '      var self = this;',
+      '      myThing.push(self);',
+      '',
       '      var locals = {',
       '        $attrs: $attrs,',
       '        $element: $element,',
       '        $scope: $scope,',
       '        $transclude: $transclude,',
       '        $oldController: $oldController,',
-      '        $createOriginal: $createOriginal',
+      '        $super: $super',
       '      };',
       '',
-      '      function $createOriginal(extendedLocals) {',
-      '        return $injector.instantiate($oldController, angular.extend({}, extendedLocals, locals));',
+      '      function $super(extendedLocals) {',
+      '        return $injector.invoke($oldController, self, angular.extend({}, extendedLocals, locals));',
       '      }',
       '',
-      '      var newInstance = $injector.instantiate(newController, locals);',
-      '      myThing.push(newInstance);',
-      '      return newInstance;',
+      '      $injector.invoke(newController, this, locals);',
       '    };',
       '',
       '    return $delegate;',
@@ -52,7 +53,7 @@ describe('interceptController', function() {
     expect(lib.process(input).code).to.equal(expected);
   });
 
-  it('print it', function() {
+  it('can be disabled', function() {
 
     var input = [
       '// @mockDirectiveController',
@@ -61,6 +62,7 @@ describe('interceptController', function() {
       '}'
     ].join('\n');
 
-    console.log(lib.process(input).code);
-  })
+    expect(lib.process(input, {mockDirectiveController:false}).code)
+      .to.equal(input);
+  });
 });

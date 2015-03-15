@@ -82,31 +82,24 @@ function createMock(regexp) {
         this.traverse(path);
       }
     });
-  }
+  };
 }
 
 function mockingCode(name, func) {
-  var injectorInvoke = injectorInstantiate(inewController, ilocals);
 
-  var newInstanceDeclare = b.variableDeclaration(
-    'var',
-    [
-      b.variableDeclarator(
-        inewInstance,
-        injectorInvoke
-      )
-    ]
+  var injectorInvoke = b.expressionStatement(
+    injectorInvokeExp(inewController, b.thisExpression(), ilocals)
   );
 
   var wrapMockFunc = b.functionExpression(
     null,
     [i$attrs, i$element, i$scope, i$injector, i$transclude],
     b.blockStatement([
+      selfIsThis,
+      pushStatement(b.identifier(name), iself),
       localsStmt,
       createOriginalDecl,
-      newInstanceDeclare,
-      pushStatement(b.identifier(name), inewInstance),
-      returnNewInstance
+      injectorInvoke
     ])
   );
 
@@ -229,7 +222,6 @@ var iangular     = b.identifier('angular');
 var iextend      = b.identifier('extend');
 var imock        = b.identifier('mock');
 var imodule      = b.identifier('module');
-var iinject      = b.identifier('inject');
 var ibeforeEach  = b.identifier('beforeEach');
 var idecorator   = b.identifier('decorator');
 var ipush        = b.identifier('push');
@@ -238,13 +230,13 @@ var i$element    = b.identifier('$element');
 var i$attrs      = b.identifier('$attrs');
 var i$transclude = b.identifier('$transclude');
 var i$injector   = b.identifier('$injector');
-var iinstantiate = b.identifier('instantiate');
-var inewInstance = b.identifier('newInstance');
+var iinvoke      = b.identifier('invoke');
+var iself        = b.identifier('self');
 var ilocals      = b.identifier('locals');
 var iextendedLocals      = b.identifier('extendedLocals');
 var i$oldController = b.identifier('$oldController');
 var inewController = b.identifier('newController');
-var i$createOriginal = b.identifier('$createOriginal');
+var i$super = b.identifier('$super');
 
 // angular.mock
 var mAngularMock = b.memberExpression(iangular, imock, false);
@@ -284,9 +276,6 @@ var sOldControllerDeclare = b.variableDeclaration(
   )]
 );
 
-// return newInstance
-var returnNewInstance = b.returnStatement(inewInstance);
-
 // {
 //   $attrs: $attrs,
 //   $element: $element,
@@ -299,7 +288,7 @@ var localsExp = b.objectExpression([
   b.property('init', i$scope, i$scope),
   b.property('init', i$transclude, i$transclude),
   b.property('init', i$oldController, i$oldController),
-  b.property('init', i$createOriginal, i$createOriginal)
+  b.property('init', i$super, i$super)
 ]);
 
 // var locals = <localsExp>
@@ -313,29 +302,31 @@ function ngExtendExp(args) {
   return b.callExpression(
     mAngularExtend,
     args
-  )
+  );
 }
 
-function injectorInstantiate(func, locals) {
+function injectorInvokeExp(func, contextExp, locals) {
   n.Expression.assert(locals);
   n.Expression.assert(func);
+  n.Expression.assert(contextExp);
   return b.callExpression(
     b.memberExpression(
       i$injector,
-      iinstantiate,
+      iinvoke,
       false
     ),
-    [func, locals]
+    [func, contextExp, locals]
   );
 }
 
 var createOriginalDecl = b.functionDeclaration(
-  i$createOriginal,
+  i$super,
   [iextendedLocals],
   b.blockStatement(
     [b.returnStatement(
-      injectorInstantiate(
+      injectorInvokeExp(
         i$oldController,
+        iself,
         ngExtendExp([
           b.objectExpression([]),
           iextendedLocals,
@@ -344,4 +335,9 @@ var createOriginalDecl = b.functionDeclaration(
       )
     )]
   )
+);
+
+var selfIsThis = b.variableDeclaration(
+  'var',
+  [b.variableDeclarator(iself, b.thisExpression())]
 );

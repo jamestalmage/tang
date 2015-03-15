@@ -124,12 +124,11 @@ describe('messages', function() {
 
   });
 
-  describe.only('@mockDirectiveController', function() {
+  describe('@mockDirectiveController', function() {
     // @mockDirectiveController
     function messageCollection() {
       this.setElement = sinon.spy();
       this.appendMessage = sinon.spy();
-      console.log('this:', this)
     }
 
     // @ngInject
@@ -140,7 +139,6 @@ describe('messages', function() {
     it('test', function() {
       $compile('<message-collection><message my-message="hello"></message></message-collection>')(scope);
       scope.$apply();
-      $timeout.flush()
       expect(messageCollection.length).to.equal(1);
       expect(messageCollection[0].appendMessage).to.have.been.calledOnce.and.calledWith('hello');
       expect(messageCollection[0].setElement.called).to.equal(true);
