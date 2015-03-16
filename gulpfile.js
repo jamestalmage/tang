@@ -1,43 +1,13 @@
 var gulp = require('gulp');
 var exec = require('child_process').exec;
-var clean = require('gulp-clean');
 var gutil = require('gulp-util');
-var istanbul = require('gulp-istanbul');
-var mocha = require('gulp-mocha');
 var spawnMocha = require('gulp-spawn-mocha');
 var jshint = require('gulp-jshint');
 var jscs = require('gulp-jscs');
 var processFiles = require('./processFiles');
 var karma = require('karma').server;
 var fs = require('fs');
-
-gulp.task('cover', function(cb) {
-  gulp.src(['src/**/*.js'])
-    .pipe(istanbul())
-    .pipe(istanbul.hookRequire())
-    .on('finish', function() {
-      gulp.src(['mocha-globals.js', 'test/**/*-test.js', 'test/*-test.js'])
-        .pipe(mocha())
-        .pipe(istanbul.writeReports(
-          {dir: './coverage/' + (process.env.NG_UTILS_PARSER || 'recast')}
-        ))
-        .on('end', cb);
-    });
-});
-
-gulp.task('test', function() {
-  return gulp.src(['test/**/*-test.js', 'test/*-test.js'], {read: false})
-    .pipe(spawnMocha({
-      growl:true,
-      r:'mocha-globals.js',
-      colors:true
-    }))
-    .on('error', gutil.log);
-});
-
-gulp.task('watch', function() {
-  gulp.watch(['test/**', 'src/**'], ['test']);
-});
+var del = require('del');
 
 gulp.task('lint', function() {
   return gulp.src(['src/**', 'test/**'])
@@ -49,6 +19,67 @@ gulp.task('lint', function() {
 gulp.task('check-style', function() {
   return gulp.src(['src/**', 'test/**'])
     .pipe(jscs());
+});
+
+function spawnMochaTask(parser, cover) {
+  return function() {
+    var opt = {
+      env: {NG_UTILS_PARSER: parser},
+      growl: true,
+      r: 'mocha-globals.js',
+      colors: true
+    };
+
+    if (cover) {
+      opt.istanbul = {
+        dir: './coverage/' + parser,
+        root: './src',
+        report: 'none',
+        print: 'none'
+      };
+    }
+
+    return gulp.src(['test/**/*-test.js', 'test/*-test.js'], {read: false})
+      .pipe(spawnMocha(opt))
+      .on('error', gutil.log);
+  };
+}
+
+var testTaskDeps = [];
+var coverTaskDeps = [];
+
+var parsers = ['recast', 'esprima', 'acorn'];
+
+parsers.forEach(function(parser) {
+  var lintAndStyle = ['lint', 'check-style'];
+  var testName = 'test-' + parser;
+  var coverName = 'cover-' + parser;
+  gulp.task(testName, lintAndStyle, spawnMochaTask(parser, false));
+  gulp.task(coverName, lintAndStyle, spawnMochaTask(parser, true));
+  testTaskDeps.push(testName);
+  coverTaskDeps.push(coverName);
+});
+
+gulp.task('test', testTaskDeps);
+
+gulp.task('cover', coverTaskDeps, function(cb) {
+  //combine all the coverage reports
+  var istanbul = require('istanbul');
+  var collector = new istanbul.Collector();
+  var reporter = new istanbul.Reporter();
+  var sync = false;
+
+  parsers.forEach(function(parser) {
+    collector.add(require('./coverage/' + parser + '/coverage.json'));
+  });
+
+  reporter.add('text');
+  reporter.addAll(['lcov', 'clover']);
+  reporter.write(collector, sync, cb);
+});
+
+gulp.task('watch', function() {
+  gulp.watch(['test/**', 'src/**'], ['test']);
 });
 
 function cloneTask(url, dir) {
@@ -92,10 +123,8 @@ function execTask(dir) {
   }
 }
 
-gulp.task('clean', function() {
-  return gulp.src('./plugins')
-    .pipe(clean())
-
+gulp.task('clean', function(cb) {
+  del(['./plugins'], cb);
 });
 
 gulp.task('clone-browserify-plugin', ['clean'], cloneTask(
@@ -137,7 +166,7 @@ if (pluginUnderTest) {
 }
 gulp.task('test-plugin', deps);
 
-gulp.task('default', ['lint', 'check-style', 'test', 'test-example']);
+gulp.task('default', ['cover', 'test-example', 'test-plugin']);
 
 gulp.task('test-example', function(cb) {
   processFiles({
@@ -151,7 +180,7 @@ gulp.task('test-example', function(cb) {
   );
   karma.start({
     configFile: __dirname + '/karma.conf.js'
-  });
+  }, cb);
 });
 
 function copySync(from, to) {
