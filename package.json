@@ -41,6 +41,7 @@
     "gulp-jscs": "^1.4.0",
     "gulp-jshint": "^1.9.2",
     "gulp-mocha": "^2.0.0",
+    "gulp-spawn-mocha": "^2.0.1",
     "gulp-util": "^3.0.4",
     "istanbul": "^0.3.6",
     "jscs": "^1.11.3",
