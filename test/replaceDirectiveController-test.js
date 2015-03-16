@@ -1,7 +1,7 @@
 describe('replaceDirectiveController', function() {
   var lib = require('./lib');
 
-  it('blah', function() {
+  it('will replace a directives controller', function() {
     var input = [
       '// @replaceDirectiveController',
       'function customClickDirective() {',
@@ -16,12 +16,14 @@ describe('replaceDirectiveController', function() {
       'beforeEach(angular.mock.module(function($provide) {',
       '  $provide.decorator("customClickDirective", function($delegate) {',
       '    var directive = $delegate[0];',
+      '    var $oldController = directive.controller;',
       '',
-      '    directive.controller = function() {',
+      '    var newController = function() {',
       '      customClickDirective.push(this);',
       '      this.doSomething = sinon.spy();',
       '    };',
       '',
+      '    directive.controller = newController;',
       '    return $delegate;',
       '  });',
       '}));'
@@ -45,12 +47,14 @@ describe('replaceDirectiveController', function() {
       'beforeEach(angular.mock.module(function($provide) {',
       '  $provide.decorator("customClickDirective", function($delegate) {',
       '    var directive = $delegate[0];',
+      '    var $oldController = directive.controller;',
       '',
-      '    directive.controller = function() {',
+      '    var newController = function() {',
       '      customClick.push(this);',
       '      this.doSomething = sinon.spy();',
       '    };',
       '',
+      '    directive.controller = newController;',
       '    return $delegate;',
       '  });',
       '}));'

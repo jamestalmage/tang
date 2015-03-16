@@ -30,8 +30,13 @@ var ngDirective = require('./ngProvide')(
   'directive', /^\s*@ngDirective\s*$/, require('./silent-logger'), '$compileProvider'
 );
 
-var replaceDirectiveController = require('./replaceDirectiveController')(
-  /^\s*@replaceDirectiveController\s*$/
+var replaceDirectiveController =
+  require('./replaceDirectiveController').replace(
+    /^\s*@replaceDirectiveController\s*$/
+  );
+
+var proxyDirectiveController = require('./replaceDirectiveController').proxy(
+  /^\s*@proxyDirectiveController\s*$/
 );
 
 var ngFactory = require('./ngFactory')(/^\s*@ngFactory\s*$/);
@@ -59,7 +64,8 @@ function transform(src, suppliedOptions) {
     ngProvider:true,
     ngDirective:true,
     ngInjectProvider:true,
-    replaceDirectiveController:true
+    replaceDirectiveController:true,
+    mockDirectiveController:true
   }, suppliedOptions);
   if (options.sourceMap) {
     if (options.sourceFileName && !options.sourceMapName) {
@@ -104,6 +110,9 @@ function transform(src, suppliedOptions) {
   }
   if (options.replaceDirectiveController) {
     replaceDirectiveController(ast);
+  }
+  if (options.mockDirectiveController) {
+    proxyDirectiveController(ast);
   }
   var result = recast.print(ast, options);
   var transformedCode = result.code;

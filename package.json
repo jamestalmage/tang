@@ -1,6 +1,6 @@
 {
   "name": "ng-test-utils",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "angular test utilities",
   "main": "index.js",
   "repository": {
@@ -21,7 +21,7 @@
     "ng-test-utils": "./cli.js"
   },
   "dependencies": {
-    "convert-source-map": "git://github.com/jamestalmage/convert-source-map#4397e24b9a41b19b964ea0a4b6eb0858d6a3450f",
+    "convert-source-map": "^1.0.0",
     "merge": "^1.2.0",
     "mkpath": "^0.1.0",
     "nomnom": "^1.8.1",
@@ -41,6 +41,7 @@
     "gulp-jscs": "^1.4.0",
     "gulp-jshint": "^1.9.2",
     "gulp-mocha": "^2.0.0",
+    "gulp-spawn-mocha": "^2.0.1",
     "gulp-util": "^3.0.4",
     "istanbul": "^0.3.6",
     "jscs": "^1.11.3",

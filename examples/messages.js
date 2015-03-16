@@ -29,7 +29,7 @@ angular.module('messages', [])
       return arr;
     };
   })
-  .directive('messageCollection', function(){
+  .directive('messageCollection', function($timeout){
     return {
       restict:'E',
       replace:true,
