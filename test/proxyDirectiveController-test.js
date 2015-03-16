@@ -4,7 +4,7 @@ describe('interceptController', function() {
 
   it('injects code', function() {
     var input = [
-      '// @mockDirectiveController',
+      '// @proxyDirectiveController',
       'function myThing($scope) {',
       '  // do something',
       '}'
@@ -12,7 +12,7 @@ describe('interceptController', function() {
 
     //jscs:disable
     var expected = [
-      '// @mockDirectiveController',
+      '// @proxyDirectiveController',
       'var myThing = [];',
       '',
       'beforeEach(angular.mock.module(function($provide) {',
@@ -56,7 +56,7 @@ describe('interceptController', function() {
   it('can be disabled', function() {
 
     var input = [
-      '// @mockDirectiveController',
+      '// @proxyDirectiveController',
       'function myThing($scope) {',
       '  // do something',
       '}'

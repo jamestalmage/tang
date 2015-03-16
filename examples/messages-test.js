@@ -125,7 +125,7 @@ describe('messages', function() {
   });
 
   describe('@mockDirectiveController', function() {
-    // @mockDirectiveController
+    // @proxyDirectiveController
     function messageCollection() {
       this.setElement = sinon.spy();
       this.appendMessage = sinon.spy();

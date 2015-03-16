@@ -35,8 +35,8 @@ var replaceDirectiveController =
     /^\s*@replaceDirectiveController\s*$/
   );
 
-var mockDirectiveController = require('./replaceDirectiveController').mock(
-  /^\s*@mockDirectiveController\s*$/
+var proxyDirectiveController = require('./replaceDirectiveController').proxy(
+  /^\s*@proxyDirectiveController\s*$/
 );
 
 var ngFactory = require('./ngFactory')(/^\s*@ngFactory\s*$/);
@@ -112,7 +112,7 @@ function transform(src, suppliedOptions) {
     replaceDirectiveController(ast);
   }
   if (options.mockDirectiveController) {
-    mockDirectiveController(ast);
+    proxyDirectiveController(ast);
   }
   var result = recast.print(ast, options);
   var transformedCode = result.code;

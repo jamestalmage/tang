@@ -1,5 +1,5 @@
 module.exports.replace = create;
-module.exports.mock = createMock;
+module.exports.proxy = createProxy;
 
 var types = require('recast').types;
 var n = types.namedTypes;
@@ -47,7 +47,7 @@ function create(regexp) {
   };
 }
 
-function createMock(regexp) {
+function createProxy(regexp) {
   assert(util.isRegExp(regexp), 'regexp required');
   var hasAnnotation = require('./hasAnnotation')(regexp);
 
