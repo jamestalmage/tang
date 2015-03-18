@@ -9,6 +9,7 @@ var karma = require('karma').server;
 var fs = require('fs');
 var del = require('del');
 var lock = require('gulp-lock');
+var _ = require('lodash');
 
 gulp.task('lint', function() {
   return gulp.src(['src/**', 'test/**'])
@@ -133,43 +134,21 @@ gulp.task('clean', function(cb) {
   del(['./plugins'], cb);
 });
 
-gulp.task('clone-browserify-plugin', ['clean'], cloneTask(
-  'https://github.com/jamestalmage/browserify-angular-test-utils.git',
-  'plugins/browserify'
-));
-gulp.task('test-browserify-plugin', ['clone-browserify-plugin'],
-  execTask('browserify'));
+var deps = [];
 
-gulp.task('clone-gulp-plugin', ['clean'], cloneTask(
-  'https://github.com/jamestalmage/gulp-angular-test-utils.git',
-  'plugins/gulp'
-));
-gulp.task('test-gulp-plugin', ['clone-gulp-plugin'], execTask('gulp'));
+_.forEach({
+  browserify: 'https://github.com/jamestalmage/browserify-angular-test-utils.git',
+  gulp: 'https://github.com/jamestalmage/gulp-angular-test-utils.git',
+  karma: 'https://github.com/jamestalmage/karma-angular-test-utils.git'
+}, function(url, key) {
+  var test = 'test-' + key + '-plugin';
+  var clone = 'clone-' + key + '-plugin';
 
-gulp.task('clone-karma-plugin', ['clean'], cloneTask(
-  'https://github.com/jamestalmage/karma-angular-test-utils.git',
-  'plugins/karma'
-));
-gulp.task('test-karma-plugin', ['clone-karma-plugin'], execTask('karma'));
+  gulp.task(clone, ['clean'], cloneTask(url, 'plugins/' + key));
+  gulp.task(test, [clone], execTask(key));
+  deps.push(test);
+});
 
-gulp.task('clone-plugins',
-  ['clone-browserify-plugin', 'clone-karma-plugin', 'clone-gulp-plugin']);
-
-// Conditionally build list of plugins to test.
-// On Travis we use a matrix and test one plugin per run (for build stability).
-// On Dev Machines we run all three plugins concurrently
-var deps;
-var pluginUnderTest = process.env.NGUTILS_PLUGIN;
-if (pluginUnderTest) {
-  pluginUnderTest = pluginUnderTest.toLowerCase();
-  deps = ['test-' + pluginUnderTest + '-plugin'];
-} else {
-  deps = [
-    'test-browserify-plugin',
-    'test-gulp-plugin',
-    'test-karma-plugin'
-  ];
-}
 gulp.task('test-plugin', deps);
 
 gulp.task('default', ['cover', 'test-example', 'test-plugin']);
