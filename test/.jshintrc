@@ -2,6 +2,8 @@
   "node": true,
   "mocha": true,
   "globals": {
-    "expect":true
+    "expect": true,
+    "sinon": true,
+    "lib": true
   }
 }

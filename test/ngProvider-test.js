@@ -1,7 +1,4 @@
 describe('ngProvider', function() {
-
-  var lib = require('./lib');
-
   it('will generate a provider using object literal', function() {
     var input = [
       '// @ngProvider',

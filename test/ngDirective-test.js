@@ -1,7 +1,4 @@
 describe('@ngDirective', function() {
-
-  var lib = require('./lib');
-
   it('will inject a directive', function() {
     var input = [
       '// @ngDirective',

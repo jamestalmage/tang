@@ -1,6 +1,4 @@
 describe('replaceDirectiveController', function() {
-  var lib = require('./lib');
-
   it('will replace a directives controller', function() {
     var input = [
       '// @replaceDirectiveController',

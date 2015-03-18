@@ -1,7 +1,4 @@
 describe('interceptController', function() {
-
-  var lib = require('./lib');
-
   it('injects code', function() {
     var input = [
       '// @proxyDirectiveController',
@@ -10,7 +7,6 @@ describe('interceptController', function() {
       '}'
     ].join('\n');
 
-    //jscs:disable
     var expected = [
       '// @proxyDirectiveController',
       'var myThing = [];',
@@ -48,13 +44,11 @@ describe('interceptController', function() {
       '  });',
       '}));'
     ].join('\n');
-    //jscs:enable
 
     expect(lib.process(input).code).to.equal(expected);
   });
 
   it('can be disabled', function() {
-
     var input = [
       '// @proxyDirectiveController',
       'function myThing($scope) {',

@@ -3,7 +3,6 @@
 describe('main', function() {
   var process, input, pathToIndex, index;
   var proxyquire    = require('proxyquire');
-  var sinon         = require('sinon');
   var convert       = require('convert-source-map');
 
   beforeEach(function() {

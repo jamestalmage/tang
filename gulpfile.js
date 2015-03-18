@@ -100,30 +100,36 @@ function cloneTask(url, dir) {
 function execTask(dir) {
   return execLock.cb(function(cb) {
     var capsDir = dir.toUpperCase();
-    console.log(gutil.colors.blue(
-      '********* STARTING PLUGIN TEST: ' + capsDir + '**************'));
+    logLines('blue','STARTING PLUGIN TEST: ' + capsDir);
     exec('cd ./plugins/' + dir + ' && npm i && npm i ../.. && gulp',
       function(err, stdout, stderr) {
         if (err) {
-          console.log(gutil.colors.red([
-            '************************************************************',
-            '*************** BEGIN FAILURE: ' + capsDir + ' *******************'
-          ].join('\n')));
-
+          logLines('red', '', 'BEGIN FAILURE: ' + capsDir);
           console.log(stdout);
           console.log(stderr);
-
-          console.log(gutil.colors.red([
-            '*********** END FAILURE: ' + capsDir + ' ********************',
-            '******************************************************************'
-          ].join('\n')));
+          logLines('red', 'END FAILURE: ' + capsDir, '');
         } else {
-          console.log(gutil.colors.blue(
-            '********* PLUGIN TESTS SUCCEEDED: ' + capsDir + '**************'));
+          logLines('blue', 'PLUGIN TEST SUCCEEDED: ' + capsDir);
         }
         cb(err);
       });
   });
+}
+
+function logLines(color, var_message){
+  console.log(messageLines.apply(null, arguments));
+}
+
+function messageLines(color, var_message){
+  var lines = Array.prototype.slice.call(arguments, 1);
+  return gutil.colors[color](lines.map(message).join('\n'));
+}
+
+function message(message) {
+  message = message || '';
+  var len = Math.floor((80 - message.length) / 2);
+  var pad = new Array(len).join('*');
+  return pad + ' ' + message + ' ' + pad;
 }
 
 gulp.task('clean', function(cb) {
@@ -147,7 +153,9 @@ _.forEach({
 
 gulp.task('test-plugin', deps);
 
-gulp.task('default', ['cover', 'test-example', 'test-plugin']);
+gulp.task('default', ['cover', 'test-example', 'test-plugin'], function() {
+  console.log('build successful');
+});
 
 gulp.task('test-example', function(cb) {
   processFiles({

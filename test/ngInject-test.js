@@ -2,8 +2,6 @@
 
 describe('ngInject - basic usage - ', function() {
   var _ngInject, ngInject;
-  var proxyquire = require('proxyquire');
-  var sinon = require('sinon');
 
   beforeEach(function() {
     _ngInject = require('../src/index');

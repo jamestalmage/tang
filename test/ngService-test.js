@@ -1,7 +1,4 @@
 describe('ngService', function() {
-
-  var lib = require('./lib/index');
-
   var types = require('recast').types;
   var n = types.namedTypes;
   var b = types.builders;

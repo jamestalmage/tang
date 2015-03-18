@@ -2,8 +2,6 @@
 
 describe('ngProvide - basic usage', function() {
   var _ngProvide, ngProvide;
-  var proxyquire = require('proxyquire');
-  var sinon = require('sinon');
 
   beforeEach(function() {
     _ngProvide = require('../src/index');

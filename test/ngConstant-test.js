@@ -1,6 +1,4 @@
 describe('ngConstant', function() {
-  var lib = require('./lib');
-
   it('@ngConstant - provides a constant', function() {
     var input = [
       '// @ngConstant',

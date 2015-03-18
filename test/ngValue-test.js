@@ -1,6 +1,4 @@
 describe('ngValue', function() {
-  var lib = require('./lib');
-
   it('@ngValue - provides a value', function() {
     var input = [
       '// @ngValue',

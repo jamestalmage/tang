@@ -1,6 +1,4 @@
 describe('@ngInjectProvider', function() {
-  var lib = require('./lib');
-
   it('injects a provider', function() {
     var input = [
       '//@ngInjectProvider',
