@@ -8,6 +8,7 @@ var processFiles = require('./processFiles');
 var karma = require('karma').server;
 var fs = require('fs');
 var del = require('del');
+var lock = require('gulp-lock');
 
 gulp.task('lint', function() {
   return gulp.src(['src/**', 'test/**'])
@@ -82,9 +83,12 @@ gulp.task('watch', function() {
   gulp.watch(['test/**', 'src/**'], ['test']);
 });
 
+var cloneLock = process.env.TRAVIS ? lock() : lock.unlimited;
+var execLock = process.env.TRAVIS ? lock() : lock.unlimited;
+
 function cloneTask(url, dir) {
-  return function(cb) {
-    exec('mkdir -p plugins && git clone ' + url + ' ' + dir,
+  return cloneLock.cb(function(cb) {
+    exec('mkdir -p plugins && git clone --depth 1 ' + url + ' ' + dir,
       function(err, stdout, stderr) {
         if (err) {
           console.log(stdout);
@@ -93,11 +97,11 @@ function cloneTask(url, dir) {
         cb(err);
       }
     );
-  }
+  });
 }
 
 function execTask(dir) {
-  return function(cb) {
+  return execLock.cb(function(cb) {
     exec('cd ./plugins/' + dir + ' && npm i && npm i ../.. && gulp',
       function(err, stdout, stderr) {
         var capsDir = dir.toUpperCase();
@@ -120,7 +124,7 @@ function execTask(dir) {
         }
         cb(err);
       });
-  }
+  });
 }
 
 gulp.task('clean', function(cb) {
