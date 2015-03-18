@@ -88,15 +88,15 @@ function createProxy(regexp) {
 function mockingCode(name, func) {
 
   var injectorInvoke = b.expressionStatement(
-    injectorInvokeExp(inewController, b.thisExpression(), ilocals)
+    injectorInvokeExp(i.newController, b.thisExpression(), i.locals)
   );
 
   var wrapMockFunc = b.functionExpression(
     null,
-    [i$attrs, i$element, i$scope, i$injector, i$transclude],
+    [i.$attrs, i.$element, i.$scope, i.$injector, i.$transclude],
     b.blockStatement([
       selfIsThis,
-      pushStatement(b.identifier(name), iself),
+      pushStatement(b.identifier(name), i.self),
       localsStmt,
       createOriginalDecl,
       injectorInvoke
@@ -117,7 +117,7 @@ function pushStatement(arrayId, valueId) {
     b.callExpression(
       b.memberExpression(
         arrayId,
-        ipush,
+        i.push,
         false
       ),
       [valueId]
@@ -137,20 +137,18 @@ function variableDeclarationInitToEmptyArray(id) {
   );
 }
 
-function replacementCode(directiveName,
-                         newImplementation,
-                         implementationWrapper) {
+function replacementCode(directiveName, newImplementation, implementationWrapper) {
 
   assert('string' === typeof directiveName, 'directiveName must be a string');
   n.Function.assert(newImplementation);
 
-  implementationWrapper = implementationWrapper || inewController;
+  implementationWrapper = implementationWrapper || i.newController;
 
   // var newController = <newImplementation>
   var newControllerDecl = b.variableDeclaration(
       'var',
       [b.variableDeclarator(
-        inewController,
+        i.newController,
         newImplementation
       )]
   );
@@ -169,20 +167,20 @@ function replacementCode(directiveName,
   //   <controllerAssignment>
   //   return $delegate
   // }
-  var decoratorCallback = b.functionExpression(null, [i$delegate],
+  var decoratorCallback = b.functionExpression(null, [i.$delegate],
     b.blockStatement([
       sDirectiveDeclare,
       sOldControllerDeclare,
       newControllerDecl,
       controllerAssignment,
-      b.returnStatement(i$delegate)
+      b.returnStatement(i.$delegate)
     ])
   );
 
   // function($provide) {
   //   $provide.decorator("<directiveName>", <decoratorCallback>);
   // }
-  var moduleCallback = b.functionExpression(null, [i$provide],
+  var moduleCallback = b.functionExpression(null, [i.$provide],
     b.blockStatement([
       b.expressionStatement(
         b.callExpression(
@@ -196,7 +194,7 @@ function replacementCode(directiveName,
   // beforeEach(angular.mock.module(<moduleCallback>))
   return b.expressionStatement(
     b.callExpression(
-      ibeforeEach,
+      i.beforeEach,
       [b.callExpression(
         mAngularMockModule,
         [moduleCallback]
@@ -214,64 +212,65 @@ function addDirectiveSuffix(name) {
 }
 
 // cached identifiers
-var idirective   = b.identifier('directive');
-var i$delegate   = b.identifier('$delegate');
-var icontroller  = b.identifier('controller');
-var i$provide    = b.identifier('$provide');
-var iangular     = b.identifier('angular');
-var iextend      = b.identifier('extend');
-var imock        = b.identifier('mock');
-var imodule      = b.identifier('module');
-var ibeforeEach  = b.identifier('beforeEach');
-var idecorator   = b.identifier('decorator');
-var ipush        = b.identifier('push');
-var i$scope      = b.identifier('$scope');
-var i$element    = b.identifier('$element');
-var i$attrs      = b.identifier('$attrs');
-var i$transclude = b.identifier('$transclude');
-var i$injector   = b.identifier('$injector');
-var iinvoke      = b.identifier('invoke');
-var iself        = b.identifier('self');
-var ilocals      = b.identifier('locals');
-var iextendedLocals      = b.identifier('extendedLocals');
-var i$oldController = b.identifier('$oldController');
-var inewController = b.identifier('newController');
-var i$super = b.identifier('$super');
+var i = {};
+['directive',
+'$delegate',
+'controller',
+'$provide',
+'angular',
+'extend',
+'mock',
+'module',
+'beforeEach',
+'decorator',
+'push',
+'$scope',
+'$element',
+'$attrs',
+'$transclude',
+'$injector',
+'invoke',
+'self',
+'locals',
+'extendedLocals',
+'$oldController',
+'newController',
+'$super'].forEach(function(value) {i[value] = b.identifier(value);});
 
 // angular.mock
-var mAngularMock = b.memberExpression(iangular, imock, false);
+var mAngularMock = b.memberExpression(i.angular, i.mock, false);
 
 // angular.mock.module
-var mAngularMockModule = b.memberExpression(mAngularMock, imodule, false);
+var mAngularMockModule = b.memberExpression(mAngularMock, i.module, false);
 
 // $provide.decorator
-var m$provideDecorator = b.memberExpression(i$provide, idecorator, false);
+var m$provideDecorator = b.memberExpression(i.$provide, i.decorator, false);
 
 // angular.extend;
-var mAngularExtend = b.memberExpression(iangular, iextend, false);
+var mAngularExtend = b.memberExpression(i.angular, i.extend, false);
 
 // var directive = $delegate[0];
 var sDirectiveDeclare = b.variableDeclaration(
   'var',
   [
     b.variableDeclarator(
-      idirective,
-      b.memberExpression(i$delegate, b.literal(0), true)
+      i.directive,
+      b.memberExpression(i.$delegate, b.literal(0), true)
     )
   ]
 );
 
 // directive.controller
 var mDirectiveController = b.memberExpression(
-  idirective,
-  icontroller,
+  i.directive,
+  i.controller,
   false
 );
 
 var sOldControllerDeclare = b.variableDeclaration(
   'var',
   [b.variableDeclarator(
-    i$oldController,
+    i.$oldController,
     mDirectiveController
   )]
 );
@@ -283,18 +282,18 @@ var sOldControllerDeclare = b.variableDeclaration(
 //   $transclude: $transclude
 // };
 var localsExp = b.objectExpression([
-  b.property('init', i$attrs, i$attrs),
-  b.property('init', i$element, i$element),
-  b.property('init', i$scope, i$scope),
-  b.property('init', i$transclude, i$transclude),
-  b.property('init', i$oldController, i$oldController),
-  b.property('init', i$super, i$super)
+  b.property('init', i.$attrs, i.$attrs),
+  b.property('init', i.$element, i.$element),
+  b.property('init', i.$scope, i.$scope),
+  b.property('init', i.$transclude, i.$transclude),
+  b.property('init', i.$oldController, i.$oldController),
+  b.property('init', i.$super, i.$super)
 ]);
 
 // var locals = <localsExp>
 var localsStmt = b.variableDeclaration(
   'var',
-  [b.variableDeclarator(ilocals, localsExp)]
+  [b.variableDeclarator(i.locals, localsExp)]
 );
 
 // angular.extend(arg0,arg2,...)
@@ -311,8 +310,8 @@ function injectorInvokeExp(func, contextExp, locals) {
   n.Expression.assert(contextExp);
   return b.callExpression(
     b.memberExpression(
-      i$injector,
-      iinvoke,
+      i.$injector,
+      i.invoke,
       false
     ),
     [func, contextExp, locals]
@@ -320,17 +319,17 @@ function injectorInvokeExp(func, contextExp, locals) {
 }
 
 var createOriginalDecl = b.functionDeclaration(
-  i$super,
-  [iextendedLocals],
+  i.$super,
+  [i.extendedLocals],
   b.blockStatement(
     [b.returnStatement(
       injectorInvokeExp(
-        i$oldController,
-        iself,
+        i.$oldController,
+        i.self,
         ngExtendExp([
           b.objectExpression([]),
-          iextendedLocals,
-          ilocals
+          i.extendedLocals,
+          i.locals
         ])
       )
     )]
@@ -339,5 +338,5 @@ var createOriginalDecl = b.functionDeclaration(
 
 var selfIsThis = b.variableDeclaration(
   'var',
-  [b.variableDeclarator(iself, b.thisExpression())]
+  [b.variableDeclarator(i.self, b.thisExpression())]
 );

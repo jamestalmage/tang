@@ -1,5 +1,6 @@
 {
   "preset": "google",
   "validateIndentation": 2,
-  "disallowMultipleVarDecl": "exceptUndefined"
+  "disallowMultipleVarDecl": "exceptUndefined",
+  "maximumLineLength": 120
 }

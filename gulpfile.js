@@ -15,11 +15,7 @@ gulp.task('lint', function() {
   return gulp.src(['src/**', 'test/**'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
-    .pipe(jshint.reporter('fail'));
-});
-
-gulp.task('check-style', function() {
-  return gulp.src(['src/**', 'test/**'])
+    .pipe(jshint.reporter('fail'))
     .pipe(jscs());
 });
 
@@ -29,6 +25,7 @@ function spawnMochaTask(parser, cover) {
       env: {NG_UTILS_PARSER: parser},
       growl: true,
       r: 'mocha-globals.js',
+      reporter:'dot',
       colors: true
     };
 
@@ -47,17 +44,16 @@ function spawnMochaTask(parser, cover) {
   };
 }
 
-var testTaskDeps = [];
-var coverTaskDeps = [];
+var testTaskDeps = ['lint'];
+var coverTaskDeps = ['lint'];
 
 var parsers = ['recast', 'esprima', 'acorn'];
 
 parsers.forEach(function(parser) {
-  var lintAndStyle = ['lint', 'check-style'];
   var testName = 'test-' + parser;
   var coverName = 'cover-' + parser;
-  gulp.task(testName, lintAndStyle, spawnMochaTask(parser, false));
-  gulp.task(coverName, lintAndStyle, spawnMochaTask(parser, true));
+  gulp.task(testName, spawnMochaTask(parser, false));
+  gulp.task(coverName, spawnMochaTask(parser, true));
   testTaskDeps.push(testName);
   coverTaskDeps.push(coverName);
 });
