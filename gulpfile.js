@@ -102,9 +102,11 @@ function cloneTask(url, dir) {
 
 function execTask(dir) {
   return execLock.cb(function(cb) {
+    var capsDir = dir.toUpperCase();
+    console.log(gutil.colors.blue(
+      '********* STARTING PLUGIN TEST: ' + capsDir + '**************'));
     exec('cd ./plugins/' + dir + ' && npm i && npm i ../.. && gulp',
       function(err, stdout, stderr) {
-        var capsDir = dir.toUpperCase();
         if (err) {
           console.log(gutil.colors.red([
             '************************************************************',
