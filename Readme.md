@@ -15,7 +15,7 @@ var serviceA;
 
 beforeEach(module(function() {
   serviceA = sinon.spy();
-  $provide.value('serviceA serviceA);
+  $provide.value('serviceA serviceA');
 }));
 
 var serviceB, $rootScope, scope;
@@ -54,6 +54,9 @@ source-maps (i.e. coffee-script).
 
 It includes a comprehensive tests suite (with 100% coverage), and has a thorough complement
 of [plugins](#build-plugins) with examples that will help you fit it in to your build process.
+
+
+
 
 
 @ngInject
@@ -130,6 +133,9 @@ beforeEach(inject(function($rootScope){
 }));
 ```
 
+
+
+
 @ngInjectProvider
 -----------------
 Works identically to `@ngInject` but performs it's injections during the `config` stage instead
@@ -142,15 +148,18 @@ var $compileProvider;
 
 // ---- becomes ----
 
-var scope;
+var $compileProvider;
 
 beforeEach(module(function(_$compileProvider_){
   $compileProvider = _$compileProvider_;
 }));
 ```
 
-@ngValue & ~~@ngProvide~~
--------------------------
+
+
+
+@ngValue
+--------
 Where `@ngInject` helps you get testable instances *out* of your angular module, `@ngValue`
 provides a way to place spies or mocks *in* to the dependency injection framework. Variable names
 are used to infer the name for the item being injected.
@@ -174,37 +183,12 @@ beforeEach(module(function($provide){
   $provide.value('myService myService);
 }));
 ```
-`@ngProvide` works the same way and is synonymous with `@ngValue`, but I plan to repurpose it with slightly
-different semantics - so stick with `@ngvalue` for now.
 
 You can use both `@ngValue` and `@ngInject` together in your tests, but you must make sure all of your
 `@ngValue` declarations come before your first `@ngInject`.
 
-~~@ngConstant~~
------------
-**deprecated** - Angular constants can not be overridden, so this is pretty useless.
-Use providers for configurable application wide settings.
 
-Very similar to `@ngConstant`, but it provides a constant service. From the angular docs:
 
-> Unlike a value [a constant] can be injected into a module configuration function (see angular.Module)
- and it cannot be overridden by an Angular decorator
-
-```javascript
-// @ngConstant
-var siteUrl = 'https://angular.io';
-
-// ---- becomes ----
-
-var siteUrl;
-
-beforeEach(module(function($provide){
-  siteUrl = 'https://angular.io';
-  $provide.constant('siteUrl siteUrl);
-}));
-```
-
-All your `@ngConstant` declarations must come before your first `@ngInject`.
 
 @ngFactory
 ----------
@@ -251,6 +235,9 @@ your tests as well. Problems would arise if `timeoutInSeconds` were to be called
 during module initialization before the `@ngInject` annotation has injected `$timeout`
 in to your test. In that case `@ngFactory` is an acceptable workaround.
 
+
+
+
 @ngService
 ----------
 Very similar to `@ngFactory`, but rather than assigning the return value, it
@@ -276,6 +263,9 @@ beforeEach(module(function($provide) {
 
 Note - this currently does not work if you `return` a value from your constructor.
 If that is the case you probably should be using `@ngFactory`.
+
+
+
 
 @ngProvider
 -----------
@@ -318,6 +308,9 @@ function greetProvider() { /* ... */ }
 var greet;
 ```
 
+
+
+
 @ngDirective
 ------------
 Create a stub directive (experimental).
@@ -355,6 +348,9 @@ beforeEach(module(function($compileProvider) {
   $compileProvider.directive("myDirective", myDirective);
 }));
 ```
+
+
+
 
 @replaceDirectiveController
 ---------------------------
@@ -399,6 +395,9 @@ when an Error gets thrown do not match the actual place in your code where it is
 `ng-test-utils` ships with full source-map support. Just make sure you enable source-maps
 in your browsers developer tools, and enable source-map support from whichever plugin you
 are using in your build.
+
+
+
 
 build plugins
 -------------
