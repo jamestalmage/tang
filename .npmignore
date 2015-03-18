@@ -10,13 +10,12 @@ JasmineAdapter-1.1.2.js
 jasmine-1.1.0.js
 
 
-
-# npmignore
-src/transform
+# npmignore - content above this line is automatically generated and modifications may be omitted
+# see npmjs.com/npmignore for more details.
 test
 .jscsrc
 .jshintrc
-combine-coverage.js
 mocha-globals.js
 .travis.yml
 examples
+karma.conf.js
