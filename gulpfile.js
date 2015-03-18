@@ -9,6 +9,7 @@ var karma = require('karma').server;
 var fs = require('fs');
 var del = require('del');
 var lock = require('gulp-lock');
+var _ = require('lodash');
 
 gulp.task('lint', function() {
   return gulp.src(['src/**', 'test/**'])
