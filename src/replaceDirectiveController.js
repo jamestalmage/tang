@@ -281,14 +281,12 @@ var sOldControllerDeclare = b.variableDeclaration(
 //   $scope: $scope,
 //   $transclude: $transclude
 // };
-var localsExp = b.objectExpression([
-  b.property('init', i.$attrs, i.$attrs),
-  b.property('init', i.$element, i.$element),
-  b.property('init', i.$scope, i.$scope),
-  b.property('init', i.$transclude, i.$transclude),
-  b.property('init', i.$oldController, i.$oldController),
-  b.property('init', i.$super, i.$super)
-]);
+var localsExp = b.objectExpression(
+  ['$attrs', '$element', '$scope', '$transclude', '$oldController', '$super']
+    .map(function(val) {
+      return b.property('init', i[val], i[val]);
+    })
+);
 
 // var locals = <localsExp>
 var localsStmt = b.variableDeclaration(
@@ -321,19 +319,17 @@ function injectorInvokeExp(func, contextExp, locals) {
 var createOriginalDecl = b.functionDeclaration(
   i.$super,
   [i.extendedLocals],
-  b.blockStatement(
-    [b.returnStatement(
-      injectorInvokeExp(
-        i.$oldController,
-        i.self,
-        ngExtendExp([
-          b.objectExpression([]),
-          i.extendedLocals,
-          i.locals
-        ])
-      )
-    )]
-  )
+  b.blockStatement([
+    b.returnStatement(injectorInvokeExp(
+      i.$oldController,
+      i.self,
+      ngExtendExp([
+        b.objectExpression([]),
+        i.extendedLocals,
+        i.locals
+      ])
+    ))
+  ])
 );
 
 var selfIsThis = b.variableDeclaration(
