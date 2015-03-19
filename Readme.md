@@ -61,6 +61,7 @@ of [plugins](#build-plugins) with examples that will help you fit it in to your 
 
 @ngInject
 ---------
+
 The `@ngInject` annotation allows you to inject instances from the Angular dependency injection framework
 directly in to your tests with ease. Variable names are used to infer the instance name you want injected, so
 
@@ -138,6 +139,7 @@ beforeEach(inject(function($rootScope){
 
 @ngInjectProvider
 -----------------
+
 Works identically to `@ngInject` but performs it's injections during the `config` stage instead
 of the `run` stage of module initialization. This means you have access to instance providers
 instead of instances.
@@ -160,6 +162,7 @@ beforeEach(module(function(_$compileProvider_){
 
 @ngValue
 --------
+
 Where `@ngInject` helps you get testable instances *out* of your angular module, `@ngValue`
 provides a way to place spies or mocks *in* to the dependency injection framework. Variable names
 are used to infer the name for the item being injected.
@@ -192,6 +195,7 @@ You can use both `@ngValue` and `@ngInject` together in your tests, but you must
 
 @ngFactory
 ----------
+
 Provides a way to inject mock services using Angulars factory style provider.
 A factory function takes a list of injectables as arguments and returns a service.
 When you place the `@ngFactory` annotation on a named function, it will be replaced
@@ -240,6 +244,7 @@ in to your test. In that case `@ngFactory` is an acceptable workaround.
 
 @ngService
 ----------
+
 Very similar to `@ngFactory`, but rather than assigning the return value, it
 uses the function as a constructor and injects the new instance.
 
@@ -269,6 +274,7 @@ If that is the case you probably should be using `@ngFactory`.
 
 @ngProvider
 -----------
+
 Provide mock providers using `$provide.provider()`
 
 ```javascript
@@ -313,6 +319,7 @@ var greet;
 
 @ngDirective
 ------------
+
 Create a stub directive (experimental).
 Possible way to test how directive controllers interact with children.
 This does **not** allow you to swap out directives for mocks
@@ -354,11 +361,19 @@ beforeEach(module(function($compileProvider) {
 
 @replaceDirectiveController
 ---------------------------
+
 Angular does not provide a straightforward way to swap out directive implementations.
 This annotation will allows you to swap out the controller for testing.
 The controller function will be swapped out with a variable of the same name, assigned to an array.
 Each time your controller stub is initialized by Angular, the new instance will be pushed in to that array.
-(note: this does not _yet_ work with controller functions that return a value it pushes "this" on to the array);
+
+Due to a [bug in angular](https://github.com/angular/angular.js/issues/11147), directive controller
+constructors can not return an explicit value, so you're replacement constructor is patched to include
+a call to `array.push(this)` at the very beginning.
+
+This completely replaces the controller implementation and has a fairly straightforward implementation.
+If you want to override/spy on only certain behaviors of a controller, take a look at
+[`@proxyDirectiveController`](#@proxyDirectiveController).
 
 ```javascript
 // @replaceDirectiveController
@@ -386,8 +401,75 @@ beforeEach(module(function($provide) {
 ```
 
 
+
+
+@proxyDirectiveController
+-------------------------
+Similar to [`@replaceDirectiveController`](#@replaceDirectiveController) with a few important differences.
+
+* `prototoype`:Your supplied function will have the same prototype as the original constructor. This is accomplished
+by setting `ProxyController.prototype = OldController.prototype`, which varies slightly from the more
+traditional inheritance method `ProxyController.prototype = new OldController()`.
+
+* `$oldController` is an injectable reference to the replaced controller function, allowing you to call
+`$oldController.apply(this,...)` if desired, but you will probably prefer to use
+
+* `$super` is a wrapper around `$injector` that will invoke `$oldController` for you with all the correct
+locals and/or injectables. You can override injected values by supplying an optional locals object.
+`$super({$attrs:{foo:'bar'}}`.
+
+The full transformation looks like this.
+
+```javascript
+// @proxyDirectiveController
+function myThing($scope) {
+  // do something
+}
+
+// --- becomes ----
+
+// @proxyDirectiveController
+var myThing = [];
+
+beforeEach(angular.mock.module(function($provide) {
+  $provide.decorator("myThingDirective", function($delegate) {
+    var directive = $delegate[0];
+    var $oldController = directive.controller;
+
+    var newController = function($scope) {
+      // do something
+    };
+
+    directive.controller = function($attrs, $element, $scope, $injector, $transclude) {
+      var self = this;
+      myThing.push(self);
+
+      var locals = {
+        $attrs: $attrs,
+        $element: $element,
+        $scope: $scope,
+        $transclude: $transclude,
+        $oldController: $oldController,
+        $super: $super
+      };
+
+      function $super(extendedLocals) {
+        return $injector.invoke($oldController, self, angular.extend({}, locals, extendedLocals));
+      }
+
+      $injector.invoke(newController, this, locals);
+    };
+
+    directive.controller.prototype = $oldController.prototype;
+    return $delegate;
+  });
+}));
+```
+
+
 source-maps
 -----------
+
 `ng-test-utils` uses [recast](https://github.com/benjamn/recast) to scan your code and inject all the
 boilerplate required to make things work (it injects the `beforeEach` methods exactly as shown above).
 However, modified javascript can create difficulties during the debug process if the line numbers displayed
@@ -398,9 +480,24 @@ are using in your build.
 
 
 
+command-line
+------------
+
+`ng-test-utils` comes with a command line utility that will instrument files for you. While it is recommended
+you use a (plugin)[#build-plugins] like the [karma preprocessor](https://github.com/jamestalmage/karma-angular-test-utils)
+to automate the transformations for you, the cli utility can be useful for debugging how the transformations have
+changed your code.
+
+```
+npm install -g ng-test-utils
+ng-test-utils --help
+ng-test-utils --output=DIR --base=tests tests/*Spec.js
+```
+
 
 build plugins
 -------------
+
 `ng-test-utils` has a number of companion plugins that help you insert it in your build process.
 Each one has its own set of examples that will help get you started.
 
