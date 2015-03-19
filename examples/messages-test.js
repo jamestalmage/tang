@@ -125,23 +125,72 @@ describe('messages', function() {
   });
 
   describe('@mockDirectiveController', function() {
-    // @proxyDirectiveController
-    function messageCollection() {
-      this.setElement = sinon.spy();
-      this.appendMessage = sinon.spy();
-    }
+    describe('allows you to override methods', function() {
+      // @proxyDirectiveController
+      function messageCollection() {
+        this.setElement = sinon.spy();
+        this.appendMessage = sinon.spy();
+      }
 
-    // @ngInject
-    var scope = $rootScope.$new()
-      , $compile
-      , $timeout;
+      // @ngInject
+      var scope = $rootScope.$new()
+        , $compile;
 
-    it('test', function() {
-      $compile('<message-collection><message my-message="hello"></message></message-collection>')(scope);
-      scope.$apply();
-      expect(messageCollection.length).to.equal(1);
-      expect(messageCollection[0].appendMessage).to.have.been.calledOnce.and.calledWith('hello');
-      expect(messageCollection[0].setElement.called).to.equal(true);
+      it('', function() {
+        $compile('<message-collection><message my-message="hello"></message></message-collection>')(scope);
+        scope.$apply();
+        expect(messageCollection.length).to.equal(1);
+        expect(messageCollection[0].appendMessage).to.have.been.calledOnce.and.calledWith('hello');
+        expect(messageCollection[0].setElement.called).to.equal(true);
+      });
+    });
+
+    describe('$super - allows you to invoke the overridden constructor', function() {
+      var log = [];
+
+      // @proxyDirectiveController
+      function messageCollection($super) {
+        this.setElement = sinon.spy();
+        this.appendMessage = sinon.spy();
+        expect(this.name).to.equal('mcc_proto');
+        $super();
+        expect(this.name).to.equal('mcc_const:bar');
+        log.push('done');
+      }
+
+      // @ngInject
+      var scope = $rootScope.$new()
+        , $compile;
+
+      it('', function() {
+        $compile('<message-collection name="bar"><message my-message="hello"></message></message-collection>')(scope);
+        scope.$apply();
+        expect(log).to.eql(['done']);
+      });
+    });
+
+    describe('$super - allows you to override locals', function () {
+      var log = [];
+
+      // @proxyDirectiveController
+      function messageCollection($super) {
+        this.setElement = sinon.spy();
+        this.appendMessage = sinon.spy();
+        expect(this.name).to.equal('mcc_proto');
+        $super({$attrs:{name:'foo'}});
+        expect(this.name).to.equal('mcc_const:foo');
+        log.push('done');
+      }
+
+      // @ngInject
+      var scope = $rootScope.$new()
+        , $compile;
+
+      it('', function () {
+        $compile('<message-collection name="bar"><message my-message="hello"></message></message-collection>')(scope);
+        scope.$apply();
+        expect(log).to.eql(['done']);
+      });
     });
   });
 });

@@ -29,28 +29,34 @@ angular.module('messages', [])
       return arr;
     };
   })
-  .directive('messageCollection', function($timeout){
+  .directive('messageCollection', function() {
+    function MessageCollectionController($timeout, $attrs){
+      this.name = 'mcc_const' + ($attrs.name ? ':' + $attrs.name : '');
+      this._$timeout = $timeout
+    }
+    var mp = MessageCollectionController.prototype;
+    mp.name = 'mcc_proto';
+    mp.setElement = function(newElement) {
+      this._element = newElement;
+    };
+    mp.appendMessage = function(msg) {
+      var self = this;
+      this._$timeout(function(){
+        var child = angular.element(self._element.children()[1]);
+        child.append(angular.element('<div>' + msg + '</div>'));
+      });
+    };
+
     return {
       restict:'E',
       replace:true,
       template:'<div><div ng-transclude></div><div></div></div></div>',
       transclude:true,
-      controller:function($timeout){
-        var element;
-        this.setElement = function(newElement){
-          element = newElement;
-        };
-        this.appendMessage = function(msg){
-          $timeout(function(){
-            var child = angular.element(element.children()[1]);
-            child.append(angular.element('<div>' + msg + '</div>'));
-          });
-        }
-      },
+      controller: MessageCollectionController,
       link: function postLink(scope, element, attrs, controller) {
         controller.setElement(element);
       }
-    }
+    };
   })
   .directive('message', function() {
     return {

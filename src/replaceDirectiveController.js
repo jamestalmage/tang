@@ -103,7 +103,7 @@ function mockingCode(name, func) {
     ])
   );
 
-  return replacementCode(addDirectiveSuffix(name), func, wrapMockFunc);
+  return replacementCode(addDirectiveSuffix(name), func, wrapMockFunc, true);
 }
 
 // <id>.push(this);
@@ -137,7 +137,7 @@ function variableDeclarationInitToEmptyArray(id) {
   );
 }
 
-function replacementCode(directiveName, newImplementation, implementationWrapper) {
+function replacementCode(directiveName, newImplementation, implementationWrapper, copyProto) {
 
   assert('string' === typeof directiveName, 'directiveName must be a string');
   n.Function.assert(newImplementation);
@@ -167,15 +167,17 @@ function replacementCode(directiveName, newImplementation, implementationWrapper
   //   <controllerAssignment>
   //   return $delegate
   // }
-  var decoratorCallback = b.functionExpression(null, [i.$delegate],
-    b.blockStatement([
-      sDirectiveDeclare,
-      sOldControllerDeclare,
-      newControllerDecl,
-      controllerAssignment,
-      b.returnStatement(i.$delegate)
-    ])
-  );
+  var stmts = [
+    sDirectiveDeclare,
+    sOldControllerDeclare,
+    newControllerDecl,
+    controllerAssignment
+  ];
+  if (copyProto) {
+    stmts.push(sCopyPrototype);
+  }
+  stmts.push(b.returnStatement(i.$delegate));
+  var decoratorCallback = b.functionExpression(null, [i.$delegate], b.blockStatement(stmts));
 
   // function($provide) {
   //   $provide.decorator("<directiveName>", <decoratorCallback>);
@@ -213,29 +215,32 @@ function addDirectiveSuffix(name) {
 
 // cached identifiers
 var i = {};
-['directive',
-'$delegate',
-'controller',
-'$provide',
-'angular',
-'extend',
-'mock',
-'module',
-'beforeEach',
-'decorator',
-'push',
-'$scope',
-'$element',
-'$attrs',
-'$transclude',
-'$injector',
-'invoke',
-'self',
-'locals',
-'extendedLocals',
-'$oldController',
-'newController',
-'$super'].forEach(function(value) {i[value] = b.identifier(value);});
+[
+  'angular',
+  '$attrs',
+  'beforeEach',
+  'controller',
+  'decorator',
+  '$delegate',
+  'directive',
+  '$element',
+  'extend',
+  'extendedLocals',
+  '$injector',
+  'invoke',
+  'locals',
+  'mock',
+  'module',
+  'newController',
+  '$oldController',
+  'prototype',
+  '$provide',
+  'push',
+  'self',
+  '$scope',
+  '$super',
+  '$transclude'
+].forEach(function(value) {i[value] = b.identifier(value);});
 
 // angular.mock
 var mAngularMock = b.memberExpression(i.angular, i.mock, false);
@@ -267,6 +272,14 @@ var mDirectiveController = b.memberExpression(
   false
 );
 
+// directive.controller.prototype
+var mDirectiveControllerPrototype = b.memberExpression(
+  mDirectiveController,
+  i.prototype,
+  false
+);
+
+// var $oldController = directive.controller
 var sOldControllerDeclare = b.variableDeclaration(
   'var',
   [b.variableDeclarator(
@@ -274,6 +287,19 @@ var sOldControllerDeclare = b.variableDeclaration(
     mDirectiveController
   )]
 );
+
+// $oldController.prototype
+var m$oldControlllerProtoype = b.memberExpression(
+  i.$oldController,
+  i.prototype,
+  false
+);
+
+var sCopyPrototype = b.expressionStatement(b.assignmentExpression(
+  '=',
+  mDirectiveControllerPrototype,
+  m$oldControlllerProtoype
+));
 
 // {
 //   $attrs: $attrs,
@@ -294,6 +320,8 @@ var localsStmt = b.variableDeclaration(
   [b.variableDeclarator(i.locals, localsExp)]
 );
 
+// directive.controller.prototype
+
 // angular.extend(arg0,arg2,...)
 function ngExtendExp(args) {
   return b.callExpression(
@@ -302,6 +330,7 @@ function ngExtendExp(args) {
   );
 }
 
+// $injector.invoke(<func>, <context>, <locals>);
 function injectorInvokeExp(func, contextExp, locals) {
   n.Expression.assert(locals);
   n.Expression.assert(func);
@@ -316,6 +345,7 @@ function injectorInvokeExp(func, contextExp, locals) {
   );
 }
 
+// var $super = function(...);
 var createOriginalDecl = b.functionDeclaration(
   i.$super,
   [i.extendedLocals],
@@ -325,13 +355,14 @@ var createOriginalDecl = b.functionDeclaration(
       i.self,
       ngExtendExp([
         b.objectExpression([]),
-        i.extendedLocals,
-        i.locals
+        i.locals,
+        i.extendedLocals
       ])
     ))
   ])
 );
 
+// var self = this;
 var selfIsThis = b.variableDeclaration(
   'var',
   [b.variableDeclarator(i.self, b.thisExpression())]
