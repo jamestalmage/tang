@@ -159,7 +159,7 @@ gulp.task('default', ['cover', 'test-example', 'test-plugin'], function() {
 
 gulp.task('test-example', function(cb) {
   processFiles({
-    files: ['examples/messages-test.js', 'examples/proxyDirectiveController-example.js'],
+    files: ['examples/messages-test.js', 'examples/*-example.js'],
     base: 'examples',
     outputDir: 'build'
   });
