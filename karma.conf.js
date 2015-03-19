@@ -4,8 +4,11 @@ module.exports = function(karma) {
 
     files: [
       'build/messages.js',
-      'build/messages-test.js'
+      'build/messages-test.js',
+      'build/*-example.js'
     ],
+
+    reporters:['mocha'],
 
     browsers: [process.env.TRAVIS ? 'Firefox' : 'Chrome'],
 
