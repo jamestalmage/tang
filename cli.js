@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var parser = require('nomnom').script('ng-test-utils');
 
 parser
