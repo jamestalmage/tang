@@ -13,51 +13,76 @@ function createController(regexp) {
   var hasAnnotation = require('./hasAnnotation')(regexp);
   return function(node) {
     types.visit(node, {
+      visitVariableDeclaration: function(path) {
+        var node = path.node;
+        if (hasAnnotation(node)) {
+          installControllers(path, node.declarations.map(function(decl) {
+            n.VariableDeclarator.assert(decl);
+            var init = decl.init;
+            assert(init, 'must have an init');
+            if (n.Function.check(init)) {
+              instrumentControllerFunction(init, decl.id);
+            }
+            return {id: decl.id, expr: init};
+          }));
+          return false;
+        }
+        this.traverse(path);
+      },
       visitFunctionDeclaration: function(path) {
         var node = path.node;
-        var id = node.id;
         if (hasAnnotation(node)) {
-
-          // inject any
-          types.visit(node.body, {
-            visitFunction: function() {
-              return false;
-            },
-            visitReturnStatement: function(path) {
-              pushReturnStatement(path, id);
-              return false;
-            }
-          });
-
-          var stmts = node.body.body;
-
-          if (!n.ReturnStatement.check(stmts[stmts.length - 1])) {
-            stmts.push(pushThisStatement(id));
-          }
+          instrumentControllerFunction(node, node.id);
 
           // strip the name from the function declaration so it does not shadow the variable;
           var controllerExpr = b.functionExpression(null, node.params, node.body);
 
-          path.replace(
-            // var a =
-            b.variableDeclaration('var', [b.variableDeclarator(id, b.arrayExpression([]))]),
-            callStmt(
-              i.beforeEach,
-              [b.callExpression(
-                mAngularMockModule,
-                [callback(
-                  [i.$controllerProvider],
-                  [callStmt(m$controllerProviderRegister, [b.literal(id.name), controllerExpr])]
-                )]
-              )]
-            )
-          );
+          installControllers(path, [{id: node.id, expr:controllerExpr}]);
           return false;
         }
         this.traverse(path);
       }
     });
   };
+}
+
+function instrumentControllerFunction(node, id) {
+  n.Function.assert(node);
+  types.visit(node.body, {
+    visitFunction: function() {
+      return false;
+    },
+    visitReturnStatement: function(path) {
+      pushReturnStatement(path, id);
+      return false;
+    }
+  });
+
+  var stmts = node.body.body;
+
+  if (!n.ReturnStatement.check(stmts[stmts.length - 1])) {
+    stmts.push(pushThisStatement(id));
+  }
+}
+
+function installControllers(path, exprs) {
+  path.replace(
+    b.variableDeclaration('var', exprs.map(function(val) {
+      return b.variableDeclarator(val.id, b.arrayExpression([]));
+    })),
+    callStmt(
+      i.beforeEach,
+      [b.callExpression(
+        mAngularMockModule,
+        [callback(
+          [i.$controllerProvider],
+          exprs.map(function(val) {
+            return callStmt(m$controllerProviderRegister, [b.literal(val.id.name), val.expr]);
+          })
+        )]
+      )]
+    )
+  );
 }
 
 //  `return <arg>;`

@@ -20,7 +20,45 @@ describe('', function() {
     expect(lib.process(input).code).to.equal(expected);
   });
 
-  it.only('handles no return statement', function() {
+  it('handles assignment to function', function() {
+    var input = [
+      '// @ngController',
+      'var blah = function() {',
+      '  return {a: "a"};',
+      '};'
+    ].join('\n');
+
+    var expected = [
+      'var blah = [];',
+      '',
+      'beforeEach(angular.mock.module(function($controllerProvider) {',
+      '  $controllerProvider.register("blah", function() {',
+      '    return blah[blah.length] = {a: "a"};',
+      '  });',
+      '}));'
+    ].join('\n');
+
+    expect(lib.process(input).code).to.equal(expected);
+  });
+
+  it('handles assignment', function() {
+    var input = [
+      '// @ngController',
+      'var blah = sinon.spy();'
+    ].join('\n');
+
+    var expected = [
+      'var blah = [];',
+      '',
+      'beforeEach(angular.mock.module(function($controllerProvider) {',
+      '  $controllerProvider.register("blah", sinon.spy());',
+      '}));'
+    ].join('\n');
+
+    expect(lib.process(input).code).to.equal(expected);
+  });
+
+  it('handles no return statement', function() {
     var input = [
       '// @ngController',
       'function blah() {',
@@ -38,9 +76,6 @@ describe('', function() {
       '  });',
       '}));'
     ].join('\n');
-
-    console.log(input);
-    console.log(expected);
 
     expect(lib.process(input).code).to.equal(expected);
   });
