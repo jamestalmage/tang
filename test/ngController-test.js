@@ -20,7 +20,7 @@ describe('', function() {
     expect(lib.process(input).code).to.equal(expected);
   });
 
-  it('handles no return statement', function() {
+  it.only('handles no return statement', function() {
     var input = [
       '// @ngController',
       'function blah() {',
@@ -38,6 +38,9 @@ describe('', function() {
       '  });',
       '}));'
     ].join('\n');
+
+    console.log(input);
+    console.log(expected);
 
     expect(lib.process(input).code).to.equal(expected);
   });

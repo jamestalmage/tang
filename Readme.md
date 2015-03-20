@@ -467,6 +467,42 @@ beforeEach(angular.mock.module(function($provide) {
 ```
 
 
+@ngController
+-------------
+Register plain old controllers (controllers that are not associated with a directive).
+Usually used with the ngController directive (i.e. `<div ng-controller="myController"/>`).
+
+```javascript
+// @ngController
+function blah($attrs) {
+  // do stuff
+}
+
+// ------- becomes ------
+
+var blah = [];
+
+beforeEach(angular.mock.module(function($controllerProvider) {
+  $controllerProvider.register("blah", function($attrs) {
+    // do stuff
+    blah.push(this);
+  });
+}));
+```
+
+If your controller returns an explicit value, `@ngController` will push that value
+on the array, instead of `this`. Be careful explicity returning primitives however. The primitive value
+will be pushed to the array, but angular will use the `this` value as your controller. That is almost
+certainly not what you want.
+
+```javascript
+// don't do this
+// @ngController
+function blah($attrs) {
+  return "hey";  // "hey" will get pushed to the array, but it won't be used as your controller.
+}
+```
+
 source-maps
 -----------
 
