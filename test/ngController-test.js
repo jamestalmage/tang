@@ -48,10 +48,10 @@ describe('', function() {
     ].join('\n');
 
     var expected = [
-      'var blah = [];',
+      'var blah;',
       '',
       'beforeEach(angular.mock.module(function($controllerProvider) {',
-      '  $controllerProvider.register("blah", sinon.spy());',
+      '  $controllerProvider.register("blah", blah = sinon.spy());',
       '}));'
     ].join('\n');
 

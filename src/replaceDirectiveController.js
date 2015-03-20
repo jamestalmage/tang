@@ -18,12 +18,16 @@ function createController(regexp) {
         if (hasAnnotation(node)) {
           installControllers(path, node.declarations.map(function(decl) {
             n.VariableDeclarator.assert(decl);
-            var init = decl.init;
-            assert(init, 'must have an init');
-            if (n.Function.check(init)) {
-              instrumentControllerFunction(init, decl.id);
+            var expr = decl.init;
+            assert(expr, 'must have an init');
+            var init = null;
+            if (n.Function.check(expr)) {
+              instrumentControllerFunction(expr, decl.id);
+              init = b.arrayExpression([]);
+            } else {
+              expr = b.assignmentExpression('=', decl.id, expr);
             }
-            return {id: decl.id, expr: init};
+            return {id: decl.id, expr: expr, init:init};
           }));
           return false;
         }
@@ -37,7 +41,7 @@ function createController(regexp) {
           // strip the name from the function declaration so it does not shadow the variable;
           var controllerExpr = b.functionExpression(null, node.params, node.body);
 
-          installControllers(path, [{id: node.id, expr:controllerExpr}]);
+          installControllers(path, [{id: node.id, expr:controllerExpr, init:b.arrayExpression([])}]);
           return false;
         }
         this.traverse(path);
@@ -68,7 +72,7 @@ function instrumentControllerFunction(node, id) {
 function installControllers(path, exprs) {
   path.replace(
     b.variableDeclaration('var', exprs.map(function(val) {
-      return b.variableDeclarator(val.id, b.arrayExpression([]));
+      return b.variableDeclarator(val.id, val.init || null);
     })),
     callStmt(
       i.beforeEach,

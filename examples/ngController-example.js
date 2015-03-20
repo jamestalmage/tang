@@ -68,4 +68,24 @@ describe('ngController', function() {
     });
   });
 
+  describe('works using assignment and sinon.spy()', function() {
+    beforeEach(module(angular.module('ngController.assignSinonSpy', []).name));
+
+    // @ngController
+    var myCtrl = ['$attrs', sinon.spy()];
+
+    // @ngInject
+    var $compile, $rootScope;
+
+    it('', function() {
+      $compile(
+        '<div ng-controller="myCtrl" name="hello"></div>' +
+        '<div ng-controller="myCtrl" name="goodbye"></div>'
+      )($rootScope);
+      $rootScope.$apply();
+      expect(myCtrl[1].callCount).to.equal(2);
+      expect(myCtrl[1]).to.have.been.calledWith(sinon.match({name:"hello"}));
+      expect(myCtrl[1]).to.have.been.calledWith(sinon.match({name:"goodbye"}));
+    });
+  });
 });
