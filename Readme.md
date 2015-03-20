@@ -503,6 +503,13 @@ function blah($attrs) {
 }
 ```
 
+`@ngController` can also be used to annotate variable declarations (the declaration must have an initialization value).
+If the initialization value is a function, it will work exactly as above; the function will be instrumented to
+push each new controller instance on to the array. If the initialization is not a function declaration
+(a call to `sinon.spy()` perhaps), things will still work, but you do not get an auto populating array.
+This is not a problem for spies as you generally have another means of reaching those value.
+
+
 source-maps
 -----------
 
