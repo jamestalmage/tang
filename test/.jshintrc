@@ -4,6 +4,10 @@
   "globals": {
     "expect": true,
     "sinon": true,
-    "lib": true
+    "lib": true,
+    "recast": true,
+    "types": true,
+    "n": true,
+    "b": true
   }
 }

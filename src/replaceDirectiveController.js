@@ -1,11 +1,100 @@
 module.exports.replace = create;
 module.exports.proxy = createProxy;
+module.exports.controller = createController;
 
 var types = require('recast').types;
 var n = types.namedTypes;
 var b = types.builders;
 var assert = require('assert');
 var util = require('util');
+
+function createController(regexp) {
+  assert(util.isRegExp(regexp), 'regexp required');
+  var hasAnnotation = require('./hasAnnotation')(regexp);
+  return function(node) {
+    types.visit(node, {
+      visitFunctionDeclaration: function(path) {
+        var node = path.node;
+        var id = node.id;
+        if (hasAnnotation(node)) {
+
+          // inject any
+          types.visit(node.body, {
+            visitFunction: function() {
+              return false;
+            },
+            visitReturnStatement: function(path) {
+              pushReturnStatement(path, id);
+              return false;
+            }
+          });
+
+          var stmts = node.body.body;
+
+          if (!n.ReturnStatement.check(stmts[stmts.length - 1])) {
+            stmts.push(pushThisStatement(id));
+          }
+
+          // strip the name from the function declaration so it does not shadow the variable;
+          var controllerExpr = b.functionExpression(null, node.params, node.body);
+
+          path.replace(
+            // var a =
+            b.variableDeclaration('var', [b.variableDeclarator(id, b.arrayExpression([]))]),
+            callStmt(
+              i.beforeEach,
+              [b.callExpression(
+                mAngularMockModule,
+                [callback(
+                  [i.$controllerProvider],
+                  [callStmt(m$controllerProviderRegister, [b.literal(id.name), controllerExpr])]
+                )]
+              )]
+            )
+          );
+          return false;
+        }
+        this.traverse(path);
+      }
+    });
+  };
+}
+
+//  `return <arg>;`
+//    becomes
+//  `return <array>[<array.length>] = <arg>;`
+//
+//  `return;`
+//     becomes
+//   `<array>.push(this); return;`
+//
+function pushReturnStatement(path, arrayId) {
+  var returnStmt = path.node;
+  n.ReturnStatement.assert(returnStmt);
+  n.Pattern.assert(arrayId);
+  if (returnStmt.argument) {
+    returnStmt.argument = b.assignmentExpression(
+      '=',
+      b.memberExpression(
+        arrayId,
+        b.memberExpression(
+          arrayId,
+          i.length,
+          false
+        ),
+        true
+      ),
+      returnStmt.argument
+    );
+  } else {
+    var pushThis = pushThisStatement(arrayId);
+    if (Array.isArray(path.parentPath.value)) {
+      path.insertBefore(pushThisStatement(arrayId));
+    } else {
+      path.replace(b.blockStatement([pushThis, returnStmt]));
+    }
+  }
+}
 
 function create(regexp) {
   assert(util.isRegExp(regexp), 'regexp required');
@@ -19,7 +108,7 @@ function create(regexp) {
 
           var id = node.id;
 
-          path.get('body').get('body').unshift(pushThisStatement(id));
+          node.body.body.unshift(pushThisStatement(id));
 
           // strip name from function so it does not shadow the array variable
           var controllerFunc = b.functionExpression(
@@ -111,17 +200,21 @@ function pushThisStatement(id) {
   return pushStatement(id, b.thisExpression());
 }
 
-// <arrayId>.push(<valueId);
+// <arrayId>.push(<valueId)
+function pushExp(arrayId, valueId) {
+  return b.callExpression(
+    b.memberExpression(
+      arrayId,
+      i.push,
+      false
+    ),
+    [valueId]
+  );
+}
+
 function pushStatement(arrayId, valueId) {
   return b.expressionStatement(
-    b.callExpression(
-      b.memberExpression(
-        arrayId,
-        i.push,
-        false
-      ),
-      [valueId]
-    )
+    pushExp(arrayId, valueId)
   );
 }
 
@@ -179,30 +272,27 @@ function replacementCode(directiveName, newImplementation, implementationWrapper
   stmts.push(b.returnStatement(i.$delegate));
   var decoratorCallback = b.functionExpression(null, [i.$delegate], b.blockStatement(stmts));
 
-  // function($provide) {
+  // beforeEach(angular.mock.module(function($provide){
   //   $provide.decorator("<directiveName>", <decoratorCallback>);
-  // }
-  var moduleCallback = b.functionExpression(null, [i.$provide],
-    b.blockStatement([
-      b.expressionStatement(
-        b.callExpression(
-          m$provideDecorator,
-          [b.literal(directiveName), decoratorCallback]
-        )
-      )
-    ])
-  );
-
-  // beforeEach(angular.mock.module(<moduleCallback>))
-  return b.expressionStatement(
-    b.callExpression(
-      i.beforeEach,
-      [b.callExpression(
-        mAngularMockModule,
-        [moduleCallback]
+  // }));
+  return callStmt(
+    i.beforeEach,
+    [b.callExpression(
+      mAngularMockModule,
+      [callback(
+        [i.$provide],
+        [callStmt(m$provideDecorator, [b.literal(directiveName), decoratorCallback])]
       )]
-    )
+    )]
   );
+}
+
+function callback(params, stmts) {
+  return b.functionExpression(null, params, b.blockStatement(stmts));
+}
+
+function callStmt(callee, args) {
+  return b.expressionStatement(b.callExpression(callee, args));
 }
 
 function addDirectiveSuffix(name) {
@@ -219,6 +309,7 @@ var i = {};
   'angular',
   '$attrs',
   'beforeEach',
+  '$controllerProvider',
   'controller',
   'decorator',
   '$delegate',
@@ -228,6 +319,7 @@ var i = {};
   'extendedLocals',
   '$injector',
   'invoke',
+  'length',
   'locals',
   'mock',
   'module',
@@ -236,6 +328,7 @@ var i = {};
   'prototype',
   '$provide',
   'push',
+  'register',
   'self',
   '$scope',
   '$super',
@@ -250,6 +343,9 @@ var mAngularMockModule = b.memberExpression(mAngularMock, i.module, false);
 
 // $provide.decorator
 var m$provideDecorator = b.memberExpression(i.$provide, i.decorator, false);
+
+// $controllerProvider.register
+var m$controllerProviderRegister = b.memberExpression(i.$controllerProvider, i.register, false);
 
 // angular.extend;
 var mAngularExtend = b.memberExpression(i.angular, i.extend, false);
