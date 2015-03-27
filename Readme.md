@@ -183,7 +183,7 @@ beforeEach(module(function($provide){
     doSomething: sinon.spy(),
     somethingElse: sinon.spy()
   };
-  $provide.value('myService myService);
+  $provide.value('myService', myService);
 }));
 ```
 
