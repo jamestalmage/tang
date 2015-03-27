@@ -1,6 +1,8 @@
-ng-test-utils
-=============
-Cleaner, less verbose tests for your Angular app!
+tang
+====
+Test Annotations for Angular.js.
+
+Create cleaner, less verbose tests for your Angular app!
 
 [![Build Status](https://travis-ci.org/jamestalmage/angular-test-utils.svg?branch=master)](https://travis-ci.org/jamestalmage/angular-test-utils)
 [![Coverage Status](https://coveralls.io/repos/jamestalmage/angular-test-utils/badge.svg?branch=master)](https://coveralls.io/r/jamestalmage/angular-test-utils?branch=master)
@@ -32,7 +34,7 @@ beforeEach(inject(function(_serviceB_, _$rootScope_) {
 All those `beforeEach` statements start to add up.
 They clutter the top of all your test files, and distract from what's important.
 
-`ng-test-utils` seeks to offer a better way:
+`tang` seeks to offer a better way:
 
 ```javascript
 module('myModule');
@@ -46,7 +48,7 @@ var serviceB, $rootScope, scope = $rootScope.$new();
 // That's it - really!
 ```
 
-`ng-test-utils` automatically generates the rest for you through a series of ast transforms.
+`tang` automatically generates the rest for you through a series of ast transforms.
 
 Better still, it includes comprehensive source-map support to help you easily identify exactly
 where errors are being thrown in your code. It even plays nice with upstream transforms that supply
@@ -73,7 +75,7 @@ var myService;
 Will cause the "myService" instance from your module to be injected in to the test.
 This injection is automatically wrapped in a `beforeEach` method call compatible with `mocha` or `jasmine`.
 
-After `ng-test-utils` does its thing, the final code looks something like this.
+After `tang` does its thing, the final code looks something like this.
 
 ```javascript
 var myService;
@@ -513,11 +515,11 @@ This is not a problem for spies as you generally have another means of reaching 
 source-maps
 -----------
 
-`ng-test-utils` uses [recast](https://github.com/benjamn/recast) to scan your code and inject all the
+`tang` uses [recast](https://github.com/benjamn/recast) to scan your code and inject all the
 boilerplate required to make things work (it injects the `beforeEach` methods exactly as shown above).
 However, modified javascript can create difficulties during the debug process if the line numbers displayed
 when an Error gets thrown do not match the actual place in your code where it is happening. Fortunately,
-`ng-test-utils` ships with full source-map support. Just make sure you enable source-maps
+`tang` ships with full source-map support. Just make sure you enable source-maps
 in your browsers developer tools, and enable source-map support from whichever plugin you
 are using in your build.
 
@@ -526,22 +528,22 @@ are using in your build.
 command-line
 ------------
 
-`ng-test-utils` comes with a command line utility that will instrument files for you. While it is recommended
+`tang` comes with a command line utility that will instrument files for you. While it is recommended
 you use a (plugin)[#build-plugins] like the [karma preprocessor](https://github.com/jamestalmage/karma-angular-test-utils)
 to automate the transformations for you, the cli utility can be useful for debugging how the transformations have
 changed your code.
 
 ```
-npm install -g ng-test-utils
-ng-test-utils --help
-ng-test-utils --output=DIR --base=tests tests/*Spec.js
+npm install -g tang
+tang --help
+tang --output=DIR --base=tests tests/*Spec.js
 ```
 
 
 build plugins
 -------------
 
-`ng-test-utils` has a number of companion plugins that help you insert it in your build process.
+`tang` has a number of companion plugins that help you insert it in your build process.
 Each one has its own set of examples that will help get you started.
 
   * The [karma preprocessor](https://github.com/jamestalmage/karma-angular-test-utils) provides
