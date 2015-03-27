@@ -1,7 +1,7 @@
 {
-  "name": "ng-test-utils",
+  "name": "tang",
   "version": "0.0.18",
-  "description": "angular test utilities",
+  "description": "test annotations for angular",
   "main": "index.js",
   "repository": {
     "type": "git",
