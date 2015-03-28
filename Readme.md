@@ -4,8 +4,8 @@ Test Annotations for Angular.js.
 
 Create cleaner, less verbose tests for your Angular app!
 
-[![Build Status](https://travis-ci.org/jamestalmage/angular-test-utils.svg?branch=master)](https://travis-ci.org/jamestalmage/angular-test-utils)
-[![Coverage Status](https://coveralls.io/repos/jamestalmage/angular-test-utils/badge.svg?branch=master)](https://coveralls.io/r/jamestalmage/angular-test-utils?branch=master)
+[![Build Status](https://travis-ci.org/jamestalmage/tang.svg?branch=master)](https://travis-ci.org/jamestalmage/tang)
+[![Coverage Status](https://coveralls.io/repos/jamestalmage/tang/badge.svg?branch=master)](https://coveralls.io/r/jamestalmage/tang?branch=master)
 
 
 Angular is an amazing framework, but its dependency injection framework can lead to some pretty verbose tests:
