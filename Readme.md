@@ -236,7 +236,7 @@ var timeoutInSeconds = function(fn, delay, invokeApply) {
 @ngInject
 var $timeout;
 ```
-This will work in most cases, and has the added advantage of exposing $timeout to
+This will work in most cases, and has the added advantage of exposing `$timeout` to
 your tests as well. Problems would arise if `timeoutInSeconds` were to be called
 during module initialization before the `@ngInject` annotation has injected `$timeout`
 in to your test. In that case `@ngFactory` is an acceptable workaround.
