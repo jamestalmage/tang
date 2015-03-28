@@ -536,7 +536,7 @@ changed your code.
 ```
 npm install -g tang
 tang --help
-tang --output=DIR --base=tests tests/*Spec.js
+tang transform --output=DIR --base=tests tests/*Spec.js
 ```
 
 
@@ -546,16 +546,16 @@ build plugins
 `tang` has a number of companion plugins that help you insert it in your build process.
 Each one has its own set of examples that will help get you started.
 
-  * The [karma preprocessor](https://github.com/jamestalmage/karma-angular-test-utils) provides
+  * The [karma preprocessor](https://github.com/jamestalmage/karma-tang) provides
   the simplest solution that will work for the majority of users. Since the transforms provided
   are entirely testing related, most users will not need anything beyond this.
 
-  * The [browserify transform](https://github.com/jamestalmage/browserify-angular-test-utils),
+  * The [browserify transform](https://github.com/jamestalmage/tangify),
   provides a way to perform the injections on code before it gets bundled by browserify.
   Combine with [karma-browserify](https://github.com/Nikku/karma-browserify) to test your
   CommonJS compatible angular modules.
 
-  * The [gulp plugin](https://github.com/jamestalmage/gulp-angular-test-utils) provides a gulp compatible
+  * The [gulp plugin](https://github.com/jamestalmage/gulp-tang) provides a gulp compatible
    transform. Use gulps powerful streaming system to wire the transform up to any input/output stream you choose.
 
 

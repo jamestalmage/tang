@@ -139,9 +139,9 @@ gulp.task('clean', function(cb) {
 var deps = [];
 
 _.forEach({
-  browserify: 'https://github.com/jamestalmage/browserify-angular-test-utils.git',
-  gulp: 'https://github.com/jamestalmage/gulp-angular-test-utils.git',
-  karma: 'https://github.com/jamestalmage/karma-angular-test-utils.git'
+  browserify: 'https://github.com/jamestalmage/tangify.git',
+  gulp: 'https://github.com/jamestalmage/gulp-tang.git',
+  karma: 'https://github.com/jamestalmage/karma-tang.git'
 }, function(url, key) {
   var test = 'test-' + key + '-plugin';
   var clone = 'clone-' + key + '-plugin';
