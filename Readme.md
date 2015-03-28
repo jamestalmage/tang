@@ -1,5 +1,8 @@
 ng-test-utils
 =============
+ng-test utils is now [tang](https://www.npmjs.com/package/tang). You should switch the dependencies
+in all your builds now.
+
 Cleaner, less verbose tests for your Angular app!
 
 [![Build Status](https://travis-ci.org/jamestalmage/angular-test-utils.svg?branch=master)](https://travis-ci.org/jamestalmage/angular-test-utils)

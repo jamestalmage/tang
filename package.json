@@ -1,11 +1,11 @@
 {
   "name": "ng-test-utils",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "angular test utilities",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jamestalmage/angular-test-utils.git"
+    "url": "https://github.com/jamestalmage/tang.git"
   },
   "keywords": [
     "angular",
@@ -14,9 +14,9 @@
   "author": "James Talmage",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jamestalmage/angular-test-utils/issues"
+    "url": "https://github.com/jamestalmage/tang/issues"
   },
-  "homepage": "https://github.com/jamestalmage/angular-test-utils",
+  "homepage": "https://github.com/jamestalmage/tang",
   "bin": {
     "ng-test-utils": "./cli.js"
   },
