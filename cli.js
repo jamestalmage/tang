@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var parser = require('nomnom').script('ng-test-utils');
+var parser = require('nomnom').script('tang');
 
 parser
   .command('transform')

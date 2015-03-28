@@ -529,7 +529,7 @@ command-line
 ------------
 
 `tang` comes with a command line utility that will instrument files for you. While it is recommended
-you use a (plugin)[#build-plugins] like the [karma preprocessor](https://github.com/jamestalmage/karma-angular-test-utils)
+you use a [plugin](#build-plugins) like the [karma preprocessor](https://github.com/jamestalmage/karma-angular-test-utils)
 to automate the transformations for you, the cli utility can be useful for debugging how the transformations have
 changed your code.
 
