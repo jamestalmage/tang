@@ -36,7 +36,6 @@
     "coveralls": "^2.11.2",
     "del": "^1.1.1",
     "esprima-fb": "^12001.1.0-dev-harmony-fb",
-    "glob": "^4.4.0",
     "gulp": "^3.8.11",
     "gulp-jscs": "^1.4.0",
     "gulp-jshint": "^1.9.2",
