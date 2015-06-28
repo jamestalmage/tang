@@ -6,7 +6,9 @@ Create cleaner, less verbose tests for your Angular app!
 
 [![Build Status](https://travis-ci.org/jamestalmage/tang.svg?branch=master)](https://travis-ci.org/jamestalmage/tang)
 [![Coverage Status](https://coveralls.io/repos/jamestalmage/tang/badge.svg?branch=master)](https://coveralls.io/r/jamestalmage/tang?branch=master)
-
+[![Dependency Status](https://david-dm.org/jamestalmage/tang.svg)](https://david-dm.org/jamestalmage/tang)
+[![devDependency Status](https://david-dm.org/jamestalmage/tang/dev-status.svg)](https://david-dm.org/jamestalmage/tang#info=devDependencies)
+[![NPM](https://nodei.co/npm/tang.png?downloads=true)](https://nodei.co/npm/tang/)
 
 Angular is an amazing framework, but its dependency injection framework can lead to some pretty verbose tests:
 
